@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Crossword
+namespace Dictionary
 {
-    public abstract class Crossword
+    class DictionaryMask
     {
     }
 }

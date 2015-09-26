@@ -16,5 +16,11 @@ namespace CrosswordApplication
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Dictionary.Dictionary d = new Dictionary.Dictionary();
+            d.Load(b => button1.Text = d.dictionaryFields[0].field);
+        }
     }
 }

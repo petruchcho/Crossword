@@ -44,9 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonUtils\AsyncTask.cs" />
     <Compile Include="Crossword\Crossword.cs" />
     <Compile Include="Crossword\CrosswordClassical.cs" />
     <Compile Include="Dictionary\Dictionary.cs" />
+    <Compile Include="Dictionary\DictionaryField.cs" />
+    <Compile Include="Dictionary\DictionaryIterator.cs" />
+    <Compile Include="Dictionary\DictionaryManager.cs" />
+    <Compile Include="Dictionary\DictionaryMask.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +81,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Главный.dict" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

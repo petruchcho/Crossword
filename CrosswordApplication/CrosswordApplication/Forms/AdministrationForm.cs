@@ -10,17 +10,11 @@ using System.Windows.Forms;
 
 namespace CrosswordApplication
 {
-    public partial class Form1 : Form
+    public partial class AdministrationForm : Form
     {
-        public Form1()
+        public AdministrationForm()
         {
             InitializeComponent();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Dictionary.Dictionary d = new Dictionary.Dictionary();
-            d.Load(b => button1.Text = d.dictionaryFields[0].field);
         }
     }
 }

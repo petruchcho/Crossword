@@ -8,5 +8,6 @@ namespace Dictionary
 {
     class DictionaryIterator
     {
+
     }
 }

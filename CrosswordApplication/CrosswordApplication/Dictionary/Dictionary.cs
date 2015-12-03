@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Dictionary
+namespace CrosswordApplication.Dictionary
 {
     class Dictionary
     {
-        public const string DEFAULT_FILE_NAME = @"..\..\Главный.dict";
+        public static readonly string DefaultFileName = @"..\..\Главный.dict";
 
         // TODO Make private
-        public DictionaryField[] dictionaryFields;
+        public DictionaryWord[] DictionaryWords;
 
         // Default constructor - creates empty dictionary
         public Dictionary()
         {
-            dictionaryFields = new DictionaryField[0];
+            DictionaryWords = new DictionaryWord[0];
         }
 
         /* 
@@ -31,9 +29,9 @@ namespace Dictionary
 
         // TODO Maybe we should create special classes for comparers
         // e.g. LengthComparer, LexicalComparer
-        public void Sort(IComparer<DictionaryField> comparer)
+        public void Sort(IComparer<DictionaryWord> comparer)
         {
-            Array.Sort<DictionaryField>(dictionaryFields, comparer);
+            Array.Sort<DictionaryWord>(DictionaryWords, comparer);
         }
 
         /*
@@ -43,19 +41,19 @@ namespace Dictionary
         public void Load(Action<bool> callback)
         {
             // TODO Get fileName with dialog
-            string fileName = DEFAULT_FILE_NAME;
+            string fileName = DefaultFileName;
 
-            new CommonUtils.AsyncTask<bool>(
+            new global::CommonUtils.AsyncTask<bool>(
                 () =>
                 {
                     try
                     {
                         string[] dictionaryLines = System.IO.File.ReadAllLines(fileName, Encoding.GetEncoding(1251));
                         int dictionarySize = dictionaryLines.Length;
-                        dictionaryFields = new DictionaryField[dictionarySize];
+                        DictionaryWords = new DictionaryWord[dictionarySize];
                         for (int i = 0; i < dictionarySize; i++)
                         {
-                            dictionaryFields[i] = new DictionaryField(dictionaryLines[i]);
+                            DictionaryWords[i] = new DictionaryWord(dictionaryLines[i]);
                         }
                         // TODO Sort it with some comparer
                         return true;
@@ -83,7 +81,7 @@ namespace Dictionary
          */
         public bool IsLoaded()
         {
-            return dictionaryFields != null && dictionaryFields.Length > 0;
+            return DictionaryWords != null && DictionaryWords.Length > 0;
         }
     }
 }

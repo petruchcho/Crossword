@@ -1,4 +1,4 @@
-﻿namespace CrosswordApplication
+﻿namespace CrosswordApplication.Forms
 {
     partial class DictionaryManagerForm
     {

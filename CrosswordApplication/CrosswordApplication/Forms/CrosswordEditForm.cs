@@ -45,9 +45,9 @@ namespace CrosswordApplication.Forms
 
             var items = dictionaryListBox.Items;
             // TODO Remove 100
-            for (var i = 0; i < Math.Min(100, dictionary.dictionaryFields.Length); i++)
+            for (var i = 0; i < Math.Min(100, dictionary.DictionaryWords.Length); i++)
             {
-                items.Add(dictionary.dictionaryFields[i].field);
+                items.Add(dictionary.DictionaryWords[i].ToString());
             }
 
             dictionaryListBox.Visible = true;

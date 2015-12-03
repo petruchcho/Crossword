@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="CommonUtils\AuthUtils.cs" />
     <Compile Include="CommonUtils\FormUtils.cs" />
+    <Compile Include="Crossword\CrosswordWord.cs" />
+    <Compile Include="Crossword\CrosswordWordPosition.cs" />
     <Compile Include="Forms\AdministrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,9 +63,8 @@
     <Compile Include="CommonUtils\AsyncTask.cs" />
     <Compile Include="Crossword\Crossword.cs" />
     <Compile Include="Dictionary\Dictionary.cs" />
-    <Compile Include="Dictionary\DictionaryField.cs" />
+    <Compile Include="Dictionary\DictionaryWord.cs" />
     <Compile Include="Dictionary\DictionaryIterator.cs" />
-    <Compile Include="Dictionary\DictionaryManager.cs" />
     <Compile Include="Dictionary\DictionaryMask.cs" />
     <Compile Include="Forms\CrosswordEditForm.cs">
       <SubType>Form</SubType>

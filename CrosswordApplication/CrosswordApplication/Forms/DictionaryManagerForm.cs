@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using Dictionary;
 
-namespace CrosswordApplication
+namespace CrosswordApplication.Forms
 {
     public partial class DictionaryManagerForm : Form
     {
@@ -54,9 +53,9 @@ namespace CrosswordApplication
         private void ShowDictionary()
         {
             var items = dictionaryListBox.Items;
-            for (var i = 0; i < dictionary.dictionaryFields.Length; i++)
+            for (var i = 0; i < dictionary.DictionaryWords.Length; i++)
             {
-                items.Add(dictionary.dictionaryFields[i].field);
+                items.Add(dictionary.DictionaryWords[i].ToString());
                 if (i%200 == 0)
                 {
                     dictionaryListBox.Update();

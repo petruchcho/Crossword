@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dictionary;
 
 namespace CrosswordApplication
 {
@@ -20,12 +14,12 @@ namespace CrosswordApplication
             InitializeComponent();
         }
 
-        public DictionaryManagerForm(string fileName) : base()
+        public DictionaryManagerForm(string fileName)
         {
             this.fileName = fileName;
         }
 
-        private void loadDictionary(string fileName)
+        private void LoadDictionary()
         {   
             // TODO Save Existed
             if (dictionary != null)
@@ -59,11 +53,14 @@ namespace CrosswordApplication
 
         private void ShowDictionary()
         {
-            var items = dictionaryListView.Items;
-            // TODO Remove 100
-            for (int i = 0; i < Math.Min(100, dictionary.dictionaryFields.Length); i++)
+            var items = dictionaryListBox.Items;
+            for (var i = 0; i < dictionary.dictionaryFields.Length; i++)
             {
                 items.Add(dictionary.dictionaryFields[i].field);
+                if (i%200 == 0)
+                {
+                    dictionaryListBox.Update();
+                }
             }
         }
 
@@ -76,13 +73,13 @@ namespace CrosswordApplication
         {
             if (fileName != null)
             {
-                loadDictionary(fileName);
+                LoadDictionary();
             }
         }
 
         private void открытьСловарьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            loadDictionary(null);
+            LoadDictionary();
         }
 
         private void ShowProgress()

@@ -33,7 +33,7 @@
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьСловарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.dictionaryListView = new System.Windows.Forms.ListView();
+            this.dictionaryListBox = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,14 +80,14 @@
             this.progressBar.TabIndex = 3;
             this.progressBar.Visible = false;
             // 
-            // dictionaryListView
+            // dictionaryListBox
             // 
-            this.dictionaryListView.Location = new System.Drawing.Point(131, 52);
-            this.dictionaryListView.Name = "dictionaryListView";
-            this.dictionaryListView.Size = new System.Drawing.Size(499, 509);
-            this.dictionaryListView.TabIndex = 4;
-            this.dictionaryListView.UseCompatibleStateImageBehavior = false;
-            this.dictionaryListView.View = System.Windows.Forms.View.List;
+            this.dictionaryListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dictionaryListBox.FormattingEnabled = true;
+            this.dictionaryListBox.Location = new System.Drawing.Point(162, 52);
+            this.dictionaryListBox.Name = "dictionaryListBox";
+            this.dictionaryListBox.Size = new System.Drawing.Size(468, 507);
+            this.dictionaryListBox.TabIndex = 4;
             // 
             // DictionaryManagerForm
             // 
@@ -96,9 +96,9 @@
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.dictionaryListView);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.dictionaryListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "DictionaryManagerForm";
@@ -119,6 +119,6 @@
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem открытьСловарьToolStripMenuItem;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.ListView dictionaryListView;
+        private System.Windows.Forms.ListBox dictionaryListBox;
     }
 }

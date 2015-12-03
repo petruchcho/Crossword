@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CrosswordApplication.Forms
@@ -21,10 +14,10 @@ namespace CrosswordApplication.Forms
 
         private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            loadDictionary();
+            LoadDictionary();
         }
 
-        private void loadDictionary()
+        private void LoadDictionary()
         {
             // TODO Save Existed
             if (dictionary != null)
@@ -34,7 +27,7 @@ namespace CrosswordApplication.Forms
             else
             {
                 dictionary = new Dictionary.Dictionary();
-                dictionary.Load((res) =>
+                dictionary.Load(res =>
                 {
                     SetDictionary();
                 });
@@ -52,7 +45,7 @@ namespace CrosswordApplication.Forms
 
             var items = dictionaryListBox.Items;
             // TODO Remove 100
-            for (int i = 0; i < Math.Min(100, dictionary.dictionaryFields.Length); i++)
+            for (var i = 0; i < Math.Min(100, dictionary.dictionaryFields.Length); i++)
             {
                 items.Add(dictionary.dictionaryFields[i].field);
             }

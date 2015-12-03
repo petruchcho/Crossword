@@ -40,6 +40,7 @@
             this.dictionaryManagerButton.TabIndex = 3;
             this.dictionaryManagerButton.Text = "Менеджер словарей";
             this.dictionaryManagerButton.UseVisualStyleBackColor = true;
+            this.dictionaryManagerButton.Click += new System.EventHandler(this.dictionaryManagerButton_Click);
             // 
             // crosswordManagerButton
             // 
@@ -49,6 +50,7 @@
             this.crosswordManagerButton.TabIndex = 2;
             this.crosswordManagerButton.Text = "Менеджер кроссвордов";
             this.crosswordManagerButton.UseVisualStyleBackColor = true;
+            this.crosswordManagerButton.Click += new System.EventHandler(this.crosswordManagerButton_Click);
             // 
             // AdministrationForm
             // 

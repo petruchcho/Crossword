@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CrosswordApplication.CommonUtils;
+using CrosswordApplication.Forms;
 
 namespace CrosswordApplication
 {
@@ -15,6 +17,17 @@ namespace CrosswordApplication
         public AdministrationForm()
         {
             InitializeComponent();
+        }
+
+        private void dictionaryManagerButton_Click(object sender, EventArgs e)
+        {
+            DictionaryManagerForm dictionaryManagerForm = new DictionaryManagerForm();
+            CommonUtils.FormUtils.OpenFormAndSaveHierarchy(this, dictionaryManagerForm);
+        }
+
+        private void crosswordManagerButton_Click(object sender, EventArgs e)
+        {
+            FormUtils.OpenFormAndSaveHierarchy(this, new CrosswordEditForm());
         }
     }
 }

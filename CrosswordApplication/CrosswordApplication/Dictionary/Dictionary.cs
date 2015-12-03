@@ -8,6 +8,8 @@ namespace Dictionary
 {
     class Dictionary
     {
+        public const string DEFAULT_FILE_NAME = @"..\..\Главный.dict";
+
         // TODO Make private
         public DictionaryField[] dictionaryFields;
 
@@ -34,13 +36,6 @@ namespace Dictionary
             Array.Sort<DictionaryField>(dictionaryFields, comparer);
         }
 
-        // Opens a new form with this dictionary
-        public void Show()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
         /*
          * This method opens a dialog to select a file and then 
          * starts async loading.
@@ -48,7 +43,7 @@ namespace Dictionary
         public void Load(Action<bool> callback)
         {
             // TODO Get fileName with dialog
-            string fileName = DictionaryManager.DEFAULT_FILE_NAME;
+            string fileName = DEFAULT_FILE_NAME;
 
             new CommonUtils.AsyncTask<bool>(
                 () =>
@@ -81,6 +76,14 @@ namespace Dictionary
         {
             // TODO
             throw new NotImplementedException();
+        }
+
+        /*
+         * Shows if disctionary is loaded
+         */
+        public bool IsLoaded()
+        {
+            return dictionaryFields != null && dictionaryFields.Length > 0;
         }
     }
 }

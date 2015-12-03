@@ -9,6 +9,5 @@ namespace Dictionary
     // TODO Unused class : to remove
     class DictionaryManager
     {
-        public const string DEFAULT_FILE_NAME = @"..\..\Главный.dict";
     }
 }

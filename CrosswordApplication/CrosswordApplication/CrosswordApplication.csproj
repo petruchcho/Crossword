@@ -60,12 +60,23 @@
     </Compile>
     <Compile Include="CommonUtils\AsyncTask.cs" />
     <Compile Include="Crossword\Crossword.cs" />
-    <Compile Include="Crossword\CrosswordClassical.cs" />
     <Compile Include="Dictionary\Dictionary.cs" />
     <Compile Include="Dictionary\DictionaryField.cs" />
     <Compile Include="Dictionary\DictionaryIterator.cs" />
     <Compile Include="Dictionary\DictionaryManager.cs" />
     <Compile Include="Dictionary\DictionaryMask.cs" />
+    <Compile Include="Forms\CrosswordEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CrosswordEditForm.Designer.cs">
+      <DependentUpon>CrosswordEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DictionaryManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DictionaryManagerForm.Designer.cs">
+      <DependentUpon>DictionaryManagerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +90,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AuthDialogForm.resx">
       <DependentUpon>AuthDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CrosswordEditForm.resx">
+      <DependentUpon>CrosswordEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DictionaryManagerForm.resx">
+      <DependentUpon>DictionaryManagerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

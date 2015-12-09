@@ -2,8 +2,11 @@
 
 namespace CrosswordApplication.Dictionary
 {
-    class DictionaryWord
+    public class DictionaryWord
     {
+        private string _word;
+        private string _description;
+
         // Probably we should check it with other mask
         public DictionaryWord(string dictionaryString)
         {
@@ -11,9 +14,28 @@ namespace CrosswordApplication.Dictionary
             Description = dictionaryString.Substring(dictionaryString.IndexOf(" ", StringComparison.Ordinal) + 1);
         }
 
-        public string Word { get; set; }
+        public DictionaryWord(string word, string description)
+        {
+            _word = word;
+            _description = description;
+        }
 
-        public string Description { get; set; }
+        public string Word
+        {
+            get { return _word; }
+            set { _word = value; Update(); }
+        }
+
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; Update(); }
+        }
+
+        public void Update()
+        {
+            
+        }
 
         public override string ToString()
         {

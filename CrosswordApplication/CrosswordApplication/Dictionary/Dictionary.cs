@@ -48,10 +48,10 @@ namespace CrosswordApplication.Dictionary
                 {
                     try
                     {
-                        string[] dictionaryLines = System.IO.File.ReadAllLines(fileName, Encoding.GetEncoding(1251));
-                        int dictionarySize = dictionaryLines.Length;
+                        var dictionaryLines = System.IO.File.ReadAllLines(fileName, Encoding.GetEncoding(1251));
+                        var dictionarySize = dictionaryLines.Length;
                         DictionaryWords = new DictionaryWord[dictionarySize];
-                        for (int i = 0; i < dictionarySize; i++)
+                        for (var i = 0; i < dictionarySize; i++)
                         {
                             DictionaryWords[i] = new DictionaryWord(dictionaryLines[i]);
                         }

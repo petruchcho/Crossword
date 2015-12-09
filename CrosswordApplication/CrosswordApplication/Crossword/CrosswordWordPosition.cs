@@ -1,6 +1,8 @@
-﻿namespace CrosswordApplication.Crossword
+﻿using System.Text;
+
+namespace CrosswordApplication.Crossword
 {
-    internal class CrosswordWordPosition
+    public class CrosswordWordPosition
     {
         private readonly int x;
         private readonly int y;

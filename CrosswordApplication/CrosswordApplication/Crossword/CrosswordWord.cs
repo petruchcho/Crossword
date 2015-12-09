@@ -1,17 +1,20 @@
-﻿using CrosswordApplication.Dictionary;
+﻿using System.Text;
+using CrosswordApplication.Dictionary;
 
 namespace CrosswordApplication.Crossword
 {
-    class CrosswordWord
+    public class CrosswordWord
     {
+        private readonly global::Crossword.Crossword crossword;
         private readonly DictionaryWord dictionaryWord;
         private CrosswordWordPosition position;
+        private bool isResolved;
 
-        public CrosswordWord(DictionaryWord dictionaryWord, CrosswordWordPosition position) : this(dictionaryWord, position, false)
+        public CrosswordWord(global::Crossword.Crossword crossword, DictionaryWord dictionaryWord, CrosswordWordPosition position) : this(crossword, dictionaryWord, position, false)
         {
         }
 
-        public CrosswordWord(DictionaryWord dictionaryWord, CrosswordWordPosition position, bool isResolved)
+        public CrosswordWord(global::Crossword.Crossword crossword, DictionaryWord dictionaryWord, CrosswordWordPosition position, bool isResolved)
         {
             this.dictionaryWord = dictionaryWord;
             this.position = position;
@@ -21,19 +24,29 @@ namespace CrosswordApplication.Crossword
         public CrosswordWordPosition Position
         {
             get { return position; }
-            set { position = value; }
+            set { position = value; Update(); }
         }
 
-        public bool IsResolved { get; set; }
+        public bool IsResolved { 
+            get { return isResolved; } 
+            set { isResolved = value; Update(); } }
 
-        public string Word()
+        public string Word
         {
-            return dictionaryWord.Word;
+            get { return dictionaryWord.Word; }
         }
 
-        public string Description()
+        public string Description
         {
-            return dictionaryWord.Description;
+            get { return dictionaryWord.Description; }
+        }
+
+        public void Update()
+        {
+            if (crossword != null)
+            {
+                crossword.UpdateState();
+            }
         }
     }
 }

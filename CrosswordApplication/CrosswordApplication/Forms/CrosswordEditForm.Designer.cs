@@ -28,33 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrosswordEditForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.кроссвордToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.загрузитьToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.словарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.загрузитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.board = new System.Windows.Forms.DataGridView();
             this.questionsSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.questionsToolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.questionsListBox = new System.Windows.Forms.ListBox();
+            this.dictionaryListBox = new System.Windows.Forms.ListBox();
             this.dictionaryToolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.questionsListBox = new System.Windows.Forms.ListBox();
-            this.dictionaryListBox = new System.Windows.Forms.ListBox();
-            this.questionsToolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.loadDictionaryHintLabel = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
+            this.rootSplitContainer.Panel1.SuspendLayout();
             this.rootSplitContainer.Panel2.SuspendLayout();
             this.rootSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.board)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.questionsSplitContainer)).BeginInit();
             this.questionsSplitContainer.Panel1.SuspendLayout();
             this.questionsSplitContainer.Panel2.SuspendLayout();
             this.questionsSplitContainer.SuspendLayout();
-            this.dictionaryToolStrip.SuspendLayout();
             this.questionsToolStrip.SuspendLayout();
+            this.dictionaryToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -71,9 +77,18 @@
             // 
             // кроссвордToolStripMenuItem
             // 
+            this.кроссвордToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.загрузитьToolStripMenuItem1});
             this.кроссвордToolStripMenuItem.Name = "кроссвордToolStripMenuItem";
             this.кроссвордToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
             this.кроссвордToolStripMenuItem.Text = "Кроссворд";
+            // 
+            // загрузитьToolStripMenuItem1
+            // 
+            this.загрузитьToolStripMenuItem1.Name = "загрузитьToolStripMenuItem1";
+            this.загрузитьToolStripMenuItem1.Size = new System.Drawing.Size(128, 22);
+            this.загрузитьToolStripMenuItem1.Text = "Загрузить";
+            this.загрузитьToolStripMenuItem1.Click += new System.EventHandler(this.загрузитьToolStripMenuItem1_Click);
             // 
             // словарьToolStripMenuItem
             // 
@@ -86,7 +101,7 @@
             // загрузитьToolStripMenuItem
             // 
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
             this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
             // 
@@ -105,12 +120,54 @@
             this.rootSplitContainer.Location = new System.Drawing.Point(0, 24);
             this.rootSplitContainer.Name = "rootSplitContainer";
             // 
+            // rootSplitContainer.Panel1
+            // 
+            this.rootSplitContainer.Panel1.Controls.Add(this.board);
+            // 
             // rootSplitContainer.Panel2
             // 
             this.rootSplitContainer.Panel2.Controls.Add(this.questionsSplitContainer);
             this.rootSplitContainer.Size = new System.Drawing.Size(784, 537);
             this.rootSplitContainer.SplitterDistance = 500;
             this.rootSplitContainer.TabIndex = 1;
+            // 
+            // board
+            // 
+            this.board.AllowUserToAddRows = false;
+            this.board.AllowUserToDeleteRows = false;
+            this.board.AllowUserToResizeColumns = false;
+            this.board.AllowUserToResizeRows = false;
+            this.board.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.board.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.board.ColumnHeadersVisible = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.board.DefaultCellStyle = dataGridViewCellStyle1;
+            this.board.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.board.Location = new System.Drawing.Point(0, 0);
+            this.board.Margin = new System.Windows.Forms.Padding(10);
+            this.board.Name = "board";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.board.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.board.RowHeadersVisible = false;
+            this.board.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.board.Size = new System.Drawing.Size(498, 535);
+            this.board.TabIndex = 0;
+            this.board.Visible = false;
+            this.board.KeyDown += new System.Windows.Forms.KeyEventHandler(this.board_KeyDown);
             // 
             // questionsSplitContainer
             // 
@@ -135,6 +192,45 @@
             this.questionsSplitContainer.Size = new System.Drawing.Size(280, 537);
             this.questionsSplitContainer.SplitterDistance = 300;
             this.questionsSplitContainer.TabIndex = 0;
+            // 
+            // questionsToolStrip
+            // 
+            this.questionsToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.questionsToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel2});
+            this.questionsToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.questionsToolStrip.Name = "questionsToolStrip";
+            this.questionsToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.questionsToolStrip.Size = new System.Drawing.Size(278, 25);
+            this.questionsToolStrip.TabIndex = 1;
+            this.questionsToolStrip.Text = "toolStrip1";
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(104, 22);
+            this.toolStripLabel2.Text = "Список вопросов";
+            // 
+            // questionsListBox
+            // 
+            this.questionsListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.questionsListBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.questionsListBox.FormattingEnabled = true;
+            this.questionsListBox.Location = new System.Drawing.Point(0, 25);
+            this.questionsListBox.Name = "questionsListBox";
+            this.questionsListBox.Size = new System.Drawing.Size(278, 273);
+            this.questionsListBox.TabIndex = 0;
+            // 
+            // dictionaryListBox
+            // 
+            this.dictionaryListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dictionaryListBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dictionaryListBox.FormattingEnabled = true;
+            this.dictionaryListBox.Location = new System.Drawing.Point(0, 23);
+            this.dictionaryListBox.Name = "dictionaryListBox";
+            this.dictionaryListBox.Size = new System.Drawing.Size(278, 208);
+            this.dictionaryListBox.TabIndex = 1;
+            this.dictionaryListBox.Visible = false;
             // 
             // dictionaryToolStrip
             // 
@@ -176,45 +272,6 @@
             this.toolStripButton.Size = new System.Drawing.Size(69, 22);
             this.toolStripButton.Text = "Менеджер";
             // 
-            // questionsListBox
-            // 
-            this.questionsListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.questionsListBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.questionsListBox.FormattingEnabled = true;
-            this.questionsListBox.Location = new System.Drawing.Point(0, 25);
-            this.questionsListBox.Name = "questionsListBox";
-            this.questionsListBox.Size = new System.Drawing.Size(278, 273);
-            this.questionsListBox.TabIndex = 0;
-            // 
-            // dictionaryListBox
-            // 
-            this.dictionaryListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dictionaryListBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dictionaryListBox.FormattingEnabled = true;
-            this.dictionaryListBox.Location = new System.Drawing.Point(0, 23);
-            this.dictionaryListBox.Name = "dictionaryListBox";
-            this.dictionaryListBox.Size = new System.Drawing.Size(278, 208);
-            this.dictionaryListBox.TabIndex = 1;
-            this.dictionaryListBox.Visible = false;
-            // 
-            // questionsToolStrip
-            // 
-            this.questionsToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.questionsToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel2});
-            this.questionsToolStrip.Location = new System.Drawing.Point(0, 0);
-            this.questionsToolStrip.Name = "questionsToolStrip";
-            this.questionsToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.questionsToolStrip.Size = new System.Drawing.Size(278, 25);
-            this.questionsToolStrip.TabIndex = 1;
-            this.questionsToolStrip.Text = "toolStrip1";
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(104, 22);
-            this.toolStripLabel2.Text = "Список вопросов";
-            // 
             // loadDictionaryHintLabel
             // 
             this.loadDictionaryHintLabel.AutoSize = true;
@@ -238,19 +295,21 @@
             this.Text = "CrosswordEditForm";
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.rootSplitContainer.Panel1.ResumeLayout(false);
             this.rootSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).EndInit();
             this.rootSplitContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.board)).EndInit();
             this.questionsSplitContainer.Panel1.ResumeLayout(false);
             this.questionsSplitContainer.Panel1.PerformLayout();
             this.questionsSplitContainer.Panel2.ResumeLayout(false);
             this.questionsSplitContainer.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.questionsSplitContainer)).EndInit();
             this.questionsSplitContainer.ResumeLayout(false);
-            this.dictionaryToolStrip.ResumeLayout(false);
-            this.dictionaryToolStrip.PerformLayout();
             this.questionsToolStrip.ResumeLayout(false);
             this.questionsToolStrip.PerformLayout();
+            this.dictionaryToolStrip.ResumeLayout(false);
+            this.dictionaryToolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -274,6 +333,8 @@
         private System.Windows.Forms.ToolStrip questionsToolStrip;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.Label loadDictionaryHintLabel;
+        private System.Windows.Forms.ToolStripMenuItem загрузитьToolStripMenuItem1;
+        private System.Windows.Forms.DataGridView board;
 
     }
 }

@@ -33,9 +33,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrosswordEditForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.кроссвордToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.загрузитьToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.newCrosswordToolStripMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadCrosswordToolStripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.словарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.загрузитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadDictionaryToolStripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
             this.board = new System.Windows.Forms.DataGridView();
@@ -78,32 +79,41 @@
             // кроссвордToolStripMenuItem
             // 
             this.кроссвордToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.загрузитьToolStripMenuItem1});
+            this.newCrosswordToolStripMenu,
+            this.loadCrosswordToolStripMenu});
             this.кроссвордToolStripMenuItem.Name = "кроссвордToolStripMenuItem";
             this.кроссвордToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
             this.кроссвордToolStripMenuItem.Text = "Кроссворд";
             // 
-            // загрузитьToolStripMenuItem1
+            // newCrosswordToolStripMenu
             // 
-            this.загрузитьToolStripMenuItem1.Name = "загрузитьToolStripMenuItem1";
-            this.загрузитьToolStripMenuItem1.Size = new System.Drawing.Size(128, 22);
-            this.загрузитьToolStripMenuItem1.Text = "Загрузить";
-            this.загрузитьToolStripMenuItem1.Click += new System.EventHandler(this.загрузитьToolStripMenuItem1_Click);
+            this.newCrosswordToolStripMenu.Name = "newCrosswordToolStripMenu";
+            this.newCrosswordToolStripMenu.Size = new System.Drawing.Size(128, 22);
+            this.newCrosswordToolStripMenu.Text = "Новый";
+            this.newCrosswordToolStripMenu.Click += new System.EventHandler(this.newCrosswordToolStripMenu_Click);
+            // 
+            // loadCrosswordToolStripMenu
+            // 
+            this.loadCrosswordToolStripMenu.Enabled = false;
+            this.loadCrosswordToolStripMenu.Name = "loadCrosswordToolStripMenu";
+            this.loadCrosswordToolStripMenu.Size = new System.Drawing.Size(128, 22);
+            this.loadCrosswordToolStripMenu.Text = "Загрузить";
+            this.loadCrosswordToolStripMenu.Click += new System.EventHandler(this.loadCrosswordToolStripMenu_Click);
             // 
             // словарьToolStripMenuItem
             // 
             this.словарьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.загрузитьToolStripMenuItem});
+            this.loadDictionaryToolStripMenu});
             this.словарьToolStripMenuItem.Name = "словарьToolStripMenuItem";
             this.словарьToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
             this.словарьToolStripMenuItem.Text = "Словарь";
             // 
-            // загрузитьToolStripMenuItem
+            // loadDictionaryToolStripMenu
             // 
-            this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.загрузитьToolStripMenuItem.Text = "Загрузить";
-            this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
+            this.loadDictionaryToolStripMenu.Name = "loadDictionaryToolStripMenu";
+            this.loadDictionaryToolStripMenu.Size = new System.Drawing.Size(128, 22);
+            this.loadDictionaryToolStripMenu.Text = "Загрузить";
+            this.loadDictionaryToolStripMenu.Click += new System.EventHandler(this.loadDictionaryToolStripMenuItem_Click);
             // 
             // справкаToolStripMenuItem
             // 
@@ -167,7 +177,6 @@
             this.board.Size = new System.Drawing.Size(498, 535);
             this.board.TabIndex = 0;
             this.board.Visible = false;
-            this.board.KeyDown += new System.Windows.Forms.KeyEventHandler(this.board_KeyDown);
             // 
             // questionsSplitContainer
             // 
@@ -231,9 +240,11 @@
             this.dictionaryListBox.Size = new System.Drawing.Size(278, 208);
             this.dictionaryListBox.TabIndex = 1;
             this.dictionaryListBox.Visible = false;
+            this.dictionaryListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dictionaryListBox_MouseDown);
             // 
             // dictionaryToolStrip
             // 
+            this.dictionaryToolStrip.Enabled = false;
             this.dictionaryToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.dictionaryToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
@@ -293,6 +304,7 @@
             this.Name = "CrosswordEditForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CrosswordEditForm";
+            this.Load += new System.EventHandler(this.CrosswordEditForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.rootSplitContainer.Panel1.ResumeLayout(false);
@@ -320,7 +332,7 @@
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem кроссвордToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem словарьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem загрузитьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadDictionaryToolStripMenu;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.SplitContainer rootSplitContainer;
         private System.Windows.Forms.SplitContainer questionsSplitContainer;
@@ -333,8 +345,9 @@
         private System.Windows.Forms.ToolStrip questionsToolStrip;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.Label loadDictionaryHintLabel;
-        private System.Windows.Forms.ToolStripMenuItem загрузитьToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem loadCrosswordToolStripMenu;
         private System.Windows.Forms.DataGridView board;
+        private System.Windows.Forms.ToolStripMenuItem newCrosswordToolStripMenu;
 
     }
 }

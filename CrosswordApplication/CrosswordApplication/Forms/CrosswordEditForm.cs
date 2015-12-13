@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using Orientation = CrosswordApplication.Crossword.Orientation;
 
@@ -18,18 +18,27 @@ namespace CrosswordApplication.Forms
             InitializeComponent();
         }
 
-        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CrosswordEditForm_Load(object sender, EventArgs e)
         {
-            LoadDictionary();
+            UpdateUi();
         }
 
-        private void LoadDictionary()
+        private void newCrosswordToolStripMenu_Click(object sender, EventArgs e)
         {
             // TODO Save Existed
-            if (dictionary != null)
-            {
-                dictionary.Save(res => { });
-            }
+
+            crossword = new global::Crossword.Crossword();
+            SetCrossword();
+            UpdateUi();
+        }
+
+        private void loadDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO Save Existed
+            //            if (dictionary != null)
+            //            {
+            //                dictionary.Save(res => { });
+            //            }
 
             dictionary = new Dictionary.Dictionary();
             dictionary.Load(res =>
@@ -38,13 +47,28 @@ namespace CrosswordApplication.Forms
             });
         }
 
+
+        private void loadCrosswordToolStripMenu_Click(object sender, EventArgs e)
+        {
+            // TODO Save Existed
+
+            crossword = new global::Crossword.Crossword();
+            crossword.Load(res =>
+            {
+                SetCrossword();
+            });
+        }
+
         private void SetDictionary()
         {
             if (dictionary == null || !dictionary.IsLoaded())
             {
-                dictionaryListBox.Visible = false;
+                UpdateUi();
                 return;
             }
+
+            loadCrosswordToolStripMenu.Enabled = true;
+            dictionaryListBox.Visible = true;
 
             var items = dictionaryListBox.Items;
             // TODO Remove 100
@@ -53,34 +77,41 @@ namespace CrosswordApplication.Forms
                 items.Add(dictionary.DictionaryWords[i].ToString());
             }
 
-            dictionaryListBox.Visible = true;
+            UpdateUi();
         }
 
-        private void загрузитьToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SetCrossword()
         {
-            crossword = new global::Crossword.Crossword();
-            crossword.Load(res =>
+            if (crossword == null)
             {
-                ShowCrossword();
-            });
-        }
-
-        private void ShowCrossword()
-        {
+                UpdateUi();
+                return;
+            }
             if (crosswordDrawer == null)
             {
                 crosswordDrawer = new DataGridViewCrosswordDrawer(board);
             }
             crosswordDrawer.Draw(crossword);
+            UpdateUi();
         }
 
-        private void board_KeyDown(object sender, KeyEventArgs e)
+        private void UpdateUi()
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.Handled = true;
-                board.BeginEdit(true);
-            }
+            bool dictionaryLoaded = dictionary != null && dictionary.IsLoaded();
+            bool crosswordLoaded = dictionaryLoaded && crossword != null;
+
+            dictionaryToolStrip.Enabled = dictionaryLoaded;
+            dictionaryListBox.Visible = dictionaryLoaded;
+
+            newCrosswordToolStripMenu.Enabled = dictionaryLoaded;
+            loadCrosswordToolStripMenu.Enabled = dictionaryLoaded;
+            board.Visible = crosswordLoaded;
+        }
+
+        private void dictionaryListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (dictionaryListBox.SelectedItem == null) return;
+            dictionaryListBox.DoDragDrop(dictionaryListBox.SelectedItem, DragDropEffects.Move);
         }
     }
 
@@ -91,7 +122,7 @@ namespace CrosswordApplication.Forms
 
     class DataGridViewCrosswordDrawer : ICrosswordDrawer
     {
-        private static readonly int CROSSWORD_MARGIN = 2;
+        private static readonly int CROSSWORD_MARGIN = 0;
         private readonly DataGridView board;
 
         public DataGridViewCrosswordDrawer(DataGridView board)
@@ -138,9 +169,63 @@ namespace CrosswordApplication.Forms
                 {
                     board[i, j].ReadOnly = true;
                 }
-            
-            board.Visible = true;
+
+            board.KeyDown += (sender, e) =>
+            {
+                try
+                {
+                    if (e.KeyCode == Keys.Enter && !board.CurrentCell.IsInEditMode)
+                    {
+                        board.BeginEdit(true);
+                        e.Handled = true;
+                    }
+                }
+                catch (Exception ignored)
+                {
+                    // ignored
+                }
+            };
+
+            board.CellValueChanged += (sender, args) =>
+            {
+                try
+                {
+                    string curValue = board[args.ColumnIndex, args.RowIndex].Value.ToString();
+                    if (curValue.Length > 1)
+                    {
+                        board[args.ColumnIndex, args.RowIndex].Value =
+                            board[args.ColumnIndex, args.RowIndex].Value.ToString()[0];
+                    }
+                }
+                catch (Exception ignored)
+                {
+                    // ignored
+                }
+
+                try
+                {
+                    board[args.ColumnIndex, args.RowIndex].Value =
+                        board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper();
+                }
+                catch (Exception ignored)
+                {
+                    // ignored
+                }
+            };
+
+            InitDragAndDrop();
+
             board.Focus();
+        }
+
+        private void InitDragAndDrop()
+        {
+            board.AllowDrop = true;
+            board.DragOver += (sender, args) =>
+            {
+                args.Effect = DragDropEffects.Move;
+                board.CurrentCell = board[5, 6];
+            };
         }
 
         private void ShowWords(global::Crossword.Crossword crossword)
@@ -151,29 +236,24 @@ namespace CrosswordApplication.Forms
 
                 for (int i = 0; i < word.Length; i++)
                 {
-                    bool hasNext = i < word.Length - 1;
                     int curX = crosswordWord.Position.X;
                     int curY = crosswordWord.Position.Y;
-                    int nextX = crosswordWord.Position.X;
-                    int nextY = crosswordWord.Position.Y;
-
+                    
                     if (crosswordWord.Position.Orientation == Orientation.Vertical)
                     {
                         curX += i;
-                        nextX += i + 1;
                     }
                     else
                     {
                         curY += i;
-                        nextY += i + 1;
                     }
 
-                    SetCell(curX, curY, word[i].ToString(), hasNext, nextX, nextY);
+                    SetCell(curX, curY, word[i].ToString());
                 }
             }
         }
 
-        private void SetCell(int x, int y, String value, bool hasNext, int nextX, int nextY)
+        private void SetCell(int x, int y, string value)
         {
             x += CROSSWORD_MARGIN;
             y += CROSSWORD_MARGIN;
@@ -181,8 +261,6 @@ namespace CrosswordApplication.Forms
             board[y, x].ReadOnly = false;
             board[y, x].Style.BackColor = Color.White;
             board[y, x].Value = value;
-
-            
         }
     }
 }

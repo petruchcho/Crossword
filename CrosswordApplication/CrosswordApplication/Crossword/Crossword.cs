@@ -97,11 +97,22 @@ namespace Crossword
                 {
                     if (crosswordWord.Position.Orientation == Orientation.Horizontal)
                     {
-                        
+                        if (curX == x && curY + i == y)
+                        {
+                            foundedWords.Add(crosswordWord);
+                        }
+                    }
+                    if (crosswordWord.Position.Orientation == Orientation.Horizontal)
+                    {
+                        if (curX + i == x && curY == y)
+                        {
+                            foundedWords.Add(crosswordWord);
+                        }
                     }
                 }
             }
-            throw new NotImplementedException();
+            
+            return foundedWords;
         }
 
         public override string ToString()

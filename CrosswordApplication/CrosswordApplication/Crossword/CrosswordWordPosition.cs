@@ -4,30 +4,41 @@ namespace CrosswordApplication.Crossword
 {
     public class CrosswordWordPosition
     {
-        private readonly int x;
-        private readonly int y;
-        private readonly Orientation orientation;
-
         public CrosswordWordPosition(int x, int y, Orientation orientation)
         {
-            this.x = x;
-            this.y = y;
-            this.orientation = orientation;
+            this.X = x;
+            this.Y = y;
+            this.Orientation = orientation;
         }
 
-        public int X
+        public int X { get; }
+
+        public int Y { get; }
+
+        public Orientation Orientation { get; }
+
+        public static void NextPosition(Orientation orientation, ref int x, ref int y)
         {
-            get { return x; }
+            if (orientation == Orientation.Horizontal)
+            {
+                x = x + 1;
+            }
+            else
+            {
+                y = y + 1;
+            }
         }
 
-        public int Y
+        public static void NextIndexPosition(Orientation orientation, int index, ref int x, ref int y)
         {
-            get { return y; }
-        }
-
-        public Orientation Orientation
-        {
-            get { return orientation; }
+            if (orientation == Orientation.Horizontal)
+            {
+                x = x + index;
+            }
+            else
+            {
+                y = y + index;
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
@@ -65,7 +66,7 @@ namespace Crossword
 
         public void UpdateState()
         {
-            
+
         }
 
         public int Height
@@ -89,7 +90,7 @@ namespace Crossword
             foreach (var crosswordWord in CrosswordWords)
             {
                 string word = crosswordWord.Word;
-                
+
                 int curX = crosswordWord.Position.X;
                 int curY = crosswordWord.Position.Y;
 
@@ -111,11 +112,68 @@ namespace Crossword
                     }
                 }
             }
-            
+
             return foundedWords;
         }
 
-        public override string ToString()
+        public List<PreviewCrosswordWord> GetPreviewsPositions(DictionaryWord dictionaryWord)
+        {
+            if (crosswordWords == null || crosswordWords.Count == 0)
+            {
+                return null;
+            }
+
+            var result = new List<PreviewCrosswordWord>();
+
+            // Todo relates on orientation
+            for (var i = 0; i + dictionaryWord.Word.Length - 1 < Width; i++)
+            {
+                for (var j = 0; j + dictionaryWord.Word.Length - 1 < Height; j++)
+                {
+                    var previewWord = new PreviewCrosswordWord(dictionaryWord,
+                        new CrosswordWordPosition(i, j, Orientation.Vertical));
+                    if (checkIfPreviewWordMatches(previewWord))
+                    {
+                        result.Add(previewWord);
+                    }
+
+                    previewWord = new PreviewCrosswordWord(dictionaryWord,
+                        new CrosswordWordPosition(i, j, Orientation.Horizontal));
+                    if (checkIfPreviewWordMatches(previewWord))
+                    {
+                        result.Add(previewWord);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private bool checkIfPreviewWordMatches(PreviewCrosswordWord previewWord)
+        {
+            var countOfIntersections = 0;
+            var goodWord = true;
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                var intersectionType = crosswordWord.IsCorrectIntersection(previewWord);
+                if (intersectionType == CrosswordWord.IntersectionType.WrongIntersection)
+                {
+                    goodWord = false;
+                    break;
+                }
+                if (intersectionType == CrosswordWord.IntersectionType.CorrectIntersection)
+                {
+                    countOfIntersections++;
+                }
+            }
+            if (countOfIntersections == 0)
+            {
+                goodWord = false;
+            }
+            return goodWord;
+        }
+
+    public override string ToString()
         {
             return serializer.SerializeCrossword(this);
         }

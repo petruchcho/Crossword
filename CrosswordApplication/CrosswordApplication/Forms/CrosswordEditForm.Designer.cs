@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrosswordEditForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.кроссвордToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -150,28 +150,28 @@
             this.board.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.board.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.board.ColumnHeadersVisible = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.board.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.board.DefaultCellStyle = dataGridViewCellStyle5;
             this.board.Dock = System.Windows.Forms.DockStyle.Fill;
             this.board.Location = new System.Drawing.Point(0, 0);
             this.board.Margin = new System.Windows.Forms.Padding(10);
             this.board.Name = "board";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.board.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.board.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.board.RowHeadersVisible = false;
             this.board.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.board.Size = new System.Drawing.Size(498, 535);
@@ -199,7 +199,7 @@
             this.questionsSplitContainer.Panel2.Controls.Add(this.dictionaryToolStrip);
             this.questionsSplitContainer.Panel2.Controls.Add(this.loadDictionaryHintLabel);
             this.questionsSplitContainer.Size = new System.Drawing.Size(280, 537);
-            this.questionsSplitContainer.SplitterDistance = 300;
+            this.questionsSplitContainer.SplitterDistance = 299;
             this.questionsSplitContainer.TabIndex = 0;
             // 
             // questionsToolStrip
@@ -225,7 +225,7 @@
             this.questionsListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.questionsListBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.questionsListBox.FormattingEnabled = true;
-            this.questionsListBox.Location = new System.Drawing.Point(0, 25);
+            this.questionsListBox.Location = new System.Drawing.Point(0, 24);
             this.questionsListBox.Name = "questionsListBox";
             this.questionsListBox.Size = new System.Drawing.Size(278, 273);
             this.questionsListBox.TabIndex = 0;
@@ -233,9 +233,9 @@
             // dictionaryListBox
             // 
             this.dictionaryListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dictionaryListBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dictionaryListBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.dictionaryListBox.FormattingEnabled = true;
-            this.dictionaryListBox.Location = new System.Drawing.Point(0, 23);
+            this.dictionaryListBox.Location = new System.Drawing.Point(0, 25);
             this.dictionaryListBox.Name = "dictionaryListBox";
             this.dictionaryListBox.Size = new System.Drawing.Size(278, 208);
             this.dictionaryListBox.TabIndex = 1;
@@ -301,6 +301,8 @@
             this.Controls.Add(this.rootSplitContainer);
             this.Controls.Add(this.menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CrosswordEditForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CrosswordEditForm";

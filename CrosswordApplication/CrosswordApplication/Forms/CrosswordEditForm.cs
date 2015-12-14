@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using CrosswordApplication.Crossword;
+using CrosswordApplication.Dictionary;
 using Orientation = CrosswordApplication.Crossword.Orientation;
 
 namespace CrosswordApplication.Forms
@@ -92,7 +94,9 @@ namespace CrosswordApplication.Forms
                 crosswordDrawer = new DataGridViewCrosswordDrawer(board);
             }
             crosswordDrawer.Draw(crossword);
+
             UpdateUi();
+            board.Focus();
         }
 
         private void UpdateUi()
@@ -142,6 +146,9 @@ namespace CrosswordApplication.Forms
 
             int crosswordSize = Math.Max(crossword.Width, crossword.Height) + CROSSWORD_MARGIN * 2;
 
+            board.Columns.Clear();
+            board.Rows.Clear();
+
             for (int i = 0; i < crosswordSize; i++)
             {
                 board.Columns.Add(new DataGridViewTextBoxColumn());
@@ -180,7 +187,7 @@ namespace CrosswordApplication.Forms
                         e.Handled = true;
                     }
                 }
-                catch (Exception ignored)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -197,7 +204,7 @@ namespace CrosswordApplication.Forms
                             board[args.ColumnIndex, args.RowIndex].Value.ToString()[0];
                     }
                 }
-                catch (Exception ignored)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -207,60 +214,148 @@ namespace CrosswordApplication.Forms
                     board[args.ColumnIndex, args.RowIndex].Value =
                         board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper();
                 }
-                catch (Exception ignored)
+                catch (Exception)
                 {
                     // ignored
                 }
             };
 
-            InitDragAndDrop();
-
-            board.Focus();
+            InitDragAndDrop(crossword);
         }
 
-        private void InitDragAndDrop()
+        private void InitDragAndDrop(global::Crossword.Crossword crossword)
         {
             board.AllowDrop = true;
             board.DragOver += (sender, args) =>
             {
+                //string word = args.Data.GetData(typeof (string)).ToString();
                 args.Effect = DragDropEffects.Move;
-                board.CurrentCell = board[5, 6];
+
+                //var recalculatedPoint = board.PointToClient(new Point(args.X, args.Y));
+
+                //var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
+                //if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
+                //{
+                //    if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
+                //    {
+                //        board.CurrentCell = board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex];
+                //    }
+                //    SetAvailableCell(curPositionInfo.ColumnIndex, curPositionInfo.RowIndex, word[0].ToString());
+                //}
             };
+
+            board.DragLeave += (sender, args) => CleanAllPreviews();
+            board.DragDrop += (sender, args) => CleanAllPreviews();
+
+            board.DragEnter += (sender, args) =>
+            {
+                args.Effect = DragDropEffects.Move;
+                ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
+            };
+        }
+
+        private static DictionaryWord ExtractDataFromDragAndDrop(DragEventArgs args)
+        {
+            return new DictionaryWord(args.Data.GetData(typeof(string)).ToString());
         }
 
         private void ShowWords(global::Crossword.Crossword crossword)
         {
             foreach (var crosswordWord in crossword.CrosswordWords)
             {
-                string word = crosswordWord.Word;
-
-                for (int i = 0; i < word.Length; i++)
-                {
-                    int curX = crosswordWord.Position.X;
-                    int curY = crosswordWord.Position.Y;
-                    
-                    if (crosswordWord.Position.Orientation == Orientation.Vertical)
-                    {
-                        curX += i;
-                    }
-                    else
-                    {
-                        curY += i;
-                    }
-
-                    SetCell(curX, curY, word[i].ToString());
-                }
+                ShowWord(crosswordWord);
             }
         }
 
-        private void SetCell(int x, int y, string value)
+        private void ShowPreviews(global::Crossword.Crossword crossword, DictionaryWord word)
+        {
+            var previews = crossword.GetPreviewsPositions(word);
+            if (previews == null)
+            {
+                // TODO ????
+                return;
+            }
+            foreach (var crosswordWord in previews)
+            {
+                PreviewWord(crosswordWord);
+            }
+        }
+
+        private void ShowWord(CrosswordWord crosswordWord)
+        {
+            var word = crosswordWord.Word;
+            for (var i = 0; i < word.Length; i++)
+            {
+                int curX;
+                int curY;
+                crosswordWord.PositionAtIndex(i, out curX, out curY);
+                SetAvailableCell(curX, curY, word[i].ToString());
+            }
+        }
+
+        private void PreviewWord(PreviewCrosswordWord crosswordWord)
+        {
+            var word = crosswordWord.Word;
+            for (var i = 0; i < word.Length; i++)
+            {
+                int curX;
+                int curY;
+                crosswordWord.PositionAtIndex(i, out curX, out curY);
+                SetPreviewCell(curX, curY, "");
+            }
+        }
+
+        private void CleanAllPreviews()
+        {
+            for (var x = 0; x < board.ColumnCount; x++)
+                for (var y = 0; y < board.RowCount; y++)
+                {
+                    if ("Preview".Equals(board[x, y].Tag))
+                    {
+                        CleanCell(x, y);
+                    }
+                }
+        }
+
+        private void SetPreviewCell(int x, int y, string value)
         {
             x += CROSSWORD_MARGIN;
             y += CROSSWORD_MARGIN;
 
-            board[y, x].ReadOnly = false;
-            board[y, x].Style.BackColor = Color.White;
-            board[y, x].Value = value;
+            if ("Available".Equals(board[x, y].Tag))
+            {
+                return;
+            }
+
+            board[x, y].Style.BackColor = Color.LightGreen;
+            board[x, y].Value = value;
+
+            board[x, y].Tag = "Preview";
+        }
+
+        private void SetAvailableCell(int x, int y, string value)
+        {
+            x += CROSSWORD_MARGIN;
+            y += CROSSWORD_MARGIN;
+
+            board[x, y].ReadOnly = false;
+            board[x, y].Style.BackColor = Color.White;
+            board[x, y].Value = value;
+
+            board[x, y].Tag = "Available";
+        }
+
+        private void CleanCell(int x, int y)
+        {
+            x += CROSSWORD_MARGIN;
+            y += CROSSWORD_MARGIN;
+
+            board[x, y].ReadOnly = true;
+            board[x, y].Style.BackColor = Color.Black;
+            board[x, y].Style.SelectionBackColor = Color.Black;
+            board[x, y].Value = "";
+
+            board[x, y].Tag = "";
         }
     }
 }

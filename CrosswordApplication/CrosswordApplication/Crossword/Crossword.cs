@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -113,7 +114,7 @@ namespace Crossword
                 }
             }
 
-            return foundedWords;
+            throw new NotImplementedException("Don't use it, I don't know what is it myself oO");
         }
 
         public List<PreviewCrosswordWord> GetPreviewsPositions(DictionaryWord dictionaryWord)
@@ -124,22 +125,22 @@ namespace Crossword
             }
 
             var result = new List<PreviewCrosswordWord>();
-
-            // Todo relates on orientation
-            for (var i = 0; i + dictionaryWord.Word.Length - 1 < Width; i++)
+            
+            for (var i = 0; i < Width; i++)
             {
-                for (var j = 0; j + dictionaryWord.Word.Length - 1 < Height; j++)
+                for (var j = 0; j < Height; j++)
                 {
                     var previewWord = new PreviewCrosswordWord(dictionaryWord,
                         new CrosswordWordPosition(i, j, Orientation.Vertical));
-                    if (checkIfPreviewWordMatches(previewWord))
+
+                    if (CheckIfPreviewWordMatches(previewWord))
                     {
                         result.Add(previewWord);
                     }
 
                     previewWord = new PreviewCrosswordWord(dictionaryWord,
                         new CrosswordWordPosition(i, j, Orientation.Horizontal));
-                    if (checkIfPreviewWordMatches(previewWord))
+                    if (CheckIfPreviewWordMatches(previewWord))
                     {
                         result.Add(previewWord);
                     }
@@ -149,10 +150,47 @@ namespace Crossword
             return result;
         }
 
-        private bool checkIfPreviewWordMatches(PreviewCrosswordWord previewWord)
+        public List<PreviewCrosswordWord> GetHighlights(DictionaryWord dictionaryWord, int x, int y)
+        {
+            var result = new List<PreviewCrosswordWord>();
+            if (crosswordWords == null || crosswordWords.Count == 0)
+            {
+                return result;
+            }
+
+            var previewWords = GetPreviewsPositions(dictionaryWord);
+            foreach (var previewCrosswordWord in previewWords)
+            {
+                if (x == previewCrosswordWord.Position.X && y == previewCrosswordWord.Position.Y)
+                {
+                    result.Add(new PreviewCrosswordWord(dictionaryWord, new CrosswordWordPosition(x, y, previewCrosswordWord.Position.Orientation)));
+                }
+            }
+
+            return result;
+        }
+
+        public PreviewCrosswordWord GetBestHighlight(DictionaryWord dictionaryWord, int x, int y)
+        {
+            var highlights = GetHighlights(dictionaryWord, x, y);
+            return highlights.Count == 0 ? null : highlights[0];
+        }
+
+        private bool CheckIfPreviewWordMatches(PreviewCrosswordWord previewWord)
         {
             var countOfIntersections = 0;
             var goodWord = true;
+
+            int x;
+            int y;
+            previewWord.PositionAtIndex(previewWord.Word.Length - 1, out x, out y);
+
+            if (x >= Width || y >= Height)
+            {
+                return false;
+            }
+
+
             foreach (var crosswordWord in CrosswordWords)
             {
                 var intersectionType = crosswordWord.IsCorrectIntersection(previewWord);

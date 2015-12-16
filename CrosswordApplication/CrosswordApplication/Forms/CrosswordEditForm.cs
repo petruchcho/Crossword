@@ -1,10 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
-using System.Security.Cryptography;
+using System.Reflection;
 using System.Windows.Forms;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
-using Orientation = CrosswordApplication.Crossword.Orientation;
 
 namespace CrosswordApplication.Forms
 {
@@ -129,6 +129,11 @@ namespace CrosswordApplication.Forms
         private static readonly int CROSSWORD_MARGIN = 0;
         private readonly DataGridView board;
 
+        private EventHandler dragOverEventHandler = (sender, args) =>
+        {
+
+        };
+
         public DataGridViewCrosswordDrawer(DataGridView board)
         {
             this.board = board;
@@ -228,24 +233,32 @@ namespace CrosswordApplication.Forms
             board.AllowDrop = true;
             board.DragOver += (sender, args) =>
             {
-                //string word = args.Data.GetData(typeof (string)).ToString();
                 args.Effect = DragDropEffects.Move;
+                var word = ExtractDataFromDragAndDrop(args);
 
-                //var recalculatedPoint = board.PointToClient(new Point(args.X, args.Y));
+                var recalculatedPoint = board.PointToClient(new Point(args.X, args.Y));
 
-                //var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
-                //if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
-                //{
-                //    if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
-                //    {
-                //        board.CurrentCell = board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex];
-                //    }
-                //    SetAvailableCell(curPositionInfo.ColumnIndex, curPositionInfo.RowIndex, word[0].ToString());
-                //}
+                var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
+                if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
+                {
+                    if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
+                    {
+                        CleanHighlight();
+                        ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
+                        var x = curPositionInfo.ColumnIndex;
+                        var y = curPositionInfo.RowIndex;
+                        board.CurrentCell = board[x, y];
+                        HighlightWord(crossword.GetBestHighlight(word, x, y));
+                    }
+                }
+
+
             };
 
-            board.DragLeave += (sender, args) => CleanAllPreviews();
-            board.DragDrop += (sender, args) => CleanAllPreviews();
+            board.DragLeave += (sender, args) => CleanBoardFromTemporaryCells();
+
+            // TODO
+            board.DragDrop += (sender, args) => CleanBoardFromTemporaryCells();
 
             board.DragEnter += (sender, args) =>
             {
@@ -257,6 +270,12 @@ namespace CrosswordApplication.Forms
         private static DictionaryWord ExtractDataFromDragAndDrop(DragEventArgs args)
         {
             return new DictionaryWord(args.Data.GetData(typeof(string)).ToString());
+        }
+
+        private void CleanBoardFromTemporaryCells()
+        {
+            CleanAllPreviews();
+            CleanHighlight();
         }
 
         private void ShowWords(global::Crossword.Crossword crossword)
@@ -293,6 +312,23 @@ namespace CrosswordApplication.Forms
             }
         }
 
+        private void HighlightWord(CrosswordWord crosswordWord)
+        {
+            if (crosswordWord == null)
+            {
+                return;
+            }
+            var word = crosswordWord.Word;
+            for (var i = 0; i < word.Length; i++)
+            {
+                int curX;
+                int curY;
+                crosswordWord.PositionAtIndex(i, out curX, out curY);
+                SetHighlightedCell(curX, curY, word[i].ToString());
+            }
+        }
+
+
         private void PreviewWord(PreviewCrosswordWord crosswordWord)
         {
             var word = crosswordWord.Word;
@@ -301,7 +337,7 @@ namespace CrosswordApplication.Forms
                 int curX;
                 int curY;
                 crosswordWord.PositionAtIndex(i, out curX, out curY);
-                SetPreviewCell(curX, curY, "");
+                SetPreviewCell(curX, curY, crosswordWord.Word[0].ToString());
             }
         }
 
@@ -311,6 +347,18 @@ namespace CrosswordApplication.Forms
                 for (var y = 0; y < board.RowCount; y++)
                 {
                     if ("Preview".Equals(board[x, y].Tag))
+                    {
+                        CleanCell(x, y);
+                    }
+                }
+        }
+
+        private void CleanHighlight()
+        {
+            for (var x = 0; x < board.ColumnCount; x++)
+                for (var y = 0; y < board.RowCount; y++)
+                {
+                    if ("Highlight".Equals(board[x, y].Tag))
                     {
                         CleanCell(x, y);
                     }
@@ -328,9 +376,25 @@ namespace CrosswordApplication.Forms
             }
 
             board[x, y].Style.BackColor = Color.LightGreen;
-            board[x, y].Value = value;
+            //board[x, y].Value = value;
 
             board[x, y].Tag = "Preview";
+        }
+
+        private void SetHighlightedCell(int x, int y, string value)
+        {
+            x += CROSSWORD_MARGIN;
+            y += CROSSWORD_MARGIN;
+
+            if ("Available".Equals(board[x, y].Tag))
+            {
+                return;
+            }
+
+            board[x, y].Style.BackColor = Color.ForestGreen;
+            board[x, y].Value = value;
+
+            board[x, y].Tag = "Highlight";
         }
 
         private void SetAvailableCell(int x, int y, string value)
@@ -352,7 +416,7 @@ namespace CrosswordApplication.Forms
 
             board[x, y].ReadOnly = true;
             board[x, y].Style.BackColor = Color.Black;
-            board[x, y].Style.SelectionBackColor = Color.Black;
+            //board[x, y].Style.SelectionBackColor = Color.Black;
             board[x, y].Value = "";
 
             board[x, y].Tag = "";

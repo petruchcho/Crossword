@@ -57,7 +57,7 @@ namespace CrosswordApplication.Crossword
             NoIntersection
         }
 
-        public IntersectionType IsCorrectIntersection(CrosswordWord other)
+        public IntersectionType GetIntersectionType(CrosswordWord other)
         {
             for (int i = 0; i < Word.Length; i++)
             {

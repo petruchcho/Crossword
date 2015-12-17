@@ -129,10 +129,7 @@ namespace CrosswordApplication.Forms
         private static readonly int CROSSWORD_MARGIN = 0;
         private readonly DataGridView board;
 
-        private EventHandler dragOverEventHandler = (sender, args) =>
-        {
-
-        };
+        private global::Crossword.Crossword crossword;
 
         public DataGridViewCrosswordDrawer(DataGridView board)
         {
@@ -141,11 +138,12 @@ namespace CrosswordApplication.Forms
 
         public void Draw(global::Crossword.Crossword crossword)
         {
-            InitBoard(crossword);
-            ShowWords(crossword);
+            this.crossword = crossword;
+            InitBoard();
+            ShowWords();
         }
 
-        private void InitBoard(global::Crossword.Crossword crossword)
+        private void InitBoard()
         {
             board.BackgroundColor = Color.Black;
 
@@ -225,46 +223,23 @@ namespace CrosswordApplication.Forms
                 }
             };
 
-            InitDragAndDrop(crossword);
+            InitDragAndDrop();
         }
 
-        private void InitDragAndDrop(global::Crossword.Crossword crossword)
+        private void InitDragAndDrop()
         {
             board.AllowDrop = true;
-            board.DragOver += (sender, args) =>
-            {
-                args.Effect = DragDropEffects.Move;
-                var word = ExtractDataFromDragAndDrop(args);
 
-                var recalculatedPoint = board.PointToClient(new Point(args.X, args.Y));
-
-                var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
-                if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
-                {
-                    if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
-                    {
-                        CleanHighlight();
-                        ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
-                        var x = curPositionInfo.ColumnIndex;
-                        var y = curPositionInfo.RowIndex;
-                        board.CurrentCell = board[x, y];
-                        HighlightWord(crossword.GetBestHighlight(word, x, y));
-                    }
-                }
-
-
-            };
+            board.DragOver -= DragOverBoard;
+            board.DragOver += DragOverBoard;
 
             board.DragLeave += (sender, args) => CleanBoardFromTemporaryCells();
 
             // TODO
             board.DragDrop += (sender, args) => CleanBoardFromTemporaryCells();
 
-            board.DragEnter += (sender, args) =>
-            {
-                args.Effect = DragDropEffects.Move;
-                ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
-            };
+            board.DragEnter -= DragEnterBoard;
+            board.DragEnter += DragEnterBoard;
         }
 
         private static DictionaryWord ExtractDataFromDragAndDrop(DragEventArgs args)
@@ -278,7 +253,7 @@ namespace CrosswordApplication.Forms
             CleanHighlight();
         }
 
-        private void ShowWords(global::Crossword.Crossword crossword)
+        private void ShowWords()
         {
             foreach (var crosswordWord in crossword.CrosswordWords)
             {
@@ -327,7 +302,6 @@ namespace CrosswordApplication.Forms
                 SetHighlightedCell(curX, curY, word[i].ToString());
             }
         }
-
 
         private void PreviewWord(PreviewCrosswordWord crosswordWord)
         {
@@ -420,6 +394,34 @@ namespace CrosswordApplication.Forms
             board[x, y].Value = "";
 
             board[x, y].Tag = "";
+        }
+
+        private void DragOverBoard(object sender, DragEventArgs args)
+        {
+            args.Effect = DragDropEffects.Move;
+            var word = ExtractDataFromDragAndDrop(args);
+
+            var recalculatedPoint = board.PointToClient(new Point(args.X, args.Y));
+
+            var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
+            if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
+            {
+                if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
+                {
+                    CleanHighlight();
+                    ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
+                    var x = curPositionInfo.ColumnIndex;
+                    var y = curPositionInfo.RowIndex;
+                    board.CurrentCell = board[x, y];
+                    HighlightWord(crossword.GetBestHighlight(word, x, y));
+                }
+            }
+        }
+
+        private void DragEnterBoard(object sender, DragEventArgs args)
+        {
+            args.Effect = DragDropEffects.Move;
+            ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
         }
     }
 }

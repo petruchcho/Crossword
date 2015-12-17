@@ -193,7 +193,7 @@ namespace Crossword
 
             foreach (var crosswordWord in CrosswordWords)
             {
-                var intersectionType = crosswordWord.IsCorrectIntersection(previewWord);
+                var intersectionType = crosswordWord.GetIntersectionType(previewWord);
                 if (intersectionType == CrosswordWord.IntersectionType.WrongIntersection)
                 {
                     goodWord = false;

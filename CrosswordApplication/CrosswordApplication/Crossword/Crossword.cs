@@ -125,7 +125,7 @@ namespace Crossword
             }
 
             var result = new List<PreviewCrosswordWord>();
-            
+
             for (var i = 0; i < Width; i++)
             {
                 for (var j = 0; j < Height; j++)
@@ -153,27 +153,59 @@ namespace Crossword
         public List<PreviewCrosswordWord> GetHighlights(DictionaryWord dictionaryWord, int x, int y)
         {
             var result = new List<PreviewCrosswordWord>();
-            if (crosswordWords == null || crosswordWords.Count == 0)
+
+            var previewWords = GetPreviewsPositions(dictionaryWord);
+            if (previewWords == null)
             {
+                var horizontalHighlight = new PreviewCrosswordWord(dictionaryWord,
+                    new CrosswordWordPosition(x, y, Orientation.Horizontal));
+                var verticalHighlight = new PreviewCrosswordWord(dictionaryWord,
+                    new CrosswordWordPosition(x, y, Orientation.Vertical));
+
+                if (IsWordInBorders(horizontalHighlight))
+                {
+                    result.Add(horizontalHighlight);
+                }
+
+                if (IsWordInBorders(verticalHighlight))
+                {
+                    result.Add(verticalHighlight);
+                }
+
                 return result;
             }
 
-            var previewWords = GetPreviewsPositions(dictionaryWord);
+
             foreach (var previewCrosswordWord in previewWords)
             {
                 if (x == previewCrosswordWord.Position.X && y == previewCrosswordWord.Position.Y)
                 {
-                    result.Add(new PreviewCrosswordWord(dictionaryWord, new CrosswordWordPosition(x, y, previewCrosswordWord.Position.Orientation)));
+                    result.Add(new PreviewCrosswordWord(dictionaryWord,
+                        new CrosswordWordPosition(x, y, previewCrosswordWord.Position.Orientation)));
                 }
             }
 
             return result;
         }
 
-        public PreviewCrosswordWord GetBestHighlight(DictionaryWord dictionaryWord, int x, int y)
+        public PreviewCrosswordWord GetBestHighlight(DictionaryWord dictionaryWord, int x, int y,
+            Orientation preferedOrientation)
         {
             var highlights = GetHighlights(dictionaryWord, x, y);
-            return highlights.Count == 0 ? null : highlights[0];
+            if (highlights.Count == 0)
+            {
+                return null;
+            }
+
+            foreach (var previewCrosswordWord in highlights)
+            {
+                if (previewCrosswordWord.Position.Orientation == preferedOrientation)
+                {
+                    return previewCrosswordWord;
+                }
+            }
+
+            return crosswordWords.Count > 0 ? highlights[0] : null;
         }
 
         private bool CheckIfPreviewWordMatches(PreviewCrosswordWord previewWord)
@@ -181,11 +213,7 @@ namespace Crossword
             var countOfIntersections = 0;
             var goodWord = true;
 
-            int x;
-            int y;
-            previewWord.PositionAtIndex(previewWord.Word.Length - 1, out x, out y);
-
-            if (x >= Width || y >= Height)
+            if (!IsWordInBorders(previewWord))
             {
                 return false;
             }
@@ -211,7 +239,16 @@ namespace Crossword
             return goodWord;
         }
 
-    public override string ToString()
+        private bool IsWordInBorders(CrosswordWord word)
+        {
+            int x;
+            int y;
+            word.PositionAtIndex(word.Word.Length - 1, out x, out y);
+
+            return x < Width && y < Height;
+        }
+
+        public override string ToString()
         {
             return serializer.SerializeCrossword(this);
         }

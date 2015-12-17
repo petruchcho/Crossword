@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
+using Orientation = CrosswordApplication.Crossword.Orientation;
 
 namespace CrosswordApplication.Forms
 {
@@ -130,6 +131,7 @@ namespace CrosswordApplication.Forms
         private readonly DataGridView board;
 
         private global::Crossword.Crossword crossword;
+        private Orientation preferedOrientation = Orientation.Horizontal;
 
         public DataGridViewCrosswordDrawer(DataGridView board)
         {
@@ -233,7 +235,8 @@ namespace CrosswordApplication.Forms
             board.DragOver -= DragOverBoard;
             board.DragOver += DragOverBoard;
 
-            board.DragLeave += (sender, args) => CleanBoardFromTemporaryCells();
+            board.DragLeave -= DragCleanBoard;
+            board.DragLeave += DragCleanBoard;
 
             // TODO
             board.DragDrop += (sender, args) => CleanBoardFromTemporaryCells();
@@ -245,6 +248,13 @@ namespace CrosswordApplication.Forms
         private static DictionaryWord ExtractDataFromDragAndDrop(DragEventArgs args)
         {
             return new DictionaryWord(args.Data.GetData(typeof(string)).ToString());
+        }
+
+        private void ChangePreferedOrientation()
+        {
+            preferedOrientation = preferedOrientation == Orientation.Horizontal
+                ? Orientation.Vertical
+                : Orientation.Horizontal;
         }
 
         private void CleanBoardFromTemporaryCells()
@@ -398,6 +408,15 @@ namespace CrosswordApplication.Forms
 
         private void DragOverBoard(object sender, DragEventArgs args)
         {
+            if ((args.KeyState & 2) == 2 || (args.KeyState & 8) == 8)
+            {
+                preferedOrientation = Orientation.Vertical;
+            }
+            else
+            {
+                preferedOrientation = Orientation.Horizontal;
+            }
+
             args.Effect = DragDropEffects.Move;
             var word = ExtractDataFromDragAndDrop(args);
 
@@ -413,7 +432,7 @@ namespace CrosswordApplication.Forms
                     var x = curPositionInfo.ColumnIndex;
                     var y = curPositionInfo.RowIndex;
                     board.CurrentCell = board[x, y];
-                    HighlightWord(crossword.GetBestHighlight(word, x, y));
+                    HighlightWord(crossword.GetBestHighlight(word, x, y, preferedOrientation));
                 }
             }
         }
@@ -422,6 +441,11 @@ namespace CrosswordApplication.Forms
         {
             args.Effect = DragDropEffects.Move;
             ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
+        }
+
+        private void DragCleanBoard(object sender, EventArgs eventArgs)
+        {
+            CleanBoardFromTemporaryCells();
         }
     }
 }

@@ -34,13 +34,22 @@ namespace CrosswordApplication.Crossword
             get { return isResolved; } 
             set { isResolved = value; Update(); } }
 
-        public string Word => dictionaryWord.Word;
+        public string Word
+        {
+            get { return dictionaryWord.Word; }
+        }
 
-        public string Description => dictionaryWord.Description;
+        public string Description
+        {
+            get { return dictionaryWord.Description; }   
+        }
 
         public void Update()
         {
-            crossword?.UpdateState();
+            if (crossword != null)
+            {
+                crossword.UpdateState();
+            }
         }
 
         public void PositionAtIndex(int index, out int x, out int y)

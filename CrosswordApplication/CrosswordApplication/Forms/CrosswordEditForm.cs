@@ -250,13 +250,6 @@ namespace CrosswordApplication.Forms
             return new DictionaryWord(args.Data.GetData(typeof(string)).ToString());
         }
 
-        private void ChangePreferedOrientation()
-        {
-            preferedOrientation = preferedOrientation == Orientation.Horizontal
-                ? Orientation.Vertical
-                : Orientation.Horizontal;
-        }
-
         private void CleanBoardFromTemporaryCells()
         {
             CleanAllPreviews();

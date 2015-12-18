@@ -11,11 +11,11 @@ namespace CrosswordApplication.Crossword
             this.Orientation = orientation;
         }
 
-        public int X { get; }
+        public int X { get; private set; }
 
-        public int Y { get; }
+        public int Y { get; private set; }
 
-        public Orientation Orientation { get; }
+        public Orientation Orientation { get; private set; }
 
         public static void NextPosition(Orientation orientation, ref int x, ref int y)
         {

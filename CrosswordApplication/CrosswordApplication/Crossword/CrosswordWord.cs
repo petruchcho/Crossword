@@ -24,6 +24,10 @@ namespace CrosswordApplication.Crossword
             IsResolved = isResolved;
         }
 
+        public CrosswordWord(global::Crossword.Crossword crossword, PreviewCrosswordWord previewCrosswordWord) : this(crossword, previewCrosswordWord.dictionaryWord, previewCrosswordWord.position, previewCrosswordWord.isResolved)
+        {
+        }
+
         public CrosswordWordPosition Position
         {
             get { return position; }
@@ -48,7 +52,7 @@ namespace CrosswordApplication.Crossword
         {
             if (crossword != null)
             {
-                crossword.UpdateState();
+                
             }
         }
 
@@ -92,6 +96,11 @@ namespace CrosswordApplication.Crossword
             }
 
             return IntersectionType.NoIntersection;
+        }
+
+        public override string ToString()
+        {
+            return Word + " " + Description;
         }
     }
 }

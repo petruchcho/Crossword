@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
@@ -94,6 +95,18 @@ namespace CrosswordApplication.Forms
             {
                 crosswordDrawer = new DataGridViewCrosswordDrawer(board);
             }
+           
+            crossword.SetCrosswordStateListener(new CrosswordStateListener(
+                crosswordWord =>
+                {
+                    // Word added
+                    questionsListBox.Items.Add(crosswordWord.ToString());
+                    crosswordDrawer.Draw(crossword);
+                },
+                () =>
+                {
+                    // Size changed
+                }));
             crosswordDrawer.Draw(crossword);
 
             UpdateUi();
@@ -130,8 +143,9 @@ namespace CrosswordApplication.Forms
         private static readonly int CROSSWORD_MARGIN = 0;
         private readonly DataGridView board;
 
+        Orientation preferedOrientation;
+
         private global::Crossword.Crossword crossword;
-        private Orientation preferedOrientation = Orientation.Horizontal;
 
         public DataGridViewCrosswordDrawer(DataGridView board)
         {
@@ -238,8 +252,8 @@ namespace CrosswordApplication.Forms
             board.DragLeave -= DragCleanBoard;
             board.DragLeave += DragCleanBoard;
 
-            // TODO
-            board.DragDrop += (sender, args) => CleanBoardFromTemporaryCells();
+            board.DragDrop -= DragDropBoard;
+            board.DragDrop += DragDropBoard;
 
             board.DragEnter -= DragEnterBoard;
             board.DragEnter += DragEnterBoard;
@@ -418,15 +432,15 @@ namespace CrosswordApplication.Forms
             var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
             if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
             {
-                if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
-                {
+               // if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
+               // {
                     CleanHighlight();
                     ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
                     var x = curPositionInfo.ColumnIndex;
                     var y = curPositionInfo.RowIndex;
                     board.CurrentCell = board[x, y];
                     HighlightWord(crossword.GetBestHighlight(word, x, y, preferedOrientation));
-                }
+               // }
             }
         }
 
@@ -436,9 +450,72 @@ namespace CrosswordApplication.Forms
             ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
         }
 
+        private void DragDropBoard(object sender, DragEventArgs args)
+        {
+            if ((args.KeyState & 2) == 2 || (args.KeyState & 8) == 8)
+            {
+                preferedOrientation = Orientation.Vertical;
+            }
+            else
+            {
+                preferedOrientation = Orientation.Horizontal;
+            }
+
+            CleanBoardFromTemporaryCells();
+
+            args.Effect = DragDropEffects.Move;
+            var word = ExtractDataFromDragAndDrop(args);
+
+            var recalculatedPoint = board.PointToClient(new Point(args.X, args.Y));
+
+            var curPositionInfo = board.HitTest(recalculatedPoint.X, recalculatedPoint.Y);
+            if (curPositionInfo.Type == DataGridViewHitTestType.Cell)
+            {
+                // if (board.CurrentCell != board[curPositionInfo.ColumnIndex, curPositionInfo.RowIndex])
+                // {
+                CleanHighlight();
+                ShowPreviews(crossword, ExtractDataFromDragAndDrop(args));
+                var x = curPositionInfo.ColumnIndex;
+                var y = curPositionInfo.RowIndex;
+                board.CurrentCell = board[x, y];
+                crossword.AddWord(new CrosswordWord(crossword, crossword.GetBestHighlight(word, x, y, preferedOrientation)));
+                // }
+            }
+        }
+
         private void DragCleanBoard(object sender, EventArgs eventArgs)
         {
             CleanBoardFromTemporaryCells();
+        }
+    }
+
+    class CustomDataGridView : DataGridView
+    {
+        public CustomDataGridView()
+        {
+            DoubleBuffered = true;
+        }     
+    }
+
+    class CrosswordStateListener : global::Crossword.Crossword.ICrosswordStateListener
+    {
+        private readonly Action<CrosswordWord> _wordAddAction;
+        private readonly Action _sizeChangedAction;
+
+        public CrosswordStateListener(Action<CrosswordWord> wordAddAction, Action sizeChangedAction)
+        {
+            this._wordAddAction = wordAddAction;
+            this._sizeChangedAction = sizeChangedAction;
+        }
+
+        public void OnWordAdded(CrosswordWord crosswordWord)
+        {
+            _wordAddAction.Invoke(crosswordWord);
+        }
+
+        public void OnSizeChanged()
+        {
+            _sizeChangedAction.Invoke();
         }
     }
 }

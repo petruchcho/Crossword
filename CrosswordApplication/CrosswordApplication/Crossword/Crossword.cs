@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
@@ -10,6 +11,13 @@ namespace Crossword
 {
     public class Crossword
     {
+        public interface ICrosswordStateListener
+        {
+            void OnWordAdded(CrosswordWord crosswordWord);
+
+            void OnSizeChanged();
+        }
+
         public static readonly string DefaultFileName = @"..\..\debug crossword.cwd";
 
         public static readonly int DefaultCrosswordWidth = 20;
@@ -22,6 +30,8 @@ namespace Crossword
         private readonly List<CrosswordWord> crosswordWords;
 
         private readonly CrosswordSerializer serializer = new CrosswordSerializer();
+
+        private ICrosswordStateListener _crosswordStateListener;
 
         public Crossword()
         {
@@ -62,12 +72,24 @@ namespace Crossword
         {
             this.width = width;
             this.height = height;
-            UpdateState();
+            if (_crosswordStateListener != null)
+            {
+                _crosswordStateListener.OnSizeChanged();
+            }
         }
 
-        public void UpdateState()
+        public void AddWord(CrosswordWord crosswordWord)
         {
+            if (typeof(PreviewCrosswordWord) == crosswordWord.GetType())
+            {
+                throw new InvalidOperationException("You should not put PreviewWord here");
+            }
 
+            crosswordWords.Add(crosswordWord);
+            if (_crosswordStateListener != null)
+            {
+                _crosswordStateListener.OnWordAdded(crosswordWord);
+            }
         }
 
         public int Height
@@ -115,6 +137,11 @@ namespace Crossword
             }
 
             throw new NotImplementedException("Don't use it, I don't know what is it myself oO");
+        }
+
+        public void SetCrosswordStateListener(ICrosswordStateListener crosswordStateListener)
+        {
+            _crosswordStateListener = crosswordStateListener;
         }
 
         public List<PreviewCrosswordWord> GetPreviewsPositions(DictionaryWord dictionaryWord)

@@ -40,6 +40,8 @@ namespace CrosswordApplication.Dictionary
          */
         public void Load(Action<bool> callback)
         {
+            //new OpenFileDialog().ShowDialog();
+
             // TODO Get fileName with dialog
             string fileName = DefaultFileName;
 

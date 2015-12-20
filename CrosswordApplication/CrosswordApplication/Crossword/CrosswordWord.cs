@@ -72,6 +72,11 @@ namespace CrosswordApplication.Crossword
 
         public IntersectionType GetIntersectionType(CrosswordWord other)
         {
+            if (other.Word.Equals(Word))
+            {
+                return IntersectionType.WrongIntersection;
+            }
+
             for (int i = 0; i < Word.Length; i++)
             {
                 for (int j = 0; j < other.Word.Length; j++)
@@ -100,7 +105,7 @@ namespace CrosswordApplication.Crossword
 
         public override string ToString()
         {
-            return Word + " " + Description;
+            return dictionaryWord.ToString();
         }
     }
 }

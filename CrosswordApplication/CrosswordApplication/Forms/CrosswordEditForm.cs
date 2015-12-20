@@ -96,7 +96,7 @@ namespace CrosswordApplication.Forms
                 crosswordDrawer = new DataGridViewCrosswordDrawer(board);
             }
            
-            crossword.SetCrosswordStateListener(new CrosswordStateListener(
+            crossword.SetCrosswordStateListener(new global::Crossword.Crossword.CrosswordStateListener(
                 crosswordWord =>
                 {
                     // Word added
@@ -109,9 +109,25 @@ namespace CrosswordApplication.Forms
                 }));
             crosswordDrawer.Draw(crossword);
 
+            ConfigureQuestionsList();
+
             UpdateUi();
             board.Focus();
         }
+
+        private void ConfigureQuestionsList()
+        {
+            questionsListBox.Items.Clear();
+            if (crossword != null)
+            {
+                foreach (var crosswordWord in crossword.CrosswordWords)
+                {
+                    questionsListBox.Items.Add(crosswordWord.ToString());
+                }
+            }
+        }
+
+
 
         private void UpdateUi()
         {
@@ -461,8 +477,6 @@ namespace CrosswordApplication.Forms
                 preferedOrientation = Orientation.Horizontal;
             }
 
-            CleanBoardFromTemporaryCells();
-
             args.Effect = DragDropEffects.Move;
             var word = ExtractDataFromDragAndDrop(args);
 
@@ -478,9 +492,15 @@ namespace CrosswordApplication.Forms
                 var x = curPositionInfo.ColumnIndex;
                 var y = curPositionInfo.RowIndex;
                 board.CurrentCell = board[x, y];
-                crossword.AddWord(new CrosswordWord(crossword, crossword.GetBestHighlight(word, x, y, preferedOrientation)));
+                var currentPreviewWord = crossword.GetBestHighlight(word, x, y, preferedOrientation);
+                if (currentPreviewWord != null)
+                {
+                    crossword.AddWord(new CrosswordWord(crossword, currentPreviewWord));   
+                }
                 // }
             }
+
+            CleanBoardFromTemporaryCells();
         }
 
         private void DragCleanBoard(object sender, EventArgs eventArgs)
@@ -495,27 +515,5 @@ namespace CrosswordApplication.Forms
         {
             DoubleBuffered = true;
         }     
-    }
-
-    class CrosswordStateListener : global::Crossword.Crossword.ICrosswordStateListener
-    {
-        private readonly Action<CrosswordWord> _wordAddAction;
-        private readonly Action _sizeChangedAction;
-
-        public CrosswordStateListener(Action<CrosswordWord> wordAddAction, Action sizeChangedAction)
-        {
-            this._wordAddAction = wordAddAction;
-            this._sizeChangedAction = sizeChangedAction;
-        }
-
-        public void OnWordAdded(CrosswordWord crosswordWord)
-        {
-            _wordAddAction.Invoke(crosswordWord);
-        }
-
-        public void OnSizeChanged()
-        {
-            _sizeChangedAction.Invoke();
-        }
     }
 }

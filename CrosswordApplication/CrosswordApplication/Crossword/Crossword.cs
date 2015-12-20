@@ -11,11 +11,26 @@ namespace Crossword
 {
     public class Crossword
     {
-        public interface ICrosswordStateListener
+        public class CrosswordStateListener
         {
-            void OnWordAdded(CrosswordWord crosswordWord);
+            private readonly Action<CrosswordWord> _wordAddAction;
+            private readonly Action _sizeChangedAction;
 
-            void OnSizeChanged();
+            public CrosswordStateListener(Action<CrosswordWord> wordAddAction, Action sizeChangedAction)
+            {
+                this._wordAddAction = wordAddAction;
+                this._sizeChangedAction = sizeChangedAction;
+            }
+
+            public void OnWordAdded(CrosswordWord crosswordWord)
+            {
+                _wordAddAction.Invoke(crosswordWord);
+            }
+
+            public void OnSizeChanged()
+            {
+                _sizeChangedAction.Invoke();
+            }
         }
 
         public static readonly string DefaultFileName = @"..\..\debug crossword.cwd";
@@ -31,7 +46,7 @@ namespace Crossword
 
         private readonly CrosswordSerializer serializer = new CrosswordSerializer();
 
-        private ICrosswordStateListener _crosswordStateListener;
+        private CrosswordStateListener _crosswordStateListener;
 
         public Crossword()
         {
@@ -112,34 +127,24 @@ namespace Crossword
             List<CrosswordWord> foundedWords = new List<CrosswordWord>();
             foreach (var crosswordWord in CrosswordWords)
             {
-                string word = crosswordWord.Word;
 
-                int curX = crosswordWord.Position.X;
-                int curY = crosswordWord.Position.Y;
-
-                for (int i = 0; i < word.Length; i++)
+                for (int i = 0; i < crosswordWord.Word.Length; i++)
                 {
-                    if (crosswordWord.Position.Orientation == Orientation.Horizontal)
+                    int curX, curY;
+                    crosswordWord.PositionAtIndex(i, out curX, out curY);
+
+                    if (curX == x && curY == y)
                     {
-                        if (curX == x && curY + i == y)
-                        {
-                            foundedWords.Add(crosswordWord);
-                        }
-                    }
-                    if (crosswordWord.Position.Orientation == Orientation.Horizontal)
-                    {
-                        if (curX + i == x && curY == y)
-                        {
-                            foundedWords.Add(crosswordWord);
-                        }
+                        foundedWords.Add(crosswordWord);
+                        break;
                     }
                 }
             }
 
-            throw new NotImplementedException("Don't use it, I don't know what is it myself oO");
+            return foundedWords;
         }
 
-        public void SetCrosswordStateListener(ICrosswordStateListener crosswordStateListener)
+        public void SetCrosswordStateListener(CrosswordStateListener crosswordStateListener)
         {
             _crosswordStateListener = crosswordStateListener;
         }

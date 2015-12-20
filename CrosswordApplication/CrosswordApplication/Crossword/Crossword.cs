@@ -240,6 +240,18 @@ namespace Crossword
             return crosswordWords.Count > 0 ? highlights[0] : null;
         }
 
+        public CrosswordWord GetCrosswordWordForWord(string word)
+        {
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                if (word.Equals(crosswordWord.Word))
+                {
+                    return crosswordWord;
+                }
+            }
+            return null;
+        }
+
         private bool CheckIfPreviewWordMatches(PreviewCrosswordWord previewWord)
         {
             var countOfIntersections = 0;

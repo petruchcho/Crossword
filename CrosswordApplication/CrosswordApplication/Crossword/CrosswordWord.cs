@@ -77,6 +77,8 @@ namespace CrosswordApplication.Crossword
                 return IntersectionType.WrongIntersection;
             }
 
+            // Todo to improve performance, we can find intersection point using O(1) instead of O(width^2)
+
             for (int i = 0; i < Word.Length; i++)
             {
                 for (int j = 0; j < other.Word.Length; j++)

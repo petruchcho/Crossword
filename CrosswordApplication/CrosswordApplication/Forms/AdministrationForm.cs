@@ -27,7 +27,7 @@ namespace CrosswordApplication
 
         private void crosswordManagerButton_Click(object sender, EventArgs e)
         {
-            FormUtils.OpenFormAndSaveHierarchy(this, new CrosswordEditForm());
+            FormUtils.OpenFormAndSaveHierarchy(this, new CrosswordEditForm(UserRole.Administrator));
         }
     }
 }

@@ -51,7 +51,6 @@ namespace CrosswordApplication.Forms
             });
         }
 
-
         private void loadCrosswordToolStripMenu_Click(object sender, EventArgs e)
         {
             // TODO Save Existed
@@ -102,11 +101,19 @@ namespace CrosswordApplication.Forms
                 {
                     // Word added
                     questionsListBox.Rows.Add(crosswordWord.Word, crosswordWord.Description);
+                    questionsListBox.ClearSelection();
                     crosswordDrawer.Draw(crossword);
                 },
                 () =>
                 {
                     // Size changed
+                }, 
+                crosswordWord =>
+                {
+                    // Word deleted
+                    ConfigureQuestionsList();
+                    questionsListBox.ClearSelection();
+                    crosswordDrawer.Draw(crossword);
                 }));
             crosswordDrawer.Draw(crossword);
 
@@ -128,18 +135,24 @@ namespace CrosswordApplication.Forms
                 }
             }
 
-            questionsListBox.SelectionChanged += (sender, args) =>
-            {
-                var word = questionsListBox.SelectedCells[0].Value.ToString();
-                var selectedWord = crossword.GetCrosswordWordForWord(word);
-                if (selectedWord != null)
-                {
-                    crosswordDrawer.SelectWord(selectedWord);
-                }
-            };
+            questionsListBox.SelectionChanged -= QuestionBoxSelectionChanges;
+            questionsListBox.SelectionChanged += QuestionBoxSelectionChanges;
         }
 
-
+        private void QuestionBoxSelectionChanges(object sender, EventArgs args)
+        {
+            if (questionsListBox.SelectedCells.Count == 0)
+            {
+                crosswordDrawer.SelectWord(null);
+                return;
+            }
+            var word = questionsListBox.SelectedCells[0].Value.ToString();
+            var selectedWord = crossword.GetCrosswordWordForWord(word);
+            if (selectedWord != null)
+            {
+                crosswordDrawer.SelectWord(selectedWord);
+            }
+        }
 
         private void UpdateUi()
         {
@@ -173,6 +186,8 @@ namespace CrosswordApplication.Forms
             private readonly UserRole userRole;
 
             Orientation preferedOrientation;
+
+            private CrosswordWord cachedSelectedWord = null;
 
             private global::Crossword.Crossword crossword;
 
@@ -242,6 +257,12 @@ namespace CrosswordApplication.Forms
                     }
                 };
 
+                if (userRole == UserRole.Administrator)
+                {
+                    board.KeyDown -= DeletePress;
+                    board.KeyDown += DeletePress;
+                }
+
                 board.CellValueChanged += (sender, args) =>
                 {
                     try
@@ -269,7 +290,10 @@ namespace CrosswordApplication.Forms
                     }
                 };
 
-                InitDragAndDrop();
+                if (userRole == UserRole.Administrator)
+                {
+                    InitDragAndDrop();
+                }
             }
 
             private void InitDragAndDrop()
@@ -313,7 +337,6 @@ namespace CrosswordApplication.Forms
                 var previews = crossword.GetPreviewsPositions(word);
                 if (previews == null)
                 {
-                    // TODO ????
                     return;
                 }
                 foreach (var crosswordWord in previews)
@@ -337,6 +360,11 @@ namespace CrosswordApplication.Forms
             public void SelectWord(CrosswordWord crosswordWord)
             {
                 CleanSelect();
+                if (crosswordWord == null)
+                {
+                    return;
+                }
+                cachedSelectedWord = crosswordWord;
                 var word = crosswordWord.Word;
                 for (var i = 0; i < word.Length; i++)
                 {
@@ -345,6 +373,7 @@ namespace CrosswordApplication.Forms
                     crosswordWord.PositionAtIndex(i, out curX, out curY);
                     SetSelectedCell(curX, curY);
                 }
+                board.Focus();
             }
 
             private void HighlightWord(CrosswordWord crosswordWord)
@@ -401,6 +430,7 @@ namespace CrosswordApplication.Forms
 
             private void CleanSelect()
             {
+                cachedSelectedWord = null;
                 for (var x = 0; x < board.ColumnCount; x++)
                     for (var y = 0; y < board.RowCount; y++)
                     {
@@ -429,7 +459,6 @@ namespace CrosswordApplication.Forms
                 }
 
                 board[x, y].Style.BackColor = Color.LightGreen;
-                //board[x, y].Value = value;
 
                 board[x, y].Tag = "Preview";
             }
@@ -457,7 +486,11 @@ namespace CrosswordApplication.Forms
 
                 board[x, y].ReadOnly = userRole != UserRole.User;
                 board[x, y].Style.BackColor = Color.White;
-                board[x, y].Value = value;
+                
+                if (userRole == UserRole.Administrator)
+                {
+                    board[x, y].Value = value;
+                }
 
                 board[x, y].Tag = "Available";
             }
@@ -566,6 +599,22 @@ namespace CrosswordApplication.Forms
             private void DragCleanBoard(object sender, EventArgs eventArgs)
             {
                 CleanBoardFromTemporaryCells();
+            }
+
+            private void DeletePress(object sender, KeyEventArgs e)
+            {
+                try
+                {
+                    if (e.KeyCode == Keys.Delete && userRole == UserRole.Administrator &&
+                        !board.CurrentCell.IsInEditMode && cachedSelectedWord != null)
+                    {
+                        crossword.DeleteWord(cachedSelectedWord);
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
         }
     }

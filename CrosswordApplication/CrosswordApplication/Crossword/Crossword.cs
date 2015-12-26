@@ -15,21 +15,37 @@ namespace Crossword
         {
             private readonly Action<CrosswordWord> _wordAddAction;
             private readonly Action _sizeChangedAction;
+            private readonly Action<CrosswordWord> _wordDeletedAction;
 
-            public CrosswordStateListener(Action<CrosswordWord> wordAddAction, Action sizeChangedAction)
+            public CrosswordStateListener(Action<CrosswordWord> wordAddAction, Action sizeChangedAction, Action<CrosswordWord> wordDeletedAction)
             {
                 this._wordAddAction = wordAddAction;
                 this._sizeChangedAction = sizeChangedAction;
+                this._wordDeletedAction = wordDeletedAction;
             }
 
             public void OnWordAdded(CrosswordWord crosswordWord)
             {
-                _wordAddAction.Invoke(crosswordWord);
+                if (_wordAddAction != null)
+                {
+                    _wordAddAction.Invoke(crosswordWord);
+                }
             }
 
             public void OnSizeChanged()
             {
-                _sizeChangedAction.Invoke();
+                if (_sizeChangedAction != null)
+                {
+                    _sizeChangedAction.Invoke();   
+                }
+            }
+
+            public void OnWordDeleted(CrosswordWord crosswordWord)
+            {
+                if (_wordDeletedAction != null)
+                {
+                    _wordDeletedAction.Invoke(crosswordWord);
+                }                
             }
         }
 
@@ -104,6 +120,28 @@ namespace Crossword
             if (_crosswordStateListener != null)
             {
                 _crosswordStateListener.OnWordAdded(crosswordWord);
+            }
+        }
+
+        public void DeleteWord(CrosswordWord crosswordWord)
+        {
+            CrosswordWord removedWord = null;
+            for (int i = 0; i < crosswordWords.Count; i++)
+            {
+                if (crosswordWords[i].Word.Equals(crosswordWord.Word))
+                {
+                    removedWord = crosswordWords[i];
+                    break;
+                }
+            }
+
+            if (removedWord != null)
+            {
+                crosswordWords.Remove(removedWord);
+            }
+            if (_crosswordStateListener != null)
+            {
+                _crosswordStateListener.OnWordDeleted(removedWord);   
             }
         }
 

@@ -51,6 +51,23 @@ namespace CrosswordApplication.Forms
             });
         }
 
+        private void saveCrosswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (crossword != null)
+            {
+                if (!crossword.IsCorrectCrossword())
+                {
+                    if (MessageBox.Show(
+                        "Кроссворд не удовлетворяет некоторым правилам построения. Вы уверены, что хотите сохранить его?",
+                        "Предупреждение", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                }
+                crossword.Save(res => { });
+            }
+        }
+
         private void loadCrosswordToolStripMenu_Click(object sender, EventArgs e)
         {
             // TODO Save Existed
@@ -164,6 +181,8 @@ namespace CrosswordApplication.Forms
 
             newCrosswordToolStripMenu.Enabled = dictionaryLoaded;
             loadCrosswordToolStripMenu.Enabled = dictionaryLoaded;
+            saveCrosswordToolStripMenuItem.Enabled = crosswordLoaded;
+
             board.Visible = crosswordLoaded;
         }
 

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Windows.Forms;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
+using Orientation = CrosswordApplication.Crossword.Orientation;
 
 namespace Crossword
 {
@@ -73,15 +76,20 @@ namespace Crossword
 
         public void Load(Action<bool> callback)
         {
-            // TODO Get fileName with dialog
-            string fileName = DefaultFileName;
+            var openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "Crossword files (*.cwd)|*.cwd";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
             new CommonUtils.AsyncTask<bool>(
                 () =>
                 {
                     try
                     {
-                        var crosswordStrings = System.IO.File.ReadAllLines(fileName, Encoding.GetEncoding(1251));
+                        var crosswordStrings = System.IO.File.ReadAllLines(openFileDialog.FileName, Encoding.GetEncoding(1251));
                         serializer.DeserializeCrossword(this, crosswordStrings);
                         return true;
                     }
@@ -92,6 +100,38 @@ namespace Crossword
                     return false;
                 }, callback).Start();
 
+        }
+
+        public void Save(Action<bool> callback)
+        {
+            var saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "Crossword files (*.cwd)|*.cwd";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
+
+            new CommonUtils.AsyncTask<bool>(
+               () =>
+               {
+                   try
+                   {
+                       Stream myStream;
+                       if ((myStream = saveFileDialog1.OpenFile()) != null)
+                       {
+                           var streamWriter = new StreamWriter(myStream, Encoding.GetEncoding(1251));
+                           streamWriter.WriteLine(serializer.SerializeCrossword(this));
+                           streamWriter.Close();
+                       }
+                       return true;
+                   }
+                   catch (Exception e)
+                   {
+                        // TODO Proceed exception
+                    }
+                   return false;
+               }, callback).Start();
         }
 
         public bool IsLoaded()
@@ -321,6 +361,53 @@ namespace Crossword
             return goodWord;
         }
 
+        public bool IsCorrectCrossword()
+        {
+            return !IsEmpty() && IsConnected();
+        }
+
+        private bool IsConnected()
+        {
+            if (IsEmpty())
+            {
+                return true;
+            }
+            bool[] visited = new bool[crosswordWords.Count];
+            var q = new Queue<int>();
+            q.Enqueue(0);
+            visited[0] = true;
+
+            while (q.Count > 0)
+            {
+                var curWord = crosswordWords[q.Dequeue()];
+                for (var index = 0; index < crosswordWords.Count; index++)
+                {
+                    if (visited[index]) continue;
+                    var intersectionType = curWord.GetIntersectionType(crosswordWords[index]);
+                    switch (intersectionType)
+                    {
+                        case CrosswordWord.IntersectionType.WrongIntersection:
+                            return false;
+                        case CrosswordWord.IntersectionType.CorrectIntersection:
+                            q.Enqueue(index);
+                            visited[index] = true;
+                            break;
+                        case CrosswordWord.IntersectionType.NoIntersection:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
+
+            return visited.Aggregate(true, (current, b) => current & b);
+        }
+
+        private bool IsEmpty()
+        {
+            return (crosswordWords == null || crosswordWords.Count == 0);
+        }
+
         private bool IsWordInBorders(CrosswordWord word)
         {
             int x;
@@ -358,9 +445,8 @@ namespace Crossword
                     throw new Exception("Orientation deserialization fail");
                 }
                 var isResolved = bool.Parse(lines[curIndex + 5]);
-                
-                crossword.CrosswordWords.Add(new CrosswordWord(crossword, new DictionaryWord(word, description), 
-                    new CrosswordWordPosition(x, y, orientation), isResolved));
+
+                crossword.CrosswordWords.Add(new CrosswordWord(crossword, new DictionaryWord(word, description), new CrosswordWordPosition(x, y, orientation), isResolved));
             }
             crossword.SetSize(width, height);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CrosswordApplication.CommonUtils;
 using CrosswordApplication.Crossword;
 using CrosswordApplication.Dictionary;
 using Orientation = CrosswordApplication.Crossword.Orientation;
@@ -53,6 +54,35 @@ namespace CrosswordApplication.Forms
 
         private void saveCrosswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveCrossword();
+        }
+
+        private void loadCrosswordToolStripMenu_Click(object sender, EventArgs e)
+        {
+            SaveCrosswordWithDialog();
+
+            crossword = new global::Crossword.Crossword();
+            crossword.Load(res =>
+            {
+                SetCrossword();
+            });
+        }
+
+        private void SaveCrosswordWithDialog()
+        {
+            if (crossword == null || crossword.IsEmpty())
+            {
+                return;
+            }
+            if (MessageBox.Show("Вы хотите сохранить текущий кроссворд?", "Сохранить", MessageBoxButtons.YesNo) ==
+                DialogResult.Yes)
+            {
+                SaveCrossword();
+            }
+        }
+
+        private void SaveCrossword()
+        {
             if (crossword != null)
             {
                 if (!crossword.IsCorrectCrossword())
@@ -66,17 +96,6 @@ namespace CrosswordApplication.Forms
                 }
                 crossword.Save(res => { });
             }
-        }
-
-        private void loadCrosswordToolStripMenu_Click(object sender, EventArgs e)
-        {
-            // TODO Save Existed
-
-            crossword = new global::Crossword.Crossword();
-            crossword.Load(res =>
-            {
-                SetCrossword();
-            });
         }
 
         private void SetDictionary()
@@ -110,7 +129,18 @@ namespace CrosswordApplication.Forms
             }
             if (crosswordDrawer == null)
             {
-                crosswordDrawer = new DataGridViewCrosswordDrawer(userRole, board);
+                var wordSelectionListener = new WordSelectionListener(crosswordWord =>
+                {
+                    for (int i = 0; i < questionsListBox.RowCount; i++)
+                    {
+                        if (questionsListBox.Rows[i].Cells[0].Value.Equals(crosswordWord.Word))
+                        {
+                            questionsListBox.Rows[i].Selected = true;
+                            break;
+                        }
+                    }
+                });
+                crosswordDrawer = new DataGridViewCrosswordDrawer(userRole, board, wordSelectionListener);
             }
            
             crossword.SetCrosswordStateListener(new global::Crossword.Crossword.CrosswordStateListener(
@@ -174,14 +204,16 @@ namespace CrosswordApplication.Forms
         private void UpdateUi()
         {
             bool dictionaryLoaded = dictionary != null && dictionary.IsLoaded();
-            bool crosswordLoaded = dictionaryLoaded && crossword != null;
+            bool crosswordLoaded = crossword != null;
 
             dictionaryToolStrip.Enabled = dictionaryLoaded;
             dictionaryListBox.Visible = dictionaryLoaded;
 
-            newCrosswordToolStripMenu.Enabled = dictionaryLoaded;
-            loadCrosswordToolStripMenu.Enabled = dictionaryLoaded;
+            newCrosswordToolStripMenu.Enabled = true;
+            loadCrosswordToolStripMenu.Enabled = true;
             saveCrosswordToolStripMenuItem.Enabled = crosswordLoaded;
+
+            сгенерироватьToolStripMenuItem.Enabled = false;
 
             board.Visible = crosswordLoaded;
         }
@@ -200,19 +232,20 @@ namespace CrosswordApplication.Forms
 
         class DataGridViewCrosswordDrawer : ICrosswordDrawer
         {
-            private static readonly int CROSSWORD_MARGIN = 0;
             private readonly DataGridView board;
+            private readonly WordSelectionListener _wordSelectionListener;
             private readonly UserRole userRole;
 
             Orientation preferedOrientation;
 
-            private CrosswordWord cachedSelectedWord = null;
+            private CrosswordWord cachedSelectedWord;
 
             private global::Crossword.Crossword crossword;
 
-            public DataGridViewCrosswordDrawer(UserRole userRole, DataGridView board)
+            public DataGridViewCrosswordDrawer(UserRole userRole, DataGridView board, WordSelectionListener wordSelectionListener)
             {
                 this.board = board;
+                _wordSelectionListener = wordSelectionListener;
                 this.userRole = userRole;
             }
 
@@ -227,17 +260,17 @@ namespace CrosswordApplication.Forms
             {
                 board.BackgroundColor = Color.Black;
 
-                int crosswordSize = Math.Max(crossword.Width, crossword.Height) + CROSSWORD_MARGIN * 2;
+                int crosswordSize = Math.Max(crossword.Width, crossword.Height);
 
                 board.Columns.Clear();
                 board.Rows.Clear();
 
-                for (int i = 0; i < crosswordSize; i++)
+                for (int i = 0; i < crossword.Width; i++)
                 {
                     board.Columns.Add(new DataGridViewTextBoxColumn());
                 }
 
-                for (int i = 0; i < crosswordSize; i++)
+                for (int i = 0; i < crossword.Height; i++)
                 {
                     board.Rows.Add();
                 }
@@ -245,17 +278,17 @@ namespace CrosswordApplication.Forms
                 // Set size of each column
                 foreach (DataGridViewColumn column in board.Columns)
                 {
-                    column.Width = (int)Math.Round(1.0 * board.Width / crosswordSize);
+                    column.Width = (int)Math.Round(1.0 * board.Width / crossword.Width);
                 }
 
                 // Set size of each Row
                 foreach (DataGridViewRow row in board.Rows)
                 {
-                    row.Height = (int)Math.Round(1.0 * board.Height / crosswordSize);
+                    row.Height = (int)Math.Round(1.0 * board.Height / crossword.Height);
                 }
 
-                for (int i = 0; i < crosswordSize; i++)
-                    for (int j = 0; j < crosswordSize; j++)
+                for (int i = 0; i < crossword.Width; i++)
+                    for (int j = 0; j < crossword.Height; j++)
                     {
                         board[i, j].ReadOnly = true;
                     }
@@ -307,6 +340,30 @@ namespace CrosswordApplication.Forms
                     {
                         // ignored
                     }
+                };
+
+                board.CellClick += (sender, args) =>
+                {
+                    var preferedOrientation = Orientation.Horizontal;
+                    if ((Control.ModifierKeys & Keys.Control) != 0)
+                    {
+                        preferedOrientation = Orientation.Vertical;
+                    }
+
+                    var foundedWords = crossword.FindWordsAtPosition(args.ColumnIndex, args.RowIndex);
+                    if (foundedWords.Count == 0)
+                    {
+                        return;
+                    }
+
+                    foreach (var crosswordWord in foundedWords)
+                    {
+                        if (crosswordWord.Position.Orientation != preferedOrientation) continue;
+                        _wordSelectionListener.OnWordSelected(crosswordWord);
+                        return;
+                    }
+
+                    _wordSelectionListener.OnWordSelected(foundedWords[0]);
                 };
 
                 if (userRole == UserRole.Administrator)
@@ -469,9 +526,6 @@ namespace CrosswordApplication.Forms
 
             private void SetPreviewCell(int x, int y, string value)
             {
-                x += CROSSWORD_MARGIN;
-                y += CROSSWORD_MARGIN;
-
                 if ("Available".Equals(board[x, y].Tag) || "Select".Equals(board[x, y].Tag))
                 {
                     return;
@@ -484,9 +538,6 @@ namespace CrosswordApplication.Forms
 
             private void SetHighlightedCell(int x, int y, string value)
             {
-                x += CROSSWORD_MARGIN;
-                y += CROSSWORD_MARGIN;
-
                 if ("Available".Equals(board[x, y].Tag) || "Select".Equals(board[x, y].Tag))
                 {
                     return;
@@ -500,9 +551,6 @@ namespace CrosswordApplication.Forms
 
             private void SetAvailableCell(int x, int y, string value)
             {
-                x += CROSSWORD_MARGIN;
-                y += CROSSWORD_MARGIN;
-
                 board[x, y].ReadOnly = userRole != UserRole.User;
                 board[x, y].Style.BackColor = Color.White;
                 
@@ -516,10 +564,6 @@ namespace CrosswordApplication.Forms
 
             private void SetSelectedCell(int x, int y)
             {
-                x += CROSSWORD_MARGIN;
-                y += CROSSWORD_MARGIN;
-
-                board[x, y].ReadOnly = false;
                 board[x, y].Style.BackColor = Color.LightSkyBlue;
 
                 board[x, y].Tag = "Select";
@@ -527,9 +571,6 @@ namespace CrosswordApplication.Forms
 
             private void CleanCell(int x, int y)
             {
-                x += CROSSWORD_MARGIN;
-                y += CROSSWORD_MARGIN;
-
                 board[x, y].ReadOnly = true;
                 board[x, y].Style.BackColor = Color.Black;
                 //board[x, y].Style.SelectionBackColor = Color.Black;

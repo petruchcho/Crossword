@@ -403,7 +403,7 @@ namespace Crossword
             return visited.Aggregate(true, (current, b) => current & b);
         }
 
-        private bool IsEmpty()
+        public bool IsEmpty()
         {
             return (crosswordWords == null || crosswordWords.Count == 0);
         }

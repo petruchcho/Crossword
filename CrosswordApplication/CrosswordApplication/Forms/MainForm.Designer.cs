@@ -40,6 +40,7 @@
             this.solvingButton.TabIndex = 0;
             this.solvingButton.Text = "Разгадывание";
             this.solvingButton.UseVisualStyleBackColor = true;
+            this.solvingButton.Click += new System.EventHandler(this.solvingButton_Click);
             // 
             // administrationButton
             // 

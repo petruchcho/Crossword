@@ -330,6 +330,18 @@ namespace Crossword
             return null;
         }
 
+        public CrosswordWord GetCrosswordWordForDescription(string description)
+        {
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                if (description.Equals(crosswordWord.Description))
+                {
+                    return crosswordWord;
+                }
+            }
+            return null;
+        }
+
         private bool CheckIfPreviewWordMatches(PreviewCrosswordWord previewWord)
         {
             var countOfIntersections = 0;

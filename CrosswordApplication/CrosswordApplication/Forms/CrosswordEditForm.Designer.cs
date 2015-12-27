@@ -35,12 +35,16 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.кроссвордToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newCrosswordToolStripMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCrosswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadCrosswordToolStripMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.сгенерироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.словарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadDictionaryToolStripMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.questionsSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.questionsUserPanel = new System.Windows.Forms.Panel();
+            this.questionsAdminSplitContainer = new System.Windows.Forms.SplitContainer();
             this.questionsToolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.dictionaryToolStrip = new System.Windows.Forms.ToolStrip();
@@ -48,27 +52,28 @@
             this.toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.loadDictionaryHintLabel = new System.Windows.Forms.Label();
             this.board = new CrosswordApplication.Forms.CustomDataGridView();
+            this.questionsUserList = new CrosswordApplication.Forms.CustomDataGridView();
             this.questionsListBox = new CrosswordApplication.Forms.CustomDataGridView();
             this.wordColumnQuestion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionColumnQuestion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dictionaryListBox = new CrosswordApplication.Forms.CustomDataGridView();
             this.wordColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.saveCrosswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.сгенерироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DescriptionUserColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
             this.rootSplitContainer.Panel1.SuspendLayout();
             this.rootSplitContainer.Panel2.SuspendLayout();
             this.rootSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.questionsSplitContainer)).BeginInit();
-            this.questionsSplitContainer.Panel1.SuspendLayout();
-            this.questionsSplitContainer.Panel2.SuspendLayout();
-            this.questionsSplitContainer.SuspendLayout();
+            this.questionsUserPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.questionsAdminSplitContainer)).BeginInit();
+            this.questionsAdminSplitContainer.Panel1.SuspendLayout();
+            this.questionsAdminSplitContainer.Panel2.SuspendLayout();
+            this.questionsAdminSplitContainer.SuspendLayout();
             this.questionsToolStrip.SuspendLayout();
             this.dictionaryToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.board)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.questionsUserList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.questionsListBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dictionaryListBox)).BeginInit();
             this.SuspendLayout();
@@ -104,6 +109,14 @@
             this.newCrosswordToolStripMenu.Text = "Новый";
             this.newCrosswordToolStripMenu.Click += new System.EventHandler(this.newCrosswordToolStripMenu_Click);
             // 
+            // saveCrosswordToolStripMenuItem
+            // 
+            this.saveCrosswordToolStripMenuItem.Enabled = false;
+            this.saveCrosswordToolStripMenuItem.Name = "saveCrosswordToolStripMenuItem";
+            this.saveCrosswordToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveCrosswordToolStripMenuItem.Text = "Сохранить";
+            this.saveCrosswordToolStripMenuItem.Click += new System.EventHandler(this.saveCrosswordToolStripMenuItem_Click);
+            // 
             // loadCrosswordToolStripMenu
             // 
             this.loadCrosswordToolStripMenu.Enabled = false;
@@ -111,6 +124,18 @@
             this.loadCrosswordToolStripMenu.Size = new System.Drawing.Size(157, 22);
             this.loadCrosswordToolStripMenu.Text = "Загрузить";
             this.loadCrosswordToolStripMenu.Click += new System.EventHandler(this.loadCrosswordToolStripMenu_Click);
+            // 
+            // сгенерироватьToolStripMenuItem
+            // 
+            this.сгенерироватьToolStripMenuItem.Name = "сгенерироватьToolStripMenuItem";
+            this.сгенерироватьToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.сгенерироватьToolStripMenuItem.Text = "Сгенерировать";
+            // 
+            // параметрыToolStripMenuItem
+            // 
+            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
+            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.параметрыToolStripMenuItem.Text = "Параметры";
             // 
             // словарьToolStripMenuItem
             // 
@@ -123,7 +148,7 @@
             // loadDictionaryToolStripMenu
             // 
             this.loadDictionaryToolStripMenu.Name = "loadDictionaryToolStripMenu";
-            this.loadDictionaryToolStripMenu.Size = new System.Drawing.Size(152, 22);
+            this.loadDictionaryToolStripMenu.Size = new System.Drawing.Size(128, 22);
             this.loadDictionaryToolStripMenu.Text = "Загрузить";
             this.loadDictionaryToolStripMenu.Click += new System.EventHandler(this.loadDictionaryToolStripMenuItem_Click);
             // 
@@ -148,34 +173,44 @@
             // 
             // rootSplitContainer.Panel2
             // 
-            this.rootSplitContainer.Panel2.Controls.Add(this.questionsSplitContainer);
+            this.rootSplitContainer.Panel2.Controls.Add(this.questionsUserPanel);
+            this.rootSplitContainer.Panel2.Controls.Add(this.questionsAdminSplitContainer);
             this.rootSplitContainer.Size = new System.Drawing.Size(784, 537);
             this.rootSplitContainer.SplitterDistance = 500;
             this.rootSplitContainer.TabIndex = 1;
             // 
-            // questionsSplitContainer
+            // questionsUserPanel
             // 
-            this.questionsSplitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.questionsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.questionsSplitContainer.IsSplitterFixed = true;
-            this.questionsSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.questionsSplitContainer.Name = "questionsSplitContainer";
-            this.questionsSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.questionsUserPanel.Controls.Add(this.questionsUserList);
+            this.questionsUserPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.questionsUserPanel.Location = new System.Drawing.Point(0, 0);
+            this.questionsUserPanel.Name = "questionsUserPanel";
+            this.questionsUserPanel.Size = new System.Drawing.Size(280, 537);
+            this.questionsUserPanel.TabIndex = 1;
             // 
-            // questionsSplitContainer.Panel1
+            // questionsAdminSplitContainer
             // 
-            this.questionsSplitContainer.Panel1.Controls.Add(this.questionsListBox);
-            this.questionsSplitContainer.Panel1.Controls.Add(this.questionsToolStrip);
+            this.questionsAdminSplitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.questionsAdminSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.questionsAdminSplitContainer.IsSplitterFixed = true;
+            this.questionsAdminSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.questionsAdminSplitContainer.Name = "questionsAdminSplitContainer";
+            this.questionsAdminSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // questionsSplitContainer.Panel2
+            // questionsAdminSplitContainer.Panel1
             // 
-            this.questionsSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.questionsSplitContainer.Panel2.Controls.Add(this.dictionaryListBox);
-            this.questionsSplitContainer.Panel2.Controls.Add(this.dictionaryToolStrip);
-            this.questionsSplitContainer.Panel2.Controls.Add(this.loadDictionaryHintLabel);
-            this.questionsSplitContainer.Size = new System.Drawing.Size(280, 537);
-            this.questionsSplitContainer.SplitterDistance = 299;
-            this.questionsSplitContainer.TabIndex = 0;
+            this.questionsAdminSplitContainer.Panel1.Controls.Add(this.questionsListBox);
+            this.questionsAdminSplitContainer.Panel1.Controls.Add(this.questionsToolStrip);
+            // 
+            // questionsAdminSplitContainer.Panel2
+            // 
+            this.questionsAdminSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.questionsAdminSplitContainer.Panel2.Controls.Add(this.dictionaryListBox);
+            this.questionsAdminSplitContainer.Panel2.Controls.Add(this.dictionaryToolStrip);
+            this.questionsAdminSplitContainer.Panel2.Controls.Add(this.loadDictionaryHintLabel);
+            this.questionsAdminSplitContainer.Size = new System.Drawing.Size(280, 537);
+            this.questionsAdminSplitContainer.SplitterDistance = 299;
+            this.questionsAdminSplitContainer.TabIndex = 0;
             // 
             // questionsToolStrip
             // 
@@ -275,6 +310,35 @@
             this.board.TabIndex = 0;
             this.board.Visible = false;
             // 
+            // questionsUserList
+            // 
+            this.questionsUserList.AllowUserToAddRows = false;
+            this.questionsUserList.AllowUserToDeleteRows = false;
+            this.questionsUserList.AllowUserToResizeColumns = false;
+            this.questionsUserList.AllowUserToResizeRows = false;
+            this.questionsUserList.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.questionsUserList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.questionsUserList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DescriptionUserColumn});
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.questionsUserList.DefaultCellStyle = dataGridViewCellStyle3;
+            this.questionsUserList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.questionsUserList.Location = new System.Drawing.Point(0, 0);
+            this.questionsUserList.MultiSelect = false;
+            this.questionsUserList.Name = "questionsUserList";
+            this.questionsUserList.ReadOnly = true;
+            this.questionsUserList.RowHeadersVisible = false;
+            this.questionsUserList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.questionsUserList.Size = new System.Drawing.Size(280, 400);
+            this.questionsUserList.TabIndex = 0;
+            // 
             // questionsListBox
             // 
             this.questionsListBox.AllowUserToAddRows = false;
@@ -287,14 +351,6 @@
             this.questionsListBox.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.wordColumnQuestion,
             this.descriptionColumnQuestion});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.questionsListBox.DefaultCellStyle = dataGridViewCellStyle3;
             this.questionsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.questionsListBox.Location = new System.Drawing.Point(0, 25);
@@ -360,25 +416,12 @@
             this.descriptionColumn.Name = "descriptionColumn";
             this.descriptionColumn.ReadOnly = true;
             // 
-            // saveCrosswordToolStripMenuItem
+            // DescriptionUserColumn
             // 
-            this.saveCrosswordToolStripMenuItem.Enabled = false;
-            this.saveCrosswordToolStripMenuItem.Name = "saveCrosswordToolStripMenuItem";
-            this.saveCrosswordToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveCrosswordToolStripMenuItem.Text = "Сохранить";
-            this.saveCrosswordToolStripMenuItem.Click += new System.EventHandler(this.saveCrosswordToolStripMenuItem_Click);
-            // 
-            // сгенерироватьToolStripMenuItem
-            // 
-            this.сгенерироватьToolStripMenuItem.Name = "сгенерироватьToolStripMenuItem";
-            this.сгенерироватьToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.сгенерироватьToolStripMenuItem.Text = "Сгенерировать";
-            // 
-            // параметрыToolStripMenuItem
-            // 
-            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
-            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.параметрыToolStripMenuItem.Text = "Параметры";
+            this.DescriptionUserColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DescriptionUserColumn.HeaderText = "Описание";
+            this.DescriptionUserColumn.Name = "DescriptionUserColumn";
+            this.DescriptionUserColumn.ReadOnly = true;
             // 
             // CrosswordEditForm
             // 
@@ -400,17 +443,19 @@
             this.rootSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).EndInit();
             this.rootSplitContainer.ResumeLayout(false);
-            this.questionsSplitContainer.Panel1.ResumeLayout(false);
-            this.questionsSplitContainer.Panel1.PerformLayout();
-            this.questionsSplitContainer.Panel2.ResumeLayout(false);
-            this.questionsSplitContainer.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.questionsSplitContainer)).EndInit();
-            this.questionsSplitContainer.ResumeLayout(false);
+            this.questionsUserPanel.ResumeLayout(false);
+            this.questionsAdminSplitContainer.Panel1.ResumeLayout(false);
+            this.questionsAdminSplitContainer.Panel1.PerformLayout();
+            this.questionsAdminSplitContainer.Panel2.ResumeLayout(false);
+            this.questionsAdminSplitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.questionsAdminSplitContainer)).EndInit();
+            this.questionsAdminSplitContainer.ResumeLayout(false);
             this.questionsToolStrip.ResumeLayout(false);
             this.questionsToolStrip.PerformLayout();
             this.dictionaryToolStrip.ResumeLayout(false);
             this.dictionaryToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.board)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.questionsUserList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.questionsListBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dictionaryListBox)).EndInit();
             this.ResumeLayout(false);
@@ -426,7 +471,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadDictionaryToolStripMenu;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.SplitContainer rootSplitContainer;
-        private System.Windows.Forms.SplitContainer questionsSplitContainer;
+        private System.Windows.Forms.SplitContainer questionsAdminSplitContainer;
         private System.Windows.Forms.ToolStrip dictionaryToolStrip;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton toolStripButton;
@@ -445,5 +490,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveCrosswordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сгенерироватьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
+        private System.Windows.Forms.Panel questionsUserPanel;
+        private CustomDataGridView questionsUserList;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionUserColumn;
     }
 }

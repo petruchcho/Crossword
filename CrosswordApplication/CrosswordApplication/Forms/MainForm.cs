@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using CrosswordApplication.CommonUtils;
+using CrosswordApplication.Forms;
 
 namespace CrosswordApplication
 {
@@ -33,6 +28,11 @@ namespace CrosswordApplication
             {
                 // TODO Show error
             }
+        }
+
+        private void solvingButton_Click(object sender, EventArgs e)
+        {
+            FormUtils.OpenFormAndSaveHierarchy(this, new CrosswordEditForm(UserRole.User));
         }
     }
 }

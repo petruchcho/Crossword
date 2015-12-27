@@ -139,6 +139,15 @@ namespace CrosswordApplication.Forms
                             break;
                         }
                     }
+
+                    for (int i = 0; i < questionsUserList.RowCount; i++)
+                    {
+                        if (questionsUserList.Rows[i].Cells[0].Value.Equals(crosswordWord.Description))
+                        {
+                            questionsUserList.Rows[i].Selected = true;
+                            break;
+                        }
+                    }
                 });
                 crosswordDrawer = new DataGridViewCrosswordDrawer(userRole, board, wordSelectionListener);
             }
@@ -158,19 +167,36 @@ namespace CrosswordApplication.Forms
                 crosswordWord =>
                 {
                     // Word deleted
-                    ConfigureQuestionsList();
+                    ConfigureQuestionsAdminList();
                     questionsListBox.ClearSelection();
                     crosswordDrawer.Draw(crossword);
                 }));
             crosswordDrawer.Draw(crossword);
 
-            ConfigureQuestionsList();
+            ConfigureQuestionsUserList();
+            ConfigureQuestionsAdminList();
 
             UpdateUi();
             board.Focus();
         }
 
-        private void ConfigureQuestionsList()
+        private void ConfigureQuestionsUserList()
+        {
+            questionsUserList.Rows.Clear();
+            questionsUserList.ClearSelection();
+            if (crossword != null)
+            {
+                foreach (var crosswordWord in crossword.CrosswordWords)
+                {
+                    questionsUserList.Rows.Add(crosswordWord.Description);
+                }
+            }
+
+            questionsUserList.SelectionChanged -= QuestionUserListSelectionChanges;
+            questionsUserList.SelectionChanged += QuestionUserListSelectionChanges;
+        }
+
+        private void ConfigureQuestionsAdminList()
         {
             questionsListBox.Rows.Clear();
             questionsListBox.ClearSelection();
@@ -201,8 +227,30 @@ namespace CrosswordApplication.Forms
             }
         }
 
+        private void QuestionUserListSelectionChanges(object sender, EventArgs args)
+        {
+            if (questionsUserList.SelectedCells.Count == 0)
+            {
+                crosswordDrawer.SelectWord(null);
+                return;
+            }
+            var description = questionsUserList.SelectedCells[0].Value.ToString();
+            var selectedWord = crossword.GetCrosswordWordForDescription(description);
+            if (selectedWord != null)
+            {
+                crosswordDrawer.SelectWord(selectedWord);
+            }
+        }
+
         private void UpdateUi()
         {
+            словарьToolStripMenuItem.Visible = userRole == UserRole.Administrator;
+            newCrosswordToolStripMenu.Visible = userRole == UserRole.Administrator;
+            параметрыToolStripMenuItem.Visible = userRole == UserRole.Administrator;
+
+            questionsAdminSplitContainer.Visible = userRole == UserRole.Administrator;
+            questionsUserPanel.Visible = userRole == UserRole.User;
+
             bool dictionaryLoaded = dictionary != null && dictionary.IsLoaded();
             bool crosswordLoaded = crossword != null;
 
@@ -512,14 +560,11 @@ namespace CrosswordApplication.Forms
                     {
                         if ("Select".Equals(board[x, y].Tag))
                         {
-                            if (board[x, y].Value == null || board[x, y].Value.Equals(""))
+                            if (board[x, y].Value == null)
                             {
-                                CleanCell(x, y);
+                                board[x, y].Value = "";
                             }
-                            else
-                            {
-                                SetAvailableCell(x, y, board[x, y].Value.ToString());
-                            }
+                            SetAvailableCell(x, y, board[x, y].Value.ToString());
                         }
                     }
             }
@@ -557,6 +602,10 @@ namespace CrosswordApplication.Forms
                 if (userRole == UserRole.Administrator)
                 {
                     board[x, y].Value = value;
+                }
+                if (board[x, y].Value == null)
+                {
+                    board[x, y].Value = "";
                 }
 
                 board[x, y].Tag = "Available";

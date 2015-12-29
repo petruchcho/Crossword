@@ -47,6 +47,7 @@
     <Compile Include="CommonUtils\AuthUtils.cs" />
     <Compile Include="CommonUtils\FormUtils.cs" />
     <Compile Include="CommonUtils\WordSelectionListener.cs" />
+    <Compile Include="Crossword\CrosswordLetter.cs" />
     <Compile Include="Crossword\CrosswordWord.cs" />
     <Compile Include="Crossword\CrosswordWordPosition.cs" />
     <Compile Include="Forms\AdministrationForm.cs">

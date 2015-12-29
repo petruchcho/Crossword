@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CrosswordApplication.CommonUtils;
@@ -62,7 +63,8 @@ namespace CrosswordApplication.Forms
             SaveCrosswordWithDialog();
 
             crossword = new global::Crossword.Crossword();
-            crossword.Load(res =>
+            crossword.Load(userRole, 
+                res =>
             {
                 SetCrossword();
             });
@@ -94,7 +96,7 @@ namespace CrosswordApplication.Forms
                         return;
                     }
                 }
-                crossword.Save(res => { });
+                crossword.Save(userRole, BuildProgress(), res => { });
             }
         }
 
@@ -278,6 +280,24 @@ namespace CrosswordApplication.Forms
 
         }
 
+        private List<CrosswordLetter> BuildProgress()
+        {
+            var result = new List<CrosswordLetter>();
+            for (var x = 0; x < board.ColumnCount; x++)
+                for (var y = 0; y < board.RowCount; y++)
+                {
+                    if (board[x, y].Value != null)
+                    {
+                        string value = (string) board[x, y].Value;
+                        if (value.Length > 0)
+                        {
+                            result.Add(new CrosswordLetter(value, new CrosswordWordPosition(x, y, Orientation.Horizontal)));
+                        }
+                    }
+                }
+            return result;
+        } 
+
         class DataGridViewCrosswordDrawer : ICrosswordDrawer
         {
             private readonly DataGridView board;
@@ -302,6 +322,11 @@ namespace CrosswordApplication.Forms
                 this.crossword = crossword;
                 InitBoard();
                 ShowWords();
+
+                if (userRole == UserRole.User)
+                {
+                    ShowProgress();
+                }
             }
 
             private void InitBoard()
@@ -456,6 +481,14 @@ namespace CrosswordApplication.Forms
                 }
             }
 
+            private void ShowProgress()
+            {
+                foreach (var letter in crossword.Progress)
+                {
+                    SetAvailableCell(letter.Position.X, letter.Position.Y, letter.Letter);
+                }
+            }
+
             private void ShowPreviews(global::Crossword.Crossword crossword, DictionaryWord word)
             {
                 var previews = crossword.GetPreviewsPositions(word);
@@ -477,7 +510,14 @@ namespace CrosswordApplication.Forms
                     int curX;
                     int curY;
                     crosswordWord.PositionAtIndex(i, out curX, out curY);
-                    SetAvailableCell(curX, curY, word[i].ToString());
+                    if (crosswordWord.IsResolved || userRole == UserRole.Administrator)
+                    {
+                        SetAvailableCell(curX, curY, word[i].ToString());
+                    }
+                    else
+                    {
+                        SetAvailableCell(curX, curY, "");
+                    }
                 }
             }
 
@@ -599,14 +639,7 @@ namespace CrosswordApplication.Forms
                 board[x, y].ReadOnly = userRole != UserRole.User;
                 board[x, y].Style.BackColor = Color.White;
                 
-                if (userRole == UserRole.Administrator)
-                {
-                    board[x, y].Value = value;
-                }
-                if (board[x, y].Value == null)
-                {
-                    board[x, y].Value = "";
-                }
+                board[x, y].Value = value;
 
                 board[x, y].Tag = "Available";
             }

@@ -63,6 +63,8 @@ namespace Crossword
         // TODO Replace with unmodifiable list
         private readonly List<CrosswordWord> crosswordWords;
 
+        private List<CrosswordLetter> progress;
+
         private readonly CrosswordSerializer serializer = new CrosswordSerializer();
 
         private CrosswordStateListener _crosswordStateListener;
@@ -72,13 +74,16 @@ namespace Crossword
             width = DefaultCrosswordWidth;
             height = DefaultCrosswordHeight;
             crosswordWords = new List<CrosswordWord>();
+            progress = new List<CrosswordLetter>();
         }
 
-        public void Load(Action<bool> callback)
+        public void Load(UserRole userRole, Action<bool> callback)
         {
             var openFileDialog = new OpenFileDialog();
 
-            openFileDialog.Filter = "Crossword files (*.cwd)|*.cwd";
+            openFileDialog.Filter = userRole == UserRole.Administrator ? 
+                "Crossword files (*.cwd)|*.cwd" :
+                "Crossword files (*.cwd, *.game)|*.cwd;*.game";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
 
@@ -102,15 +107,23 @@ namespace Crossword
 
         }
 
-        public void Save(Action<bool> callback)
+        public void Save(UserRole userRole, List<CrosswordLetter> progress, Action<bool> callback)
         {
             var saveFileDialog1 = new SaveFileDialog();
 
-            saveFileDialog1.Filter = "Crossword files (*.cwd)|*.cwd";
+            saveFileDialog1.Filter = userRole == UserRole.Administrator ? 
+                "Crossword files (*.cwd)|*.cwd" : 
+                "Crossword game (*.game)|*.game";
             saveFileDialog1.FilterIndex = 1;
             saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.DefaultExt = userRole == UserRole.Administrator ? "cwd" : "game";
 
             if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
+            if (!saveFileDialog1.FileName.EndsWith(saveFileDialog1.DefaultExt))
+            {
+                MessageBox.Show("Некорректное расширение");
+                return;
+            }
 
             new CommonUtils.AsyncTask<bool>(
                () =>
@@ -121,7 +134,11 @@ namespace Crossword
                        if ((myStream = saveFileDialog1.OpenFile()) != null)
                        {
                            var streamWriter = new StreamWriter(myStream, Encoding.GetEncoding(1251));
-                           streamWriter.WriteLine(serializer.SerializeCrossword(this));
+                           var serializedCrossword = userRole == UserRole.Administrator
+                               ? serializer.SerializeCrossword(this)
+                               : serializer.SerializeCrossword(this, progress);
+
+                           streamWriter.WriteLine(serializedCrossword);
                            streamWriter.Close();
                        }
                        return true;
@@ -198,6 +215,17 @@ namespace Crossword
         public List<CrosswordWord> CrosswordWords
         {
             get { return crosswordWords; }
+        }
+
+        public List<CrosswordLetter> Progress
+        {
+            get { return progress; }
+        }
+
+        public void SetProgress(List<CrosswordLetter> progressList)
+        {
+            progress = new List<CrosswordLetter>();
+            progress.AddRange(progressList);
         }
 
         public List<CrosswordWord> FindWordsAtPosition(int x, int y)
@@ -457,10 +485,39 @@ namespace Crossword
                     throw new Exception("Orientation deserialization fail");
                 }
                 var isResolved = bool.Parse(lines[curIndex + 5]);
-
                 crossword.CrosswordWords.Add(new CrosswordWord(crossword, new DictionaryWord(word, description), new CrosswordWordPosition(x, y, orientation), isResolved));
             }
+
+            try
+            {
+                var progressCount = int.Parse(lines[3 + wordsCount * 6]);
+                for (var i = 0; i < progressCount; i++)
+                {
+                    var curIndex = 3 + wordsCount * 6 + 1 + i * 3;
+                    var letter = lines[curIndex];
+                    var x = int.Parse(lines[curIndex + 1]);
+                    var y = int.Parse(lines[curIndex + 2]);
+                    crossword.Progress.Add(new CrosswordLetter(letter, new CrosswordWordPosition(x, y, Orientation.Horizontal)));
+                }
+            }
+            catch
+            {
+            }
+
             crossword.SetSize(width, height);
+        }
+
+        internal string SerializeCrossword(Crossword crossword, List<CrosswordLetter> progress)
+        {
+            var sb = new StringBuilder(SerializeCrossword(crossword));
+            sb.AppendLine(progress.Count.ToString());
+            foreach (CrosswordLetter letter in progress)
+            {
+                sb.AppendLine(letter.Letter.ToString());
+                sb.AppendLine(letter.Position.X.ToString());
+                sb.AppendLine(letter.Position.Y.ToString());
+            }
+            return sb.ToString();
         }
 
         internal string SerializeCrossword(Crossword crossword)

@@ -63,7 +63,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 161);
+            this.ClientSize = new System.Drawing.Size(250, 118);
             this.Controls.Add(this.typePasswordLabel);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.ok_button);

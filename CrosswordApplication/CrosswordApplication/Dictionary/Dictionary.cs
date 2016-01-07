@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace CrosswordApplication.Dictionary
 {
@@ -29,9 +30,9 @@ namespace CrosswordApplication.Dictionary
 
         // TODO Maybe we should create special classes for comparers
         // e.g. LengthComparer, LexicalComparer
-        public void Sort(IComparer<DictionaryWord> comparer)
+        public void Sort(DictionaryWordComparator comparer)
         {
-            Array.Sort<DictionaryWord>(DictionaryWords, comparer);
+            Array.Sort(DictionaryWords, comparer);
         }
 
         /*
@@ -40,17 +41,20 @@ namespace CrosswordApplication.Dictionary
          */
         public void Load(Action<bool> callback)
         {
-            //new OpenFileDialog().ShowDialog();
+            var openFileDialog = new OpenFileDialog();
 
-            // TODO Get fileName with dialog
-            string fileName = DefaultFileName;
+            openFileDialog.Filter = "Dictionary files (*.dict)|*.dict";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
             new global::CommonUtils.AsyncTask<bool>(
                 () =>
                 {
                     try
                     {
-                        var dictionaryLines = System.IO.File.ReadAllLines(fileName, Encoding.GetEncoding(1251));
+                        var dictionaryLines = System.IO.File.ReadAllLines(openFileDialog.FileName, Encoding.GetEncoding(1251));
                         var dictionarySize = dictionaryLines.Length;
                         DictionaryWords = new DictionaryWord[dictionarySize];
                         for (var i = 0; i < dictionarySize; i++)
@@ -58,6 +62,7 @@ namespace CrosswordApplication.Dictionary
                             DictionaryWords[i] = new DictionaryWord(dictionaryLines[i]);
                         }
                         // TODO Sort it with some comparer
+                        Sort(new DictionaryWordComparator(DictionaryWordComparator.SortDirection.Ascending, DictionaryWordComparator.SortBy.Alphabet));
                         return true;
                     }
                     catch (Exception e)

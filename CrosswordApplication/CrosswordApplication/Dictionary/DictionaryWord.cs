@@ -16,7 +16,7 @@ namespace CrosswordApplication.Dictionary
 
         public DictionaryWord(string word, string description)
         {
-            _word = word;
+            _word = word; 
             _description = description;
         }
 

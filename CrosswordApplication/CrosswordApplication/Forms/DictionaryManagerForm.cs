@@ -30,7 +30,7 @@ namespace CrosswordApplication.Forms
             // TODO Save Existed
             if (dictionary != null)
             {
-                if (dictionary.DictionaryWords.Length > 0)
+                if (dictionary.DictionaryWords[dictionary.DictionaryWords.Length - 1] != null)
                 {
                     dictionary.Save((res) => { });
                 }
@@ -48,6 +48,10 @@ namespace CrosswordApplication.Forms
                 }
                 catch (Exception e)
                 {
+                    ShowDirectionButtons(false, false);
+                    ShowSortTypeButtons(false, false);
+                    ShowMask(false);
+                    ShowButtonsForWord(false);
                     return;
                 }
             });
@@ -132,13 +136,10 @@ namespace CrosswordApplication.Forms
             sortDirection = DictionaryWordComparator.SortDirection.Ascending;
             sortBy = DictionaryWordComparator.SortBy.Alphabet;
 
-            if (dictionary.DictionaryWords.Length > 0)
-            {
-                ShowDirectionButtons(false, true);
-                ShowSortTypeButtons(false, true);
-                ShowMask(true);
-                ShowButtonsForWord(true);
-            }
+            ShowDirectionButtons(false, true);
+            ShowSortTypeButtons(false, true);
+            ShowMask(true);
+            ShowButtonsForWord(true);
         }
 
         private void ShowProgress()

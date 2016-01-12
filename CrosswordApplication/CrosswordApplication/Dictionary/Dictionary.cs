@@ -110,7 +110,7 @@ namespace CrosswordApplication.Dictionary
                            {
                                sb.AppendLine(this.DictionaryWords[i].Word + ' ' + this.DictionaryWords[i].Description);
                            }
-                           
+
                            streamWriter.Write(sb.ToString());
                            streamWriter.Close();
                        }

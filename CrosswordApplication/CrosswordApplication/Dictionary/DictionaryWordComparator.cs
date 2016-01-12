@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CrosswordApplication.Dictionary
 {
-    class DictionaryWordComparator : IComparer<DictionaryWord>
+    public class DictionaryWordComparator : IComparer<DictionaryWord>
     {
         public enum SortDirection
         {

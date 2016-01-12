@@ -1,6 +1,6 @@
 ﻿namespace CrosswordApplication.Dictionary
 {
-    class DictionaryMask
+    public class DictionaryMask
     {
     }
 }

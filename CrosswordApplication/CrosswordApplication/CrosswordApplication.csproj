@@ -70,6 +70,12 @@
     <Compile Include="Dictionary\DictionaryWord.cs" />
     <Compile Include="Dictionary\DictionaryIterator.cs" />
     <Compile Include="Dictionary\DictionaryMask.cs" />
+    <Compile Include="Forms\CreateOrUpdateDictionaryWordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateOrUpdateDictionaryWordForm.Designer.cs">
+      <DependentUpon>CreateOrUpdateDictionaryWordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CrosswordEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AuthDialogForm.resx">
       <DependentUpon>AuthDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateOrUpdateDictionaryWordForm.resx">
+      <DependentUpon>CreateOrUpdateDictionaryWordForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrosswordEditForm.resx">
       <DependentUpon>CrosswordEditForm.cs</DependentUpon>

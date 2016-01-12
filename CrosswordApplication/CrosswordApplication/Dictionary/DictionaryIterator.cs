@@ -1,6 +1,6 @@
 ﻿namespace CrosswordApplication.Dictionary
 {
-    class DictionaryIterator
+    public class DictionaryIterator
     {
 
     }

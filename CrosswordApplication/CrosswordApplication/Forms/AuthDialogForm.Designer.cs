@@ -35,7 +35,8 @@
             // 
             // ok_button
             // 
-            this.ok_button.Location = new System.Drawing.Point(12, 68);
+            this.ok_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ok_button.Location = new System.Drawing.Point(94, 56);
             this.ok_button.Name = "ok_button";
             this.ok_button.Size = new System.Drawing.Size(96, 28);
             this.ok_button.TabIndex = 0;
@@ -45,17 +46,19 @@
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.Location = new System.Drawing.Point(12, 31);
+            this.passwordTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.passwordTextBox.Location = new System.Drawing.Point(43, 28);
             this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(204, 20);
+            this.passwordTextBox.Size = new System.Drawing.Size(204, 22);
             this.passwordTextBox.TabIndex = 1;
             // 
             // typePasswordLabel
             // 
             this.typePasswordLabel.AutoSize = true;
-            this.typePasswordLabel.Location = new System.Drawing.Point(12, 12);
+            this.typePasswordLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.typePasswordLabel.Location = new System.Drawing.Point(91, 9);
             this.typePasswordLabel.Name = "typePasswordLabel";
-            this.typePasswordLabel.Size = new System.Drawing.Size(88, 13);
+            this.typePasswordLabel.Size = new System.Drawing.Size(114, 16);
             this.typePasswordLabel.TabIndex = 2;
             this.typePasswordLabel.Text = "Введите пароль";
             // 
@@ -63,7 +66,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(250, 118);
+            this.ClientSize = new System.Drawing.Size(297, 95);
             this.Controls.Add(this.typePasswordLabel);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.ok_button);

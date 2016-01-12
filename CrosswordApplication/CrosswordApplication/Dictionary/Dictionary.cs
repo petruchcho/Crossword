@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
 namespace CrosswordApplication.Dictionary
 {
-    class Dictionary
+    public class Dictionary
     {
         public static readonly string DefaultFileName = @"..\..\Главный.dict";
 
@@ -67,7 +68,9 @@ namespace CrosswordApplication.Dictionary
                     }
                     catch (Exception e)
                     {
-                        // TODO Proceed exception
+                        MessageBox.Show(
+                    "Неверный формат файла",
+                    "Ошибка", MessageBoxButtons.OK);
                     }
                     return false;
                 }, callback).Start();
@@ -79,8 +82,46 @@ namespace CrosswordApplication.Dictionary
          */
         public void Save(Action<bool> callback)
         {
-            // TODO
-            throw new NotImplementedException();
+            var saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "Dictionary files (*.dict)|*.dict";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
+            if (!saveFileDialog1.FileName.EndsWith(saveFileDialog1.DefaultExt))
+            {
+                MessageBox.Show("Некорректное расширение");
+                return;
+            }
+
+            new global::CommonUtils.AsyncTask<bool>(
+               () =>
+               {
+                   try
+                   {
+                       Stream myStream;
+                       if ((myStream = saveFileDialog1.OpenFile()) != null)
+                       {
+                           var streamWriter = new StreamWriter(myStream, Encoding.GetEncoding(1251));
+
+                           var sb = new StringBuilder();
+                           for (int i = 0; i < this.DictionaryWords.Length; i++)
+                           {
+                               sb.AppendLine(this.DictionaryWords[i].Word + ' ' + this.DictionaryWords[i].Description);
+                           }
+                           
+                           streamWriter.Write(sb.ToString());
+                           streamWriter.Close();
+                       }
+                       return true;
+                   }
+                   catch (Exception e)
+                   {
+                       // TODO Proceed exception
+                   }
+                   return false;
+               }, callback).Start();
         }
 
         /*

@@ -48,7 +48,6 @@
             this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьСловарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.dictionaryListBox = new System.Windows.Forms.ListBox();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -70,7 +69,7 @@
             this.descendingButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(784, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(736, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -140,7 +139,7 @@
             this.deleteMaskButton.Size = new System.Drawing.Size(23, 22);
             this.deleteMaskButton.Text = "toolStripButton5";
             this.deleteMaskButton.ToolTipText = "Очистить маску";
-            this.deleteMaskButton.Click += new System.EventHandler(this.toolStripButton5_Click);
+            this.deleteMaskButton.Click += new System.EventHandler(this.deleteMaskButton_Click);
             // 
             // toolStripSeparator2
             // 
@@ -155,8 +154,8 @@
             this.stripSplitButton.Image = global::CrosswordApplication.Properties.Resources.sort;
             this.stripSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stripSplitButton.Name = "stripSplitButton";
-            this.stripSplitButton.Size = new System.Drawing.Size(183, 22);
-            this.stripSplitButton.Text = "Выберите тип сортировки";
+            this.stripSplitButton.Size = new System.Drawing.Size(128, 22);
+            this.stripSplitButton.Text = "Тип сортировки";
             // 
             // поАлфавиту
             // 
@@ -201,7 +200,7 @@
             this.справкаToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(736, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -220,6 +219,7 @@
             this.новыйToolStripMenuItem.Name = "новыйToolStripMenuItem";
             this.новыйToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.новыйToolStripMenuItem.Text = "Новый";
+            this.новыйToolStripMenuItem.Click += new System.EventHandler(this.новыйToolStripMenuItem_Click);
             // 
             // сохранитьToolStripMenuItem
             // 
@@ -241,23 +241,20 @@
             this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.справкаToolStripMenuItem.Text = "Справка";
             // 
-            // progressBar
-            // 
-            this.progressBar.Location = new System.Drawing.Point(285, 221);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(197, 32);
-            this.progressBar.Step = 1;
-            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar.TabIndex = 3;
-            this.progressBar.Visible = false;
-            // 
             // dictionaryListBox
             // 
+            this.dictionaryListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dictionaryListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dictionaryListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dictionaryListBox.FormattingEnabled = true;
-            this.dictionaryListBox.Location = new System.Drawing.Point(162, 52);
+            this.dictionaryListBox.HorizontalScrollbar = true;
+            this.dictionaryListBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.dictionaryListBox.ItemHeight = 20;
+            this.dictionaryListBox.Location = new System.Drawing.Point(0, 52);
             this.dictionaryListBox.Name = "dictionaryListBox";
-            this.dictionaryListBox.Size = new System.Drawing.Size(468, 507);
+            this.dictionaryListBox.Size = new System.Drawing.Size(735, 380);
             this.dictionaryListBox.TabIndex = 4;
             this.dictionaryListBox.SelectedIndexChanged += new System.EventHandler(this.dictionaryListBox_SelectedIndexChanged);
             // 
@@ -266,8 +263,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(784, 561);
-            this.Controls.Add(this.progressBar);
+            this.ClientSize = new System.Drawing.Size(736, 434);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dictionaryListBox);
@@ -292,7 +288,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem открытьСловарьToolStripMenuItem;
-        private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.ToolStripButton newWordButton;
         private System.Windows.Forms.ToolStripButton updateWordButton;
         private System.Windows.Forms.ToolStripButton deleteWordButton;

@@ -263,7 +263,7 @@ namespace CrosswordApplication.Forms
             loadCrosswordToolStripMenu.Enabled = true;
             saveCrosswordToolStripMenuItem.Enabled = crosswordLoaded;
 
-            сгенерироватьToolStripMenuItem.Enabled = false;
+            generateToolStripMenuItem.Enabled = false;
 
             board.Visible = crosswordLoaded;
         }
@@ -760,10 +760,39 @@ namespace CrosswordApplication.Forms
             }
         }
 
+        private void ShowCrosswordGenerationParametersDialog()
+        {
+            SaveCrosswordWithDialog();
+
+            CrosswordGenerationParametersForm generationParametersForm = new CrosswordGenerationParametersForm();//or (this) with a listener
+            generationParametersForm.ShowDialog();
+
+        }
+
+        private void GenerateCrossword()
+        {
+            
+
+            crossword = new global::Crossword.Crossword();
+
+            //TODO Logic, new class mb
+           
+        }
+
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AboutProgram aboutForm = new AboutProgram();
             aboutForm.ShowDialog();
+        }
+
+        private void generateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowCrosswordGenerationParametersDialog();
+            //GENERATION
+            GenerateCrossword();
+            SetCrossword();
+
+            UpdateUi();
         }
     }
 

@@ -47,7 +47,7 @@
             // passwordTextBox
             // 
             this.passwordTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passwordTextBox.Location = new System.Drawing.Point(43, 28);
+            this.passwordTextBox.Location = new System.Drawing.Point(46, 28);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(204, 22);
             this.passwordTextBox.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             this.typePasswordLabel.AutoSize = true;
             this.typePasswordLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.typePasswordLabel.Location = new System.Drawing.Point(91, 9);
+            this.typePasswordLabel.Location = new System.Drawing.Point(83, 9);
             this.typePasswordLabel.Name = "typePasswordLabel";
             this.typePasswordLabel.Size = new System.Drawing.Size(114, 16);
             this.typePasswordLabel.TabIndex = 2;
@@ -64,6 +64,7 @@
             // 
             // AuthDialogForm
             // 
+            this.AcceptButton = this.ok_button;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(297, 95);
@@ -71,7 +72,9 @@
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.ok_button);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "AuthDialogForm";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Авторизация";
             this.TopMost = true;

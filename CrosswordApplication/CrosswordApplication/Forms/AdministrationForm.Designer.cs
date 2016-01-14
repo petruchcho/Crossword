@@ -35,12 +35,14 @@
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.руководствоПользователяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // dictionaryManagerButton
             // 
-            this.dictionaryManagerButton.Location = new System.Drawing.Point(129, 139);
+            this.dictionaryManagerButton.Location = new System.Drawing.Point(247, 148);
             this.dictionaryManagerButton.Name = "dictionaryManagerButton";
             this.dictionaryManagerButton.Size = new System.Drawing.Size(317, 60);
             this.dictionaryManagerButton.TabIndex = 3;
@@ -50,7 +52,7 @@
             // 
             // crosswordManagerButton
             // 
-            this.crosswordManagerButton.Location = new System.Drawing.Point(129, 55);
+            this.crosswordManagerButton.Location = new System.Drawing.Point(247, 68);
             this.crosswordManagerButton.Name = "crosswordManagerButton";
             this.crosswordManagerButton.Size = new System.Drawing.Size(317, 60);
             this.crosswordManagerButton.TabIndex = 2;
@@ -90,21 +92,35 @@
             this.руководствоПользователяToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.руководствоПользователяToolStripMenuItem.Text = "Руководство пользователя";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::CrosswordApplication.Properties.Resources.owl;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 30);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(220, 220);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
             // AdministrationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 261);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dictionaryManagerButton);
             this.Controls.Add(this.crosswordManagerButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "AdministrationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Администрирование";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -118,5 +134,6 @@
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem руководствоПользователяToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

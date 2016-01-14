@@ -31,25 +31,30 @@ namespace CrosswordApplication.Forms
             {
                 if((dictionary.DictionaryWords.Length > 0) && (dictionary.DictionaryWords[dictionary.DictionaryWords.Length - 1] != null))
                     dictionary.Save((res) => { });
-
             }
         }
 
-        private void LoadDictionary()
+        private void LoadDictionary(Action action)
         {
             // TODO Save Existed
             
             Save();
 
             ShowProgress();
-            dictionary = new Dictionary.Dictionary();
+            Dictionary.Dictionary dictionary = new Dictionary.Dictionary();
 
             dictionary.Load((res) =>
             {
+                this.dictionary = dictionary;
+
                 HideProgress();
                 try
                 {
                     UpdateUi();
+                    if (action != null)
+                    {
+                        action.Invoke();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -97,15 +102,10 @@ namespace CrosswordApplication.Forms
 
         private void DictionaryManagerForm_Load(object sender, EventArgs e)
         {
-            if (fileName != null)
-            {
-                LoadDictionary();
-            }
-
-            ShowDirectionButtons(false, false);
-            ShowSortTypeButtons(false, false);
-            ShowMask(false);
-            ShowButtonsForWord(false);
+           ShowDirectionButtons(false, false);
+           ShowSortTypeButtons(false, false);
+           ShowMask(false);
+           ShowButtonsForWord(false); 
         }
 
         private void ShowDirectionButtons(bool ascending, bool descending)
@@ -136,15 +136,15 @@ namespace CrosswordApplication.Forms
 
         private void открытьСловарьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoadDictionary();
+            LoadDictionary(() => {
+                sortDirection = DictionaryWordComparator.SortDirection.Ascending;
+                sortBy = DictionaryWordComparator.SortBy.Alphabet;
 
-            sortDirection = DictionaryWordComparator.SortDirection.Ascending;
-            sortBy = DictionaryWordComparator.SortBy.Alphabet;
-
-            ShowDirectionButtons(false, true);
-            ShowSortTypeButtons(false, true);
-            ShowMask(true);
-            ShowButtonsForWord(true);
+                ShowDirectionButtons(false, true);
+                ShowSortTypeButtons(false, true);
+                ShowMask(true);
+                ShowButtonsForWord(true);
+            });
         }
 
         private void ShowProgress()

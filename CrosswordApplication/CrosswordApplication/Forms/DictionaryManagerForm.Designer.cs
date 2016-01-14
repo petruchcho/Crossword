@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DictionaryManagerForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.newWordButton = new System.Windows.Forms.ToolStripButton();
             this.updateWordButton = new System.Windows.Forms.ToolStripButton();
@@ -37,7 +38,7 @@
             this.searchMask = new System.Windows.Forms.ToolStripTextBox();
             this.deleteMaskButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.stripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
+            this.stripSplitButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.поАлфавиту = new System.Windows.Forms.ToolStripMenuItem();
             this.поКоличествуБукв = new System.Windows.Forms.ToolStripMenuItem();
             this.anscendingButton = new System.Windows.Forms.ToolStripButton();
@@ -48,6 +49,8 @@
             this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьСловарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.руководствоПользователяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionaryListBox = new System.Windows.Forms.ListBox();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -126,7 +129,7 @@
             // 
             this.searchMask.Name = "searchMask";
             this.searchMask.Size = new System.Drawing.Size(100, 25);
-            this.searchMask.ToolTipText = "Поиск по маске";
+            this.searchMask.ToolTipText = "Поиск по маске\r\n* - любая одна буква\r\n? - любые несколько букв\r\n";
             this.searchMask.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox1_KeyPress);
             // 
             // deleteMaskButton
@@ -154,7 +157,7 @@
             this.stripSplitButton.Image = global::CrosswordApplication.Properties.Resources.sort;
             this.stripSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stripSplitButton.Name = "stripSplitButton";
-            this.stripSplitButton.Size = new System.Drawing.Size(128, 22);
+            this.stripSplitButton.Size = new System.Drawing.Size(125, 22);
             this.stripSplitButton.Text = "Тип сортировки";
             // 
             // поАлфавиту
@@ -237,9 +240,24 @@
             // 
             // справкаToolStripMenuItem
             // 
+            this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.оПрограммеToolStripMenuItem,
+            this.руководствоПользователяToolStripMenuItem});
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
             this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.справкаToolStripMenuItem.Text = "Справка";
+            // 
+            // оПрограммеToolStripMenuItem
+            // 
+            this.оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
+            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.оПрограммеToolStripMenuItem.Text = "О программе";
+            // 
+            // руководствоПользователяToolStripMenuItem
+            // 
+            this.руководствоПользователяToolStripMenuItem.Name = "руководствоПользователяToolStripMenuItem";
+            this.руководствоПользователяToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.руководствоПользователяToolStripMenuItem.Text = "Руководство пользователя";
             // 
             // dictionaryListBox
             // 
@@ -257,6 +275,7 @@
             this.dictionaryListBox.Size = new System.Drawing.Size(735, 380);
             this.dictionaryListBox.TabIndex = 4;
             this.dictionaryListBox.SelectedIndexChanged += new System.EventHandler(this.dictionaryListBox_SelectedIndexChanged);
+            this.dictionaryListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dictionaryListBox_MouseDoubleClick);
             // 
             // DictionaryManagerForm
             // 
@@ -268,6 +287,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dictionaryListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "DictionaryManagerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -296,14 +316,16 @@
         private System.Windows.Forms.ToolStripTextBox searchMask;
         private System.Windows.Forms.ToolStripButton deleteMaskButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripSplitButton stripSplitButton;
         private System.Windows.Forms.ToolStripButton descendingButton;
         private System.Windows.Forms.ToolStripButton anscendingButton;
-        private System.Windows.Forms.ToolStripMenuItem поАлфавиту;
-        private System.Windows.Forms.ToolStripMenuItem поКоличествуБукв;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem новыйToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
         private System.Windows.Forms.ListBox dictionaryListBox;
+        private System.Windows.Forms.ToolStripDropDownButton stripSplitButton;
+        private System.Windows.Forms.ToolStripMenuItem поАлфавиту;
+        private System.Windows.Forms.ToolStripMenuItem поКоличествуБукв;
+        private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem руководствоПользователяToolStripMenuItem;
     }
 }

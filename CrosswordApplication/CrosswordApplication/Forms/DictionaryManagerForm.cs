@@ -25,16 +25,21 @@ namespace CrosswordApplication.Forms
             this.fileName = fileName;
         }
 
+        private void Save()
+        {
+            if (dictionary != null)
+            {
+                if((dictionary.DictionaryWords.Length > 0) && (dictionary.DictionaryWords[dictionary.DictionaryWords.Length - 1] != null))
+                    dictionary.Save((res) => { });
+
+            }
+        }
+
         private void LoadDictionary()
         {
             // TODO Save Existed
-            if (dictionary != null)
-            {
-                if (dictionary.DictionaryWords[dictionary.DictionaryWords.Length - 1] != null)
-                {
-                    dictionary.Save((res) => { });
-                }
-            }
+            
+            Save();
 
             ShowProgress();
             dictionary = new Dictionary.Dictionary();
@@ -200,7 +205,7 @@ namespace CrosswordApplication.Forms
         private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             char keyChar = e.KeyChar;
-            if ((keyChar < 'а' || keyChar > 'я') && keyChar != '\b' && keyChar != '*')
+            if ((keyChar < 'а' || keyChar > 'я') && keyChar != '\b' && keyChar != '*' && keyChar != '?')
             {
                 e.Handled = true;
             }
@@ -373,12 +378,34 @@ namespace CrosswordApplication.Forms
 
         private void новыйToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Save();
+
             dictionary = new Dictionary.Dictionary();
             dictionary.DictionaryWords = new DictionaryWord[0];
             ShowDirectionButtons(false, true);
             ShowSortTypeButtons(false, true);
             ShowMask(true);
             ShowButtonsForWord(true);
+            UpdateUi();
+        }
+
+        private void dictionaryListBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int indexSelected = dictionaryListBox.SelectedIndex;
+            try
+            {
+                if (dictionaryListBox.SelectedItem.ToString() != "По данной маске ничего не найдено")
+                {
+                    selectedWord = dictionary.DictionaryWords[indexSelected].Word;
+                    selectedDascription = dictionary.DictionaryWords[indexSelected].Description;
+                    updateWordButton_Click(sender, e);
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            
         }
     }
 }

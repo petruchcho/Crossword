@@ -29,5 +29,11 @@ namespace CrosswordApplication
         {
             FormUtils.OpenFormAndSaveHierarchy(this, new CrosswordEditForm(UserRole.Administrator));
         }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutProgram aboutForm = new AboutProgram();
+            aboutForm.ShowDialog();
+        }
     }
 }

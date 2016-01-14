@@ -759,6 +759,12 @@ namespace CrosswordApplication.Forms
                 }
             }
         }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutProgram aboutForm = new AboutProgram();
+            aboutForm.ShowDialog();
+        }
     }
 
     interface ICrosswordDrawer

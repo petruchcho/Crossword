@@ -20,6 +20,7 @@ namespace CrosswordApplication.Forms
 
         private void generateButton_Click(object sender, EventArgs e)
         {
+
             //TODO verify all parameters, 
             //InitializeComponent - on UserRole (Параметры form/Сгенерировать form), ask how to do this
         }

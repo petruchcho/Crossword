@@ -263,7 +263,7 @@ namespace CrosswordApplication.Forms
             loadCrosswordToolStripMenu.Enabled = true;
             saveCrosswordToolStripMenuItem.Enabled = crosswordLoaded;
 
-            generateToolStripMenuItem.Enabled = false;
+            generateToolStripMenuItem.Enabled = dictionaryLoaded && crosswordLoaded;
 
             board.Visible = crosswordLoaded;
         }
@@ -771,12 +771,9 @@ namespace CrosswordApplication.Forms
 
         private void GenerateCrossword()
         {
-            
-
             crossword = new global::Crossword.Crossword();
 
-            //TODO Logic, new class mb
-           
+            crossword.Generate(dictionary);            
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -787,8 +784,13 @@ namespace CrosswordApplication.Forms
 
         private void generateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowCrosswordGenerationParametersDialog();
-            //GENERATION
+            /* ShowCrosswordGenerationParametersDialog();
+             //GENERATION
+             GenerateCrossword();
+             SetCrossword();
+
+             UpdateUi();*/
+
             GenerateCrossword();
             SetCrossword();
 

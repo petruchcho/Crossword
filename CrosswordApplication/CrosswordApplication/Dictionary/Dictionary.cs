@@ -10,6 +10,8 @@ namespace CrosswordApplication.Dictionary
     {
         public static readonly string DefaultFileName = @"..\..\Главный.dict";
 
+        private readonly static Random random = new Random();
+
         // TODO Make private
         public DictionaryWord[] DictionaryWords;
 
@@ -130,6 +132,18 @@ namespace CrosswordApplication.Dictionary
         public bool IsLoaded()
         {
             return DictionaryWords != null && DictionaryWords.Length > 0;
+        }
+
+        public DictionaryWord GetRandomDictionaryWord()
+        {
+            if (DictionaryWords == null || DictionaryWords.Length == 0)
+            {
+                return null;
+            }
+
+            DictionaryWord dictionaryWord = DictionaryWords[random.Next(0, DictionaryWords.Length)];
+
+            return dictionaryWord;
         }
     }
 }

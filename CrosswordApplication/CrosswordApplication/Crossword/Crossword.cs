@@ -67,6 +67,9 @@ namespace Crossword
 
         private readonly CrosswordSerializer serializer = new CrosswordSerializer();
 
+        private readonly CrosswordGenerator generator = new CrosswordGenerator();
+
+
         private CrosswordStateListener _crosswordStateListener;
 
         public Crossword()
@@ -461,6 +464,11 @@ namespace Crossword
         {
             return serializer.SerializeCrossword(this);
         }
+
+        public void Generate(Dictionary dictionary)
+        {
+            generator.Generate(this, dictionary);
+        }
     }
 
     class CrosswordSerializer
@@ -536,6 +544,56 @@ namespace Crossword
                 stringBuilder.AppendLine(crosswordWord.IsResolved.ToString());
             }
             return stringBuilder.ToString();
+        }
+    }
+
+    class CrosswordGenerator
+    {
+        private readonly static Random random = new Random();
+
+        internal void Generate(Crossword crossword, Dictionary dictionary)
+        {
+            if (dictionary.DictionaryWords.Length == 0)
+            {
+                return;
+            }
+            
+            int count_of_HOLOSTYE_iterations = 0;
+            //int iteration = 0;
+
+            while (count_of_HOLOSTYE_iterations < 10)//iteration < 3)
+            {
+                var dictionaryWord = dictionary.GetRandomDictionaryWord();
+                var positions = crossword.GetPreviewsPositions(dictionaryWord);
+
+                if (positions != null)
+                {
+                    if (positions.Count == 0)
+                    {
+                        count_of_HOLOSTYE_iterations++;
+                        continue;
+                    }
+
+                    var position = positions[random.Next(0, positions.Count)]; //  range: [0; positions.Count - 1]  
+                    var crosswordWord = new CrosswordWord(crossword, dictionaryWord, position.Position, false);
+                    crossword.AddWord(crosswordWord); 
+                }
+                else
+                {
+                    int x = random.Next(0, crossword.Width);
+                    int y = random.Next(0, crossword.Height);
+                    int lengthOfWord = dictionaryWord.Word.Length;
+
+                    while (x + lengthOfWord - 1 > crossword.Width - 1)
+                    {
+                        x = random.Next(0, crossword.Width);
+                    }
+
+                    crossword.AddWord(new CrosswordWord(crossword, dictionaryWord, new CrosswordWordPosition(x, y, Orientation.Horizontal), false)); 
+                }                
+                
+                count_of_HOLOSTYE_iterations = 0;
+            }
         }
     }
 }

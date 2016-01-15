@@ -91,6 +91,12 @@
     <Compile Include="CommonUtils\CustomDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\CrosswordGenerationParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CrosswordGenerationParametersForm.Designer.cs">
+      <DependentUpon>CrosswordGenerationParametersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DictionaryManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrosswordEditForm.resx">
       <DependentUpon>CrosswordEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CrosswordGenerationParametersForm.resx">
+      <DependentUpon>CrosswordGenerationParametersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DictionaryManagerForm.resx">
       <DependentUpon>DictionaryManagerForm.cs</DependentUpon>

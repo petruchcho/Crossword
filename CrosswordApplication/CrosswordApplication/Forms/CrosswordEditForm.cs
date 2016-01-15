@@ -253,6 +253,15 @@ namespace CrosswordApplication.Forms
             questionsAdminSplitContainer.Visible = userRole == UserRole.Administrator;
             questionsUserPanel.Visible = userRole == UserRole.User;
 
+            if (userRole == UserRole.Administrator)
+            {
+                this.Text = "Менеджер кроссвордов";
+            }
+            else
+            {
+                this.Text = "Разгадывание";
+            }
+
             bool dictionaryLoaded = dictionary != null && dictionary.IsLoaded();
             bool crosswordLoaded = crossword != null;
 

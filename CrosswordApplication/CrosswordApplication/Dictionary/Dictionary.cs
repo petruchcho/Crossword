@@ -26,7 +26,7 @@ namespace CrosswordApplication.Dictionary
         public DictionaryIterator GetIterator(DictionaryMask mask)
         {
             // TODO
-            throw new NotImplementedException();
+            return new DictionaryIterator(mask, DictionaryWords);
         }
 
         // TODO Maybe we should create special classes for comparers

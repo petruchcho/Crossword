@@ -454,7 +454,6 @@
             this.MinimizeBox = false;
             this.Name = "CrosswordEditForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Кроссворд";
             this.Load += new System.EventHandler(this.CrosswordEditForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();

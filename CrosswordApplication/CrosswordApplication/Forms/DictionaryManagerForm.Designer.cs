@@ -52,6 +52,7 @@
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.руководствоПользователяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionaryListBox = new System.Windows.Forms.ListBox();
+            this.emptyState = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -130,6 +131,7 @@
             this.searchMask.Name = "searchMask";
             this.searchMask.Size = new System.Drawing.Size(100, 25);
             this.searchMask.ToolTipText = "Поиск по маске\r\n* - любая одна буква\r\n? - любые несколько букв\r\n";
+            this.searchMask.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchMask_KeyDown);
             this.searchMask.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox1_KeyPress);
             // 
             // deleteMaskButton
@@ -278,12 +280,25 @@
             this.dictionaryListBox.SelectedIndexChanged += new System.EventHandler(this.dictionaryListBox_SelectedIndexChanged);
             this.dictionaryListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dictionaryListBox_MouseDoubleClick);
             // 
+            // emptyState
+            // 
+            this.emptyState.AutoSize = true;
+            this.emptyState.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.emptyState.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.emptyState.ForeColor = System.Drawing.Color.Red;
+            this.emptyState.Location = new System.Drawing.Point(179, 202);
+            this.emptyState.Name = "emptyState";
+            this.emptyState.Size = new System.Drawing.Size(372, 24);
+            this.emptyState.TabIndex = 5;
+            this.emptyState.Text = "Загрузите или создайте новый словарь";
+            // 
             // DictionaryManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(736, 434);
+            this.Controls.Add(this.emptyState);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dictionaryListBox);
@@ -328,5 +343,6 @@
         private System.Windows.Forms.ToolStripMenuItem поКоличествуБукв;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem руководствоПользователяToolStripMenuItem;
+        private System.Windows.Forms.Label emptyState;
     }
 }

@@ -64,6 +64,8 @@ namespace Crossword
         private readonly List<CrosswordWord> crosswordWords;
 
         private List<CrosswordLetter> progress;
+        private int letterHelpers = 0;
+        private int wordHelpers = 0;
 
         private readonly CrosswordSerializer serializer = new CrosswordSerializer();
 
@@ -225,10 +227,44 @@ namespace Crossword
             get { return progress; }
         }
 
+        public int LetterHelpers
+        {
+            get
+            {
+                return letterHelpers;
+            }
+
+            set { letterHelpers = value; }
+        }
+
+        public int WordHelpers
+        {
+            get
+            {
+                return wordHelpers;
+            }
+
+            set { wordHelpers = value; }
+        }
+
         public void SetProgress(List<CrosswordLetter> progressList)
         {
             progress = new List<CrosswordLetter>();
             progress.AddRange(progressList);
+        }
+
+        public void AddLetterToProgress(int x, int y, string letter)
+        {
+            for (int i = 0; i < progress.Count; i++)
+            {
+                var curProgress = progress[i];
+                if (curProgress.Position.X == x && curProgress.Position.Y == y)
+                {
+                    progress.RemoveAt(i);
+                    break;
+                }
+            }
+            progress.Add(new CrosswordLetter(letter, new CrosswordWordPosition(x, y, Orientation.Horizontal)));
         }
 
         public List<CrosswordWord> FindWordsAtPosition(int x, int y)
@@ -327,6 +363,24 @@ namespace Crossword
             }
 
             return result;
+        }
+
+        public CrosswordLetter GetLetterAtPosition(int x, int y)
+        {
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                for (var i = 0; i < crosswordWord.Word.Length; i++)
+                {
+                    int xx;
+                    int yy;
+                    crosswordWord.PositionAtIndex(i, out xx, out yy);
+                    if (xx == x && yy == y)
+                    {
+                        return new CrosswordLetter(crosswordWord.Word[i].ToString().ToUpper(), new CrosswordWordPosition(x, y, Orientation.Horizontal));
+                    }
+                }
+            }
+            return null;
         }
 
         public PreviewCrosswordWord GetBestHighlight(DictionaryWord dictionaryWord, int x, int y,
@@ -496,12 +550,24 @@ namespace Crossword
                 crossword.CrosswordWords.Add(new CrosswordWord(crossword, new DictionaryWord(word, description), new CrosswordWordPosition(x, y, orientation), isResolved));
             }
 
+            int sumOfLetters = 0;
+            foreach (CrosswordWord word in crossword.CrosswordWords)
+            {
+                sumOfLetters += word.Word.Length;
+            }
+            crossword.LetterHelpers = (int) (0.1*sumOfLetters);
+            crossword.WordHelpers = (int)(0.1 * wordsCount);
+
             try
             {
-                var progressCount = int.Parse(lines[3 + wordsCount * 6]);
+                var wordHelpers = int.Parse(lines[3 + wordsCount*6]);
+                var letterHelpers = int.Parse(lines[4 + wordsCount * 6]);
+                crossword.LetterHelpers = letterHelpers;
+                crossword.WordHelpers = wordHelpers;
+                var progressCount = int.Parse(lines[5 + wordsCount * 6]);
                 for (var i = 0; i < progressCount; i++)
                 {
-                    var curIndex = 3 + wordsCount * 6 + 1 + i * 3;
+                    var curIndex = 5 + wordsCount * 6 + 1 + i * 3;
                     var letter = lines[curIndex];
                     var x = int.Parse(lines[curIndex + 1]);
                     var y = int.Parse(lines[curIndex + 2]);
@@ -518,6 +584,8 @@ namespace Crossword
         internal string SerializeCrossword(Crossword crossword, List<CrosswordLetter> progress)
         {
             var sb = new StringBuilder(SerializeCrossword(crossword));
+            sb.AppendLine(crossword.WordHelpers.ToString());
+            sb.AppendLine(crossword.LetterHelpers.ToString());
             sb.AppendLine(progress.Count.ToString());
             foreach (CrosswordLetter letter in progress)
             {

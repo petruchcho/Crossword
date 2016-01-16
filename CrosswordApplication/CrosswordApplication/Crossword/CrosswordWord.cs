@@ -102,6 +102,21 @@ namespace CrosswordApplication.Crossword
                 }
             }
 
+            for (int i = 0; i < Word.Length; i++)
+            {
+                for (int j = 0; j < other.Word.Length; j++)
+                {
+                    int x1, y1, x2, y2;
+                    PositionAtIndex(i, out x1, out y1);
+                    other.PositionAtIndex(j, out x2, out y2);
+
+                    if (Math.Abs(x2 - x1) + Math.Abs(y2 - y1) == 1)
+                    {
+                        return IntersectionType.WrongIntersection;
+                    }
+                }
+            }
+
             return IntersectionType.NoIntersection;
         }
 

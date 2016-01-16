@@ -508,7 +508,26 @@ namespace CrosswordApplication.Forms
 
                 try
                 {
-                    board[args.ColumnIndex, args.RowIndex].Value = board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper();
+                    if (!board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper().Equals(board[args.ColumnIndex, args.RowIndex].Value))
+                    {
+                        board[args.ColumnIndex, args.RowIndex].Value = board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper();
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                try
+                {
+                    if (board[args.ColumnIndex, args.RowIndex].Value.ToString().Length > 0)
+                    {
+                        char c = board[args.ColumnIndex, args.RowIndex].Value.ToString()[0];
+                        if (!(c >= 'А' && c <= 'Я'))
+                        {
+                            board[args.ColumnIndex, args.RowIndex].Value = "";
+                        }
+                    }
                 }
                 catch (Exception)
                 {

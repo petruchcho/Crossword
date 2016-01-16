@@ -47,6 +47,9 @@
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
             this.board = new CrosswordApplication.Forms.CustomDataGridView();
             this.questionsUserPanel = new System.Windows.Forms.Panel();
+            this.finishButton = new System.Windows.Forms.Button();
+            this.openLetterButton = new System.Windows.Forms.Button();
+            this.openWordButton = new System.Windows.Forms.Button();
             this.questionsUserList = new CrosswordApplication.Forms.CustomDataGridView();
             this.DescriptionUserColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.questionsAdminSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -238,12 +241,44 @@
             // 
             // questionsUserPanel
             // 
+            this.questionsUserPanel.Controls.Add(this.finishButton);
+            this.questionsUserPanel.Controls.Add(this.openLetterButton);
+            this.questionsUserPanel.Controls.Add(this.openWordButton);
             this.questionsUserPanel.Controls.Add(this.questionsUserList);
             this.questionsUserPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.questionsUserPanel.Location = new System.Drawing.Point(0, 0);
             this.questionsUserPanel.Name = "questionsUserPanel";
             this.questionsUserPanel.Size = new System.Drawing.Size(280, 537);
             this.questionsUserPanel.TabIndex = 1;
+            // 
+            // finishButton
+            // 
+            this.finishButton.Location = new System.Drawing.Point(138, 406);
+            this.finishButton.Name = "finishButton";
+            this.finishButton.Size = new System.Drawing.Size(137, 127);
+            this.finishButton.TabIndex = 3;
+            this.finishButton.Text = "Завершить игру";
+            this.finishButton.UseVisualStyleBackColor = true;
+            // 
+            // openLetterButton
+            // 
+            this.openLetterButton.Location = new System.Drawing.Point(4, 474);
+            this.openLetterButton.Name = "openLetterButton";
+            this.openLetterButton.Size = new System.Drawing.Size(128, 59);
+            this.openLetterButton.TabIndex = 2;
+            this.openLetterButton.Text = "Открыть слово";
+            this.openLetterButton.UseVisualStyleBackColor = true;
+            this.openLetterButton.Click += new System.EventHandler(this.openLetterButton_Click);
+            // 
+            // openWordButton
+            // 
+            this.openWordButton.Location = new System.Drawing.Point(4, 407);
+            this.openWordButton.Name = "openWordButton";
+            this.openWordButton.Size = new System.Drawing.Size(128, 61);
+            this.openWordButton.TabIndex = 1;
+            this.openWordButton.Text = "Открыть букву";
+            this.openWordButton.UseVisualStyleBackColor = true;
+            this.openWordButton.Click += new System.EventHandler(this.openWordButton_Click);
             // 
             // questionsUserList
             // 
@@ -513,5 +548,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionUserColumn;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem руководствоПользователяToolStripMenuItem;
+        private System.Windows.Forms.Button finishButton;
+        private System.Windows.Forms.Button openLetterButton;
+        private System.Windows.Forms.Button openWordButton;
     }
 }

@@ -40,16 +40,13 @@ namespace CrosswordApplication.Forms
 
         private void loadDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO Save Existed
-            //            if (dictionary != null)
-            //            {
-            //                dictionary.Save(res => { });
-            //            }
-
             dictionary = new Dictionary.Dictionary();
             dictionary.Load(res =>
             {
-                SetDictionary();
+                if (res)
+                {
+                    SetDictionary();
+                }
             });
         }
 
@@ -66,7 +63,10 @@ namespace CrosswordApplication.Forms
             crossword.Load(userRole, 
                 res =>
             {
-                SetCrossword();
+                if (res)
+                {
+                    SetCrossword();
+                }
             });
         }
 
@@ -112,8 +112,7 @@ namespace CrosswordApplication.Forms
             dictionaryListBox.Visible = true;
 
             var items = dictionaryListBox.Rows;
-            // TODO Remove 100
-            for (var i = 0; i < Math.Min(100, dictionary.DictionaryWords.Length); i++)
+            for (var i = 0; i < dictionary.DictionaryWords.Length; i++)
             {
                 var dictionaryWord = dictionary.DictionaryWords[i];
                 items.Add(dictionaryWord.Word, dictionaryWord.Description);
@@ -133,6 +132,12 @@ namespace CrosswordApplication.Forms
             {
                 var wordSelectionListener = new WordSelectionListener(crosswordWord =>
                 {
+                    questionsListBox.ClearSelection();
+                    questionsUserList.ClearSelection();
+                    if (crosswordWord == null)
+                    {
+                        return;
+                    }
                     for (int i = 0; i < questionsListBox.RowCount; i++)
                     {
                         if (questionsListBox.Rows[i].Cells[0].Value.Equals(crosswordWord.Word))
@@ -160,7 +165,7 @@ namespace CrosswordApplication.Forms
                     // Word added
                     questionsListBox.Rows.Add(crosswordWord.Word, crosswordWord.Description);
                     questionsListBox.ClearSelection();
-                    crosswordDrawer.Draw(crossword);
+                    crosswordDrawer.ReDraw(BuildProgress());
                 },
                 () =>
                 {
@@ -171,7 +176,7 @@ namespace CrosswordApplication.Forms
                     // Word deleted
                     ConfigureQuestionsAdminList();
                     questionsListBox.ClearSelection();
-                    crosswordDrawer.Draw(crossword);
+                    crosswordDrawer.ReDraw(BuildProgress());
                 }));
             crosswordDrawer.Draw(crossword);
 
@@ -193,6 +198,7 @@ namespace CrosswordApplication.Forms
                     questionsUserList.Rows.Add(crosswordWord.Description);
                 }
             }
+            questionsUserList.ClearSelection();
 
             questionsUserList.SelectionChanged -= QuestionUserListSelectionChanges;
             questionsUserList.SelectionChanged += QuestionUserListSelectionChanges;
@@ -209,6 +215,7 @@ namespace CrosswordApplication.Forms
                     questionsListBox.Rows.Add(crosswordWord.Word, crosswordWord.Description);
                 }
             }
+            questionsUserList.ClearSelection();
 
             questionsListBox.SelectionChanged -= QuestionBoxSelectionChanges;
             questionsListBox.SelectionChanged += QuestionBoxSelectionChanges;
@@ -275,6 +282,20 @@ namespace CrosswordApplication.Forms
             сгенерироватьToolStripMenuItem.Enabled = false;
 
             board.Visible = crosswordLoaded;
+
+            if (crossword != null && userRole == UserRole.User)
+            {
+                openLetterButton.Text = "Открыть букву(" + crossword.LetterHelpers + ")";
+                openWordButton.Text = "Открыть слово(" + crossword.WordHelpers + ")";
+                openWordButton.Enabled = crossword.WordHelpers > 0;
+                openLetterButton.Enabled = crossword.LetterHelpers > 0;
+            }
+            else
+            {
+                openLetterButton.Enabled = false;
+                openWordButton.Enabled = false;
+                finishButton.Enabled = false;
+            }
         }
 
         private void dictionaryListBox_MouseDown(object sender, MouseEventArgs e)
@@ -326,9 +347,35 @@ namespace CrosswordApplication.Forms
                 this.userRole = userRole;
             }
 
+            public void ReDraw(List<CrosswordLetter> progress)
+            {
+                var selectedCellX = -1;
+                var selectedCellY = -1;
+                if (board.CurrentCell != null)
+                {
+                    selectedCellX = board.CurrentCell.ColumnIndex;
+                    selectedCellY = board.CurrentCell.RowIndex;
+                }
+
+                CleanBoard();
+                ShowWords();
+
+                if (userRole == UserRole.User)
+                {
+                    crossword.SetProgress(progress);
+                    ShowProgress();
+                }
+
+                if (selectedCellX > -1)
+                {
+                    board.CurrentCell = board[selectedCellX, selectedCellY];
+                }
+            }
+
             public void Draw(global::Crossword.Crossword crossword)
             {
                 this.crossword = crossword;
+                
                 InitBoard();
                 ShowWords();
 
@@ -336,12 +383,40 @@ namespace CrosswordApplication.Forms
                 {
                     ShowProgress();
                 }
+
+
+                board.CurrentCell = null;
+                _wordSelectionListener.OnWordSelected(null);
             }
 
             private void InitBoard()
             {
-                board.BackgroundColor = Color.Black;
+                CleanBoard();
 
+                board.KeyDown -= OnBoardOnKeyDown;
+                board.KeyDown += OnBoardOnKeyDown;
+
+                if (userRole == UserRole.Administrator)
+                {
+                    board.KeyDown -= DeletePress;
+                    board.KeyDown += DeletePress;
+                }
+
+                board.CellValueChanged -= OnBoardOnCellValueChanged;
+                board.CellValueChanged += OnBoardOnCellValueChanged;
+
+                board.CellClick -= OnBoardOnCellClick;
+                board.CellClick += OnBoardOnCellClick;
+
+                if (userRole == UserRole.Administrator)
+                {
+                    InitDragAndDrop();
+                }
+            }
+
+            private void CleanBoard()
+            {
+                board.BackgroundColor = Color.Black;
                 int crosswordSize = Math.Max(crossword.Width, crossword.Height);
 
                 board.Columns.Clear();
@@ -374,83 +449,70 @@ namespace CrosswordApplication.Forms
                     {
                         board[i, j].ReadOnly = true;
                     }
+            }
 
-                board.KeyDown += (sender, e) =>
+            private void OnBoardOnKeyDown(object sender, KeyEventArgs e)
+            {
+                try
                 {
-                    try
+                    if (e.KeyCode == Keys.Enter && !board.CurrentCell.IsInEditMode)
                     {
-                        if (e.KeyCode == Keys.Enter && !board.CurrentCell.IsInEditMode)
-                        {
-                            board.BeginEdit(true);
-                            e.Handled = true;
-                        }
+                        board.BeginEdit(true);
+                        e.Handled = true;
                     }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-                };
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
 
-                if (userRole == UserRole.Administrator)
+            private void OnBoardOnCellClick(object sender, DataGridViewCellEventArgs args)
+            {
+                var preferedOrientation = Orientation.Horizontal;
+                if ((Control.ModifierKeys & Keys.Control) != 0)
                 {
-                    board.KeyDown -= DeletePress;
-                    board.KeyDown += DeletePress;
+                    preferedOrientation = Orientation.Vertical;
                 }
 
-                board.CellValueChanged += (sender, args) =>
+                var foundedWords = crossword.FindWordsAtPosition(args.ColumnIndex, args.RowIndex);
+                if (foundedWords.Count == 0)
                 {
-                    try
-                    {
-                        string curValue = board[args.ColumnIndex, args.RowIndex].Value.ToString();
-                        if (curValue.Length > 1)
-                        {
-                            board[args.ColumnIndex, args.RowIndex].Value =
-                                board[args.ColumnIndex, args.RowIndex].Value.ToString()[0];
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
+                    return;
+                }
 
-                    try
-                    {
-                        board[args.ColumnIndex, args.RowIndex].Value =
-                            board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper();
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-                };
-
-                board.CellClick += (sender, args) =>
+                foreach (var crosswordWord in foundedWords)
                 {
-                    var preferedOrientation = Orientation.Horizontal;
-                    if ((Control.ModifierKeys & Keys.Control) != 0)
-                    {
-                        preferedOrientation = Orientation.Vertical;
-                    }
+                    if (crosswordWord.Position.Orientation != preferedOrientation) continue;
+                    _wordSelectionListener.OnWordSelected(crosswordWord);
+                    return;
+                }
 
-                    var foundedWords = crossword.FindWordsAtPosition(args.ColumnIndex, args.RowIndex);
-                    if (foundedWords.Count == 0)
-                    {
-                        return;
-                    }
+                _wordSelectionListener.OnWordSelected(foundedWords[0]);
+            }
 
-                    foreach (var crosswordWord in foundedWords)
-                    {
-                        if (crosswordWord.Position.Orientation != preferedOrientation) continue;
-                        _wordSelectionListener.OnWordSelected(crosswordWord);
-                        return;
-                    }
-
-                    _wordSelectionListener.OnWordSelected(foundedWords[0]);
-                };
-
-                if (userRole == UserRole.Administrator)
+            private void OnBoardOnCellValueChanged(object sender, DataGridViewCellEventArgs args)
+            {
+                try
                 {
-                    InitDragAndDrop();
+                    string curValue = board[args.ColumnIndex, args.RowIndex].Value.ToString();
+                    if (curValue.Length > 1)
+                    {
+                        board[args.ColumnIndex, args.RowIndex].Value = board[args.ColumnIndex, args.RowIndex].Value.ToString()[0];
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                try
+                {
+                    board[args.ColumnIndex, args.RowIndex].Value = board[args.ColumnIndex, args.RowIndex].Value.ToString().ToUpper();
+                }
+                catch (Exception)
+                {
+                    // ignored
                 }
             }
 
@@ -774,6 +836,72 @@ namespace CrosswordApplication.Forms
             AboutProgram aboutForm = new AboutProgram();
             aboutForm.ShowDialog();
         }
+
+        private void openWordButton_Click(object sender, EventArgs e)
+        {
+            if (questionsUserList.SelectedCells.Count == 0)
+            {
+                ShowErrorDialog("Выберите слово");
+                return;
+            }
+            var description = questionsUserList.SelectedCells[0].Value.ToString();
+            var selectedWord = crossword.GetCrosswordWordForDescription(description);
+            if (selectedWord != null)
+            {
+                bool isSelected = false;
+                for (int i = 0; i < selectedWord.Word.Length; i++)
+                {
+                    int x, y;
+                    selectedWord.PositionAtIndex(i, out x, out y);
+                    isSelected |= "Select".Equals(board[x, y].Tag);
+                }
+
+                if (!isSelected)
+                {
+                    ShowErrorDialog("Выберите слово");
+                    return;
+                }
+
+                for (int i = 0; i < selectedWord.Word.Length; i++)
+                {
+                    int x, y;
+                    selectedWord.PositionAtIndex(i, out x, out y);
+                    board[x, y].Value = selectedWord.Word[i];
+                }
+                crossword.WordHelpers--;
+                crosswordDrawer.ReDraw(BuildProgress());
+                UpdateUi();
+            }
+            else
+            {
+                ShowErrorDialog("Выберите слово");
+            }
+        }
+
+        private void openLetterButton_Click(object sender, EventArgs e)
+        {
+            var cell = board.CurrentCell;
+            if (cell == null)
+            {
+                ShowErrorDialog("Выберите букву");
+                return;
+            }
+            var crosswordLetter = crossword.GetLetterAtPosition(cell.ColumnIndex, cell.RowIndex);
+            if (crosswordLetter == null)
+            {
+                ShowErrorDialog("Выберите букву");
+                return;
+            }
+            board[cell.ColumnIndex, cell.RowIndex].Value = crosswordLetter.Letter;
+            crossword.LetterHelpers--;
+            crosswordDrawer.ReDraw(BuildProgress());
+            UpdateUi();
+        }
+
+        private void ShowErrorDialog(string message)
+        {
+            MessageBox.Show(message);
+        }
     }
 
     interface ICrosswordDrawer
@@ -781,6 +909,8 @@ namespace CrosswordApplication.Forms
         void Draw(global::Crossword.Crossword crossword);
 
         void SelectWord(CrosswordWord crosswordWord);
+
+        void ReDraw(List<CrosswordLetter> progress);
     }
 
 }

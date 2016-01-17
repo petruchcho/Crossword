@@ -511,6 +511,33 @@ namespace Crossword
             return x < Width && y < Height;
         }
 
+        public double GetResult(List<CrosswordLetter> progress)
+        {
+            int countOfLetters = 0;
+            int countOfCorrectLetters = 0;
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                int x, y;
+                for (int i = 0; i < crosswordWord.Word.Length; i++)
+                {
+                    countOfLetters++;
+                    crosswordWord.PositionAtIndex(i, out x, out y);
+                    foreach (var crosswordLetter in progress)
+                    {
+                        if (crosswordLetter.Position.X == x && crosswordLetter.Position.Y == y)
+                        {
+                            if (crosswordLetter.Letter.ToUpper().Equals(crosswordWord.Word[i].ToString().ToUpper()))
+                            {
+                                countOfCorrectLetters++;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            return 100.0*countOfCorrectLetters/countOfLetters;
+        }
+
         public override string ToString()
         {
             return serializer.SerializeCrossword(this);

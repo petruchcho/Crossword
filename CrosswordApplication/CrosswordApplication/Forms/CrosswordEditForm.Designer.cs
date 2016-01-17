@@ -259,6 +259,7 @@
             this.finishButton.TabIndex = 3;
             this.finishButton.Text = "Завершить игру";
             this.finishButton.UseVisualStyleBackColor = true;
+            this.finishButton.Click += new System.EventHandler(this.finishButton_Click);
             // 
             // openLetterButton
             // 

@@ -50,7 +50,7 @@
             this.открытьСловарьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.руководствоПользователяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.userguideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionaryListBox = new System.Windows.Forms.ListBox();
             this.emptyState = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
@@ -244,7 +244,7 @@
             // 
             this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.оПрограммеToolStripMenuItem,
-            this.руководствоПользователяToolStripMenuItem});
+            this.userguideToolStripMenuItem});
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
             this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.справкаToolStripMenuItem.Text = "Справка";
@@ -258,9 +258,10 @@
             // 
             // руководствоПользователяToolStripMenuItem
             // 
-            this.руководствоПользователяToolStripMenuItem.Name = "руководствоПользователяToolStripMenuItem";
-            this.руководствоПользователяToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.руководствоПользователяToolStripMenuItem.Text = "Руководство пользователя";
+            this.userguideToolStripMenuItem.Name = "руководствоПользователяToolStripMenuItem";
+            this.userguideToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.userguideToolStripMenuItem.Text = "Руководство пользователя";
+            this.userguideToolStripMenuItem.Click += new System.EventHandler(this.userguideToolStripMenuItem_Click);
             // 
             // dictionaryListBox
             // 
@@ -342,7 +343,7 @@
         private System.Windows.Forms.ToolStripMenuItem поАлфавиту;
         private System.Windows.Forms.ToolStripMenuItem поКоличествуБукв;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem руководствоПользователяToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem userguideToolStripMenuItem;
         private System.Windows.Forms.Label emptyState;
     }
 }

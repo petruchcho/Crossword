@@ -519,9 +519,9 @@ namespace Crossword
             return serializer.SerializeCrossword(this);
         }
 
-        public void Generate(Dictionary dictionary)
+        public int Generate(Dictionary dictionary)
         {
-            generator.Generate(this, dictionary);
+            return generator.Generate(this, dictionary);
         }
     }
 
@@ -619,17 +619,17 @@ namespace Crossword
     {
         private readonly static Random random = new Random();
 
-        internal void Generate(Crossword crossword, Dictionary dictionary)
+        internal int Generate(Crossword crossword, Dictionary dictionary)
         {
             if (dictionary.DictionaryWords.Length == 0)
             {
-                return;
+                return -1;
             }
             
-            int count_of_HOLOSTYE_iterations = 0;
-            //int iteration = 0;
+            int blankIterations = 0;
+            int wordsHaveBeenAdded = 0;
 
-            while (count_of_HOLOSTYE_iterations < 10)//iteration < 3)
+            while (blankIterations < 10)
             {
                 var dictionaryWord = dictionary.GetRandomDictionaryWord();
                 var positions = crossword.GetPreviewsPositions(dictionaryWord);
@@ -638,13 +638,14 @@ namespace Crossword
                 {
                     if (positions.Count == 0)
                     {
-                        count_of_HOLOSTYE_iterations++;
+                        blankIterations++;
                         continue;
                     }
 
                     var position = positions[random.Next(0, positions.Count)]; //  range: [0; positions.Count - 1]  
                     var crosswordWord = new CrosswordWord(crossword, dictionaryWord, position.Position, false);
-                    crossword.AddWord(crosswordWord); 
+                    crossword.AddWord(crosswordWord);
+                    wordsHaveBeenAdded = 1;
                 }
                 else
                 {
@@ -657,11 +658,14 @@ namespace Crossword
                         x = random.Next(0, crossword.Width);
                     }
 
-                    crossword.AddWord(new CrosswordWord(crossword, dictionaryWord, new CrosswordWordPosition(x, y, Orientation.Horizontal), false)); 
+                    crossword.AddWord(new CrosswordWord(crossword, dictionaryWord, new CrosswordWordPosition(x, y, Orientation.Horizontal), false));
+                    wordsHaveBeenAdded = 1;
                 }                
                 
-                count_of_HOLOSTYE_iterations = 0;
+                blankIterations = 0;
             }
+
+            return wordsHaveBeenAdded;
         }
     }
 }

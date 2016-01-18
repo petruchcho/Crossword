@@ -56,6 +56,7 @@
             0,
             0});
             this.widthNumericUpDown.Name = "widthNumericUpDown";
+            this.widthNumericUpDown.ReadOnly = true;
             this.widthNumericUpDown.Size = new System.Drawing.Size(50, 24);
             this.widthNumericUpDown.TabIndex = 0;
             this.widthNumericUpDown.Value = new decimal(new int[] {
@@ -66,6 +67,8 @@
             // 
             // heightNumericUpDown
             // 
+            this.heightNumericUpDown.CausesValidation = false;
+            this.heightNumericUpDown.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.heightNumericUpDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.heightNumericUpDown.Location = new System.Drawing.Point(147, 126);
             this.heightNumericUpDown.Maximum = new decimal(new int[] {
@@ -79,6 +82,7 @@
             0,
             0});
             this.heightNumericUpDown.Name = "heightNumericUpDown";
+            this.heightNumericUpDown.ReadOnly = true;
             this.heightNumericUpDown.Size = new System.Drawing.Size(50, 24);
             this.heightNumericUpDown.TabIndex = 1;
             this.heightNumericUpDown.Value = new decimal(new int[] {
@@ -137,12 +141,14 @@
             this.openDictionaryFileButton.TabIndex = 6;
             this.openDictionaryFileButton.Text = "Обзор...";
             this.openDictionaryFileButton.UseVisualStyleBackColor = true;
+            this.openDictionaryFileButton.Click += new System.EventHandler(this.openDictionaryFileButton_Click);
             // 
             // dictionaryFilePathTextBox
             // 
             this.dictionaryFilePathTextBox.Location = new System.Drawing.Point(30, 54);
             this.dictionaryFilePathTextBox.Multiline = true;
             this.dictionaryFilePathTextBox.Name = "dictionaryFilePathTextBox";
+            this.dictionaryFilePathTextBox.ReadOnly = true;
             this.dictionaryFilePathTextBox.Size = new System.Drawing.Size(370, 23);
             this.dictionaryFilePathTextBox.TabIndex = 7;
             // 

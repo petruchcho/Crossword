@@ -255,7 +255,7 @@ namespace CrosswordApplication.Forms
         {
             словарьToolStripMenuItem.Visible = userRole == UserRole.Administrator;
             newCrosswordToolStripMenu.Visible = userRole == UserRole.Administrator;
-            параметрыToolStripMenuItem.Visible = userRole == UserRole.Administrator;
+            parametersToolStripMenuItem.Visible = userRole == UserRole.Administrator;
 
             questionsAdminSplitContainer.Visible = userRole == UserRole.Administrator;
             questionsUserPanel.Visible = userRole == UserRole.User;
@@ -831,20 +831,50 @@ namespace CrosswordApplication.Forms
             }
         }
 
-        private void ShowCrosswordGenerationParametersDialog()
+        private void ShowCrosswordGenerationParametersDialog(String type)
         {
             SaveCrosswordWithDialog();
 
-            CrosswordGenerationParametersForm generationParametersForm = new CrosswordGenerationParametersForm();//or (this) with a listener
-            generationParametersForm.ShowDialog();
+            String dictionaryPath = "";
+
+            int crosswordHeight = crossword.Height;
+            int crosswordWidth = crossword.Width;
+           // CrosswordGenerationParametersForm generationParametersForm; 
+
+
+
+            if (type.Equals("Generation"))
+            {
+                Values result = new Values(crosswordHeight, crosswordWidth);
+
+                //generationParametersForm = new CrosswordGenerationParametersForm("Generation", dictionary, result => { crosswordHeight = result; });
+            }
+                
+            //else              // type.Equals("Parameters")
+            //    generationParametersForm = new CrosswordGenerationParametersForm("Parameters");
+
+            //FormUtils.OpenFormAndSaveHierarchy(this, generationParametersForm);//generationParametersForm.ShowDialog();
+
 
         }
 
         private void GenerateCrossword()
         {
-            crossword = new global::Crossword.Crossword();
+           // if (crossword.CrosswordWords.Count == 0)
+            //{
+            ShowCrosswordGenerationParametersDialog("Generation");
+            //}
 
-            crossword.Generate(dictionary);            
+            int wordHaveBeenAdded = crossword.Generate(dictionary);
+
+            if (wordHaveBeenAdded == 0)
+                MessageBox.Show("Новые слова не были добавлены!");
+                       
+        }
+
+        private void SetParametersOfCrossword()
+        {
+            ShowCrosswordGenerationParametersDialog("Parameters");
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -855,16 +885,8 @@ namespace CrosswordApplication.Forms
 
         private void generateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /* ShowCrosswordGenerationParametersDialog();
-             //GENERATION
-             GenerateCrossword();
-             SetCrossword();
-
-             UpdateUi();*/
-
             GenerateCrossword();
-            SetCrossword();
-
+            crosswordDrawer.ReDraw(BuildProgress());
             UpdateUi();
         }
 
@@ -932,6 +954,13 @@ namespace CrosswordApplication.Forms
         private void ShowErrorDialog(string message)
         {
             MessageBox.Show(message);
+        }
+
+        private void parametersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetParametersOfCrossword();
+            crosswordDrawer.ReDraw(BuildProgress());
+            UpdateUi();
         }
     }
 

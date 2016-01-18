@@ -21,6 +21,8 @@ namespace CrosswordApplication.Dictionary
             DictionaryWords = new DictionaryWord[0];
         }
 
+        private string filename;
+
         /* 
          * Returns an iterator that contains only fields that 
          * match mask 
@@ -51,7 +53,7 @@ namespace CrosswordApplication.Dictionary
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-
+            
             new global::CommonUtils.AsyncTask<bool>(
                 () =>
                 {
@@ -66,6 +68,7 @@ namespace CrosswordApplication.Dictionary
                         }
                         // TODO Sort it with some comparer
                         Sort(new DictionaryWordComparator(DictionaryWordComparator.SortDirection.Ascending, DictionaryWordComparator.SortBy.Alphabet));
+                        filename = openFileDialog.FileName;
                         return true;
                     }
                     catch (Exception e)
@@ -144,6 +147,11 @@ namespace CrosswordApplication.Dictionary
             DictionaryWord dictionaryWord = DictionaryWords[random.Next(0, DictionaryWords.Length)];
 
             return dictionaryWord;
+        }
+
+        public string GetFilename()
+        {
+            return filename;
         }
     }
 }

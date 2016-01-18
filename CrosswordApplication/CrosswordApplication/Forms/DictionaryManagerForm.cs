@@ -62,6 +62,7 @@ namespace CrosswordApplication.Forms
                     ShowSortTypeButtons(false, false);
                     ShowMask(false);
                     ShowButtonsForWord(false);
+                    emptyState.Visible = true;
                 }
             });
         }
@@ -136,7 +137,6 @@ namespace CrosswordApplication.Forms
             newWordButton.Enabled = flag;
             updateWordButton.Enabled = flag;
             deleteWordButton.Enabled = flag;
-            emptyState.Visible = !flag;
         }
 
         private void ShowSortTypeButtons(bool alphabet, bool lettercount)
@@ -154,6 +154,7 @@ namespace CrosswordApplication.Forms
 
         private void открытьСловарьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            emptyState.Visible = false;
             LoadDictionary(() =>
             {
                 sortDirection = DictionaryWordComparator.SortDirection.Ascending;
@@ -382,6 +383,7 @@ namespace CrosswordApplication.Forms
 
         private void новыйToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            emptyState.Visible = false;
             SaveDialog();
 
             dictionary = new Dictionary.Dictionary();

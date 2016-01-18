@@ -183,6 +183,7 @@ namespace Crossword
             {
                 _crosswordStateListener.OnWordAdded(crosswordWord);
             }
+            UpdateHelpers();
         }
 
         public void DeleteWord(CrosswordWord crosswordWord)
@@ -514,14 +515,67 @@ namespace Crossword
             return x < Width && y < Height;
         }
 
+        public double GetResult(List<CrosswordLetter> progress)
+        {
+            int countOfLetters = 0;
+            int countOfCorrectLetters = 0;
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                int x, y;
+                for (int i = 0; i < crosswordWord.Word.Length; i++)
+                {
+                    countOfLetters++;
+                    crosswordWord.PositionAtIndex(i, out x, out y);
+                    foreach (var crosswordLetter in progress)
+                    {
+                        if (crosswordLetter.Position.X == x && crosswordLetter.Position.Y == y)
+                        {
+                            if (crosswordLetter.Letter.ToUpper().Equals(crosswordWord.Word[i].ToString().ToUpper()))
+                            {
+                                countOfCorrectLetters++;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            return 100.0*countOfCorrectLetters/countOfLetters;
+        }
+
         public override string ToString()
         {
             return serializer.SerializeCrossword(this);
         }
 
-        public int Generate(Dictionary dictionary)
+        public void Generate(Dictionary dictionary)
         {
-            return generator.Generate(this, dictionary);
+            int wordHaveBeenAdded = generator.Generate(this, dictionary);
+            if (wordHaveBeenAdded == 0)
+                MessageBox.Show("Новые слова не были добавлены!");
+        }
+
+        public bool CanChangeBorders(int newWidth, int newHeight)
+        {
+            var can = true;
+            foreach (var crosswordWord in crosswordWords)
+            {
+                int x0, y0, x1, y1;
+                crosswordWord.PositionAtIndex(0, out x0, out y0);
+                crosswordWord.PositionAtIndex(crosswordWord.Word.Length - 1, out x1, out y1);
+                can &= x0 < newWidth && x1 < newWidth && y0 < newHeight && y1 < newHeight;
+            }
+            return can;
+        }
+
+        public void UpdateHelpers()
+        {
+            int sumOfLetters = 0;
+            foreach (CrosswordWord word in CrosswordWords)
+            {
+                sumOfLetters += word.Word.Length;
+            }
+            LetterHelpers = (int)(0.1 * sumOfLetters);
+            WordHelpers = (int)(0.1 * crosswordWords.Count);
         }
     }
 
@@ -550,13 +604,7 @@ namespace Crossword
                 crossword.CrosswordWords.Add(new CrosswordWord(crossword, new DictionaryWord(word, description), new CrosswordWordPosition(x, y, orientation), isResolved));
             }
 
-            int sumOfLetters = 0;
-            foreach (CrosswordWord word in crossword.CrosswordWords)
-            {
-                sumOfLetters += word.Word.Length;
-            }
-            crossword.LetterHelpers = (int) (0.1*sumOfLetters);
-            crossword.WordHelpers = (int)(0.1 * wordsCount);
+            crossword.UpdateHelpers();
 
             try
             {

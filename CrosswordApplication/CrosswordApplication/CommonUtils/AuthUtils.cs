@@ -8,9 +8,9 @@ namespace CrosswordApplication.CommonUtils
 {
     class AuthUtils
     {
-        public static bool CheckAdminPassword(string password) 
+        public static bool CheckAdminPassword(string password)
         {
-            return true; // TODO
+            return "111".Equals(password);
         }
     }
 }

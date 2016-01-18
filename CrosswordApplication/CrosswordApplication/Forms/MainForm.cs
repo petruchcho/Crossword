@@ -26,7 +26,7 @@ namespace CrosswordApplication
             }
             else
             {
-                // TODO Show error
+                MessageBox.Show("Неверный пароль", "Ошибка");
             }
         }
 

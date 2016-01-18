@@ -24,6 +24,11 @@ namespace CrosswordApplication.Forms
         {
             this.userRole = userRole;
             InitializeComponent();
+
+            FormClosing += (sender, args) =>
+            {
+                SaveCrosswordWithDialog();
+            };
         }
 
         private void CrosswordEditForm_Load(object sender, EventArgs e)

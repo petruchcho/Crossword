@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using CrosswordApplication.CommonUtils;
 using CrosswordApplication.Forms;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace CrosswordApplication
 {
@@ -39,6 +41,27 @@ namespace CrosswordApplication
         {
             AboutProgram aboutForm = new AboutProgram();
             aboutForm.ShowDialog();
+        }
+
+        private void userguideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //UserGuideForm userguide = new UserGuideForm();
+            //userguide.Show();
+
+            String text = System.IO.File.ReadAllText(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
+            if (!(text.Contains("<head>") || text.Contains("</head>") || text.Contains("<body>") || text.Contains("</body>")))
+            {
+                MessageBox.Show("Файл справки некорректен!");
+                return;
+            }
+
+            try {
+                Process.Start(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
+            }
+            catch(Win32Exception e1)
+            {
+                MessageBox.Show("Файл справки отсутствует!");
+            }
         }
     }
 }

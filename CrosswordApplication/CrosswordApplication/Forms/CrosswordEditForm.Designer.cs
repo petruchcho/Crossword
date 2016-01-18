@@ -253,6 +253,7 @@
             this.questionsUserPanel.Size = new System.Drawing.Size(280, 537);
             this.questionsUserPanel.TabIndex = 1;
             // 
+            this.finishButton.Click += new System.EventHandler(this.finishButton_Click);
             // questionsUserList
             // 
             this.questionsUserList.AllowUserToAddRows = false;

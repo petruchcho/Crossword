@@ -98,7 +98,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(310, 17);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Карпова Е.Д., Назарова Е.А., Пономарёв Е.А.";
+            this.label4.Text = "Карпова Е.Д., Назарова Е.А., Пономарев Е.А.";
             // 
             // label5
             // 

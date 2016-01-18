@@ -7,31 +7,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CrosswordApplication.CommonUtils;
 
 namespace CrosswordApplication
 {
     public partial class AuthDialogForm : Form
     {
-        public interface IAuthDialogResultListener
-        {
-            void PasswordReceived(string password);
-        }
-
-        private IAuthDialogResultListener listener;
-
-        public AuthDialogForm(IAuthDialogResultListener listener)
+        public AuthDialogForm()
         {
             InitializeComponent();
-            this.listener = listener;
         }
 
         private void ok_button_Click(object sender, EventArgs e)
         {
-            if (listener != null)
+            if (AuthUtils.CheckAdminPassword(passwordTextBox.Text))
             {
-                listener.PasswordReceived(passwordTextBox.Text);
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            Close();
+            else
+            {
+                MessageBox.Show("Неверный пароль", "Ошибка");
+            }
         }
     }
 }

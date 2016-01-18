@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace CrosswordApplication
 {
-    public partial class MainForm : Form, AuthDialogForm.IAuthDialogResultListener
+    public partial class MainForm : Form
     {
         public MainForm()
         {
@@ -16,19 +16,10 @@ namespace CrosswordApplication
 
         private void administrationButton_Click(object sender, EventArgs e)
         {
-            AuthDialogForm dialogForm = new AuthDialogForm(this);
-            dialogForm.ShowDialog();
-        }
-
-        public void PasswordReceived(string password)
-        {
-            if (CommonUtils.AuthUtils.CheckAdminPassword(password))
+            AuthDialogForm dialogForm = new AuthDialogForm();
+            if (dialogForm.ShowDialog() == DialogResult.OK)
             {
                 CommonUtils.FormUtils.OpenFormAndSaveHierarchy(this, new AdministrationForm());
-            }
-            else
-            {
-                MessageBox.Show("Неверный пароль", "Ошибка");
             }
         }
 

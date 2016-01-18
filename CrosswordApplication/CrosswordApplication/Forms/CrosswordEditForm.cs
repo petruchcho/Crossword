@@ -33,7 +33,7 @@ namespace CrosswordApplication.Forms
 
         private void newCrosswordToolStripMenu_Click(object sender, EventArgs e)
         {
-            // TODO Save Existed
+            SaveCrosswordWithDialog();
 
             crossword = new global::Crossword.Crossword();
             SetCrossword();

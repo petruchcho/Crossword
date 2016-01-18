@@ -14,8 +14,9 @@ namespace CrosswordApplication.Forms
     {
         public enum Type
         {
-            WithDictionary,
-            NoDictionary
+            GenerateWithDictionary,
+            GenerateWithoutDictionary,
+            Params
         }
 
         private Type _type;
@@ -30,20 +31,30 @@ namespace CrosswordApplication.Forms
 
             _crossword = crossword;
             _type = type;
-            if (type == Type.NoDictionary)
+            if (type != Type.GenerateWithDictionary)
             {
                 dictionaryFilePathTextBox.Visible = false;
+                openDictionaryFileButton.Visible = false;
                 label1.Visible = false;
+            }
+            if (type == Type.Params)
+            {
                 generateButton.Text = "Сохранить";
                 this.Text = "Параметры";
             }
+
+            _dictionary = new Dictionary.Dictionary();
         }
 
-
+        public CrosswordGenerationParametersForm(Type type, global::Crossword.Crossword crossword,
+            Dictionary.Dictionary dictionary) : this(type, crossword)
+        {
+            _dictionary = dictionary;
+        }
 
         private void generateButton_Click(object sender, EventArgs e)
         {
-            if (_type == Type.WithDictionary && !_dictionary.IsLoaded())
+            if (_type == Type.GenerateWithDictionary && !_dictionary.IsLoaded())
             {
                 MessageBox.Show("Выберите словарь", "Ошибка");
                 return;
@@ -56,7 +67,12 @@ namespace CrosswordApplication.Forms
                 return;
             }
             _crossword.SetSize(newWidth, newHeight);
-            if (_type == Type.WithDictionary)
+            if (_type == Type.Params)
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
             {
                 _crossword.Generate(_dictionary);
                 DialogResult = DialogResult.OK;

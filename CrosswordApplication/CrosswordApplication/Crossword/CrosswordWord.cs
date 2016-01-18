@@ -77,7 +77,26 @@ namespace CrosswordApplication.Crossword
                 return IntersectionType.WrongIntersection;
             }
 
-            // Todo to improve performance, we can find intersection point using O(1) instead of O(width^2)
+            int Ax, Ay, Bx, By, Cx, Cy, Dx, Dy;
+            PositionAtIndex(0, out Ax, out Ay);
+            PositionAtIndex(Word.Length - 1, out Bx, out By);
+            other.PositionAtIndex(0, out Cx, out Cy);
+            other.PositionAtIndex(other.Word.Length - 1, out Dx, out Dy);
+            Ax--;
+            Ay--;
+            Bx++;
+            By++;
+
+            if (!(Intersect(Ax, Bx, Cx, Dx) && Intersect(Ay, By, Cy, Dy)))
+            {
+                return IntersectionType.NoIntersection;
+            }
+
+            // Rectangles are intersected. If words not then WRONG
+            if (!(Intersect(Ax+1, Bx-1, Cx, Dx) && Intersect(Ay+1, By-1, Cy, Dy)))
+            {
+                return IntersectionType.WrongIntersection;
+            }
 
             for (int i = 0; i < Word.Length; i++)
             {
@@ -102,22 +121,27 @@ namespace CrosswordApplication.Crossword
                 }
             }
 
-            for (int i = 0; i < Word.Length; i++)
-            {
-                for (int j = 0; j < other.Word.Length; j++)
-                {
-                    int x1, y1, x2, y2;
-                    PositionAtIndex(i, out x1, out y1);
-                    other.PositionAtIndex(j, out x2, out y2);
+            //for (int i = 0; i < Word.Length; i++)
+            //{
+            //    for (int j = 0; j < other.Word.Length; j++)
+            //    {
+            //        int x1, y1, x2, y2;
+            //        PositionAtIndex(i, out x1, out y1);
+            //        other.PositionAtIndex(j, out x2, out y2);
 
-                    if (Math.Abs(x2 - x1) + Math.Abs(y2 - y1) == 1)
-                    {
-                        return IntersectionType.WrongIntersection;
-                    }
-                }
-            }
+            //        if (Math.Abs(x2 - x1) + Math.Abs(y2 - y1) == 1)
+            //        {
+            //            return IntersectionType.WrongIntersection;
+            //        }
+            //    }
+            //}
 
             return IntersectionType.NoIntersection;
+        }
+
+        private bool Intersect(int a, int b, int c, int d)
+        {
+            return Math.Max(Math.Min(a, b), Math.Min(c, d)) <= Math.Min(Math.Max(a, b), Math.Max(c, d));
         }
 
         public override string ToString()

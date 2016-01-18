@@ -173,7 +173,7 @@ namespace CrosswordApplication.Forms
                 () =>
                 {
                     // Size changed
-                    crosswordDrawer.ReDraw(BuildProgress());
+                    crosswordDrawer.ReDraw(BuildProgress(), IsFinished);
                 }, 
                 crosswordWord =>
                 {
@@ -919,10 +919,10 @@ namespace CrosswordApplication.Forms
             if (userRole == UserRole.Administrator)
             {
                 if (
-                    new CrosswordGenerationParametersForm(CrosswordGenerationParametersForm.Type.NoDictionary, crossword)
+                    new CrosswordGenerationParametersForm(CrosswordGenerationParametersForm.Type.GenerateWithoutDictionary, crossword, dictionary)
                         .ShowDialog() == DialogResult.OK)
                 {
-                    crosswordDrawer.ReDraw(BuildProgress());
+                    crosswordDrawer.ReDraw(BuildProgress(), IsFinished);
                     UpdateUi();
                 }
             }
@@ -931,7 +931,7 @@ namespace CrosswordApplication.Forms
                 SaveCrosswordWithDialog();
                 crossword = new global::Crossword.Crossword();
                 if (
-                    new CrosswordGenerationParametersForm(CrosswordGenerationParametersForm.Type.WithDictionary, crossword)
+                    new CrosswordGenerationParametersForm(CrosswordGenerationParametersForm.Type.GenerateWithDictionary, crossword)
                         .ShowDialog() == DialogResult.OK)
                 {
                     SetCrossword();
@@ -1007,7 +1007,7 @@ namespace CrosswordApplication.Forms
 
         private void parametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            new CrosswordGenerationParametersForm(CrosswordGenerationParametersForm.Type.Params, crossword).ShowDialog();
         }
 
         private void finishButton_Click(object sender, EventArgs e)

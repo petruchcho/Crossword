@@ -183,6 +183,7 @@ namespace Crossword
             {
                 _crosswordStateListener.OnWordAdded(crosswordWord);
             }
+            UpdateHelpers();
         }
 
         public void DeleteWord(CrosswordWord crosswordWord)
@@ -548,8 +549,7 @@ namespace Crossword
 
         public void Generate(Dictionary dictionary)
         {
-            int wordHaveBeenAdded = generator.Generate(this, dictionary); 
-
+            int wordHaveBeenAdded = generator.Generate(this, dictionary);
             if (wordHaveBeenAdded == 0)
                 MessageBox.Show("Новые слова не были добавлены!");
         }
@@ -565,6 +565,17 @@ namespace Crossword
                 can &= x0 < newWidth && x1 < newWidth && y0 < newHeight && y1 < newHeight;
             }
             return can;
+        }
+
+        public void UpdateHelpers()
+        {
+            int sumOfLetters = 0;
+            foreach (CrosswordWord word in CrosswordWords)
+            {
+                sumOfLetters += word.Word.Length;
+            }
+            LetterHelpers = (int)(0.1 * sumOfLetters);
+            WordHelpers = (int)(0.1 * crosswordWords.Count);
         }
     }
 
@@ -593,13 +604,7 @@ namespace Crossword
                 crossword.CrosswordWords.Add(new CrosswordWord(crossword, new DictionaryWord(word, description), new CrosswordWordPosition(x, y, orientation), isResolved));
             }
 
-            int sumOfLetters = 0;
-            foreach (CrosswordWord word in crossword.CrosswordWords)
-            {
-                sumOfLetters += word.Word.Length;
-            }
-            crossword.LetterHelpers = (int) (0.1*sumOfLetters);
-            crossword.WordHelpers = (int)(0.1 * wordsCount);
+            crossword.UpdateHelpers();
 
             try
             {

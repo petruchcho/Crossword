@@ -18,9 +18,13 @@ namespace CrosswordApplication.Forms
         public DictionaryManagerForm()
         {
             InitializeComponent();
+            FormClosing += (sender, args) =>
+            {
+                SaveDialog();
+            };
         }
 
-        public DictionaryManagerForm(string fileName)
+        public DictionaryManagerForm(string fileName) : this()
         {
             this.fileName = fileName;
         }

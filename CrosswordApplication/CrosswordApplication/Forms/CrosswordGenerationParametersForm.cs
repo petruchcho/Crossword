@@ -36,11 +36,27 @@ namespace CrosswordApplication.Forms
                 dictionaryFilePathTextBox.Visible = false;
                 openDictionaryFileButton.Visible = false;
                 label1.Visible = false;
+
+                int margin = 80;
+
+                generateButton.Location = new Point(generateButton.Location.X, generateButton.Location.Y - margin);
+                heightNumericUpDown.Location = new Point(heightNumericUpDown.Location.X, heightNumericUpDown.Location.Y - margin);
+                widthNumericUpDown.Location = new Point(widthNumericUpDown.Location.X, widthNumericUpDown.Location.Y - margin);
+                label2.Location = new Point(label2.Location.X, label2.Location.Y - margin);
+                heightLabel.Location = new Point(heightLabel.Location.X, heightLabel.Location.Y - margin);
+                widthLabel.Location = new Point(widthLabel.Location.X, widthLabel.Location.Y - margin);
+                this.Height -= margin;
             }
             if (type == Type.Params)
             {
                 generateButton.Text = "Сохранить";
                 this.Text = "Параметры";
+            }
+
+            if (crossword != null)
+            {
+                heightNumericUpDown.Value = crossword.Height;
+                widthNumericUpDown.Value = crossword.Width;
             }
 
             _dictionary = new Dictionary.Dictionary();

@@ -831,38 +831,30 @@ namespace CrosswordApplication.Forms
             }
         }
 
-        private void ShowCrosswordGenerationParametersDialog(String type)
+        private void ShowCrosswordGenerationParametersDialog()
         {
-            SaveCrosswordWithDialog();
-
-            String dictionaryPath = "";
-
-            int crosswordHeight = crossword.Height;
-            int crosswordWidth = crossword.Width;
-           // CrosswordGenerationParametersForm generationParametersForm; 
-
-
-
-            if (type.Equals("Generation"))
+            if(crossword != null || crossword.CrosswordWords.Count != 0)
             {
-                Values result = new Values(crosswordHeight, crosswordWidth);
-
-                //generationParametersForm = new CrosswordGenerationParametersForm("Generation", dictionary, result => { crosswordHeight = result; });
+                SaveCrosswordWithDialog(); 
             }
-                
-            //else              // type.Equals("Parameters")
-            //    generationParametersForm = new CrosswordGenerationParametersForm("Parameters");
+                //ONLY AFTER CREATION PARAMETERS/GENERATION FORM
 
-            //FormUtils.OpenFormAndSaveHierarchy(this, generationParametersForm);//generationParametersForm.ShowDialog();
+            //String dictionaryPath = "";
 
+            //int crosswordHeight = crossword.Height;
+            //int crosswordWidth = crossword.Width;
 
+            
+            // CrosswordGenerationParametersForm generationParametersForm = new CrosswordGenerationParametersForm();
+            // FormUtils.OpenFormAndSaveHierarchy(this, generationParametersForm);
         }
 
         private void GenerateCrossword()
         {
+
            // if (crossword.CrosswordWords.Count == 0)
             //{
-            ShowCrosswordGenerationParametersDialog("Generation");
+            ShowCrosswordGenerationParametersDialog();
             //}
 
             int wordHaveBeenAdded = crossword.Generate(dictionary);
@@ -870,11 +862,6 @@ namespace CrosswordApplication.Forms
             if (wordHaveBeenAdded == 0)
                 MessageBox.Show("Новые слова не были добавлены!");
                        
-        }
-
-        private void SetParametersOfCrossword()
-        {
-            ShowCrosswordGenerationParametersDialog("Parameters");
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -958,9 +945,7 @@ namespace CrosswordApplication.Forms
 
         private void parametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetParametersOfCrossword();
-            crosswordDrawer.ReDraw(BuildProgress());
-            UpdateUi();
+
         }
     }
 

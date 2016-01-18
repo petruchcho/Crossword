@@ -294,8 +294,8 @@ namespace CrosswordApplication.Forms
             {
                 openLetterButton.Text = "Открыть букву(" + crossword.LetterHelpers + ")";
                 openWordButton.Text = "Открыть слово(" + crossword.WordHelpers + ")";
-                openWordButton.Enabled = crossword.WordHelpers > 0;
-                openLetterButton.Enabled = crossword.LetterHelpers > 0;
+                openWordButton.Enabled = crossword.WordHelpers > 0 && !IsFinished;
+                openLetterButton.Enabled = crossword.LetterHelpers > 0 && !IsFinished;
                 finishButton.Enabled = !IsFinished;
             }
             else

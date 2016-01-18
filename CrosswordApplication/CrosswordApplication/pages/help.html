@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <!--<meta charset="utf-8">-->
+    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
+    <title>Руководство пользователя</title>
+    <style type="text/css">
+        div.all{
+            position: absolute;
+            width: 100%;
+            margin: 0 0 0 0;
+            top: 0;
+        }
+
+        div.head {
+            width: 80%;
+            margin: 0 0 0 0;
+            position: relative;
+            left: 10%;
+            background: rgb(129, 221, 122);
+        }
+
+        div.centerblock {
+            width: 60%;
+            position: relative;
+            left: 20%;
+            bottom: 178px;
+            float: left;
+            margin-top: 14%;
+            background: rgb(199, 239, 255);/*, 0.7);*/
+            border-left: solid 2px #8b8b8b;
+            border-right: solid 1px #d1d1d1;
+            border-bottom: solid 1px #d1d1d1;
+        }
+
+        div.tabs {
+            width: 100%;
+            height: 12%;
+            position: absolute;
+            left: 0;
+            background: rgb(83, 86, 83);
+            z-index: 5;
+
+            border-radius: 0 0 100% 100%;
+            /* background: #cff67a;*/
+        }
+
+        div.container{
+            position: relative;
+            left: 10%;
+
+        }
+        /*************************/
+        img.setting{
+            height: 70px;
+            width: 70px;
+            border: inset 5px;
+            opacity: 0.9;
+            position: relative;
+            left: 80%;
+            border-radius: 95%;
+            margin-bottom: 10%;
+        }
+
+        img.main{
+            height: 400px;
+            width: 600px;
+            position: relative;
+            left: 3%;
+            margin-bottom: 0%;
+        }
+
+        h1.mytopheader{
+            font-family: sans-serif;
+            color: #ffffff;
+            text-align: left;
+            font-size: 20pt;
+            font-variant: small-caps;
+            font-weight: normal;
+            position: relative;
+            left: 25%;
+            bottom: -1%;
+
+        }
+        h2.center_header {
+            color: #ffffff;
+            background-color: #74b7ca;
+            border-radius: 0 0 5px 5px;
+            padding: 2% 0 2% 0;
+            font-family: sans-serif;
+            text-align: center;
+            font-size: 20pt;
+            font-weight: normal;
+            position: relative;
+            top: -20px;
+        }
+        h2.main{
+            color: #222120;
+            padding: 0 0 1% 0;
+            font-family: sans-serif;
+            font-size: 15pt;
+            font-weight: normal;
+            position: relative;
+        }
+        h3.inner_header{
+            color: #222120;
+            padding: 0 0 0 0;
+            font-family: sans-serif;
+            font-size: 14pt;
+            font-weight: normal;
+            position: relative;
+            top: -10px;
+        }
+        p.main_text {
+            position: relative;
+            padding: 0% 16% 1% 0%;
+
+            font-size: 12pt;
+            color: #222120;
+            font-family: sans-serif;
+        }
+
+        p.img{
+            position: relative;
+            padding: 0 27% 3% 13%;
+
+            font-size: 12pt;
+            color: #222120;
+            font-family: sans-serif;
+        }
+        a.passive {
+            text-decoration: none;
+            font-family: sans-serif;
+            font-size: 12pt;
+            color: #292e29;
+        }
+
+        a.passive:hover {text-decoration: underline; color: #0d9ffe;}
+
+        ol.main {
+            font-size: 10pt;
+            font-family: sans-serif;
+            position: relative;
+            margin-bottom: 1%;
+        }
+
+    </style>
+</head>
+<body >
+<div class="all">
+    <div class="head">
+        <table>
+            <tr><td><p><img class="setting" src="resources\help.png" alt="отклеилась" ></p></td>
+                <td><h1 class="mytopheader"><b>Справочная информация</b></h1></td>
+            </tr>
+        </table>
+        <div class="tabs">
+            <p></p>
+        </div>
+        
+    </div>
+
+
+    <div class="centerblock">
+        <h2 class="center_header" >Руководство пользователя</h2>
+        <h2 class="main" style="left: 10%; bottom: -10px;">Содержание:</h2>
+        <div class="container">
+        <ol class="main">
+            <li><a class="passive" href="#">Режим разгадывания кроссворда:</a></li>
+            <ol class="main">
+                <li><a class="passive" href="#">Выбор кроссворда</a></li>
+                <li><a class="passive" href="#">Автоматическое составление</a></li>
+                <li><a class="passive" href="#">Выбор подсказок и их виды</a></li>
+            </ol>
+            <li><a class="passive" href="#">Функции, доступные для администратора:</a>
+            <ol class="main">
+                <li><a class="passive" href="#">Менеджер кроссвордов</a></li>
+                <li><a class="passive" href="#">Менеджер словарей</a></li>
+            </ol>
+            </li>
+        </ol>
+        </div>
+
+        <div class="container">
+            <h2 class="main">Режим разгадывания кроссворда</h2>
+            <h3 class="inner_header">Выбор кроссворда</h3>
+            <p class="main_text">При запуске данной программы появится окно с выбором режима разгадывания или режима администрирования.</p>
+            <p class="main_text">При выборе режима разгадывания можно создать кроссворд автоматически или загрузить уже существующий, нажав на пункт "Загрузить" в меню настроек сверху (рисунок 1) и выбрав необходимы файл с кроссвордом.</p>
+            <img class="main" src="resources\Screenshot_1.png" alt="картинка отклеилась" ></p>
+            <p class="img">Рисунок 1 - Расположение пункта меню "Загрузить"</p>
+
+            <h3 class="inner_header">Автоматическое составление</h3>
+            <p class="main_text">Чтобы сгенерировать новый кроссворд, следует выбрать пункт "Сгенерировать" в меню настроек. Появится новое окно, где необходимо задать параметры будущего кроссворда, а также указать путь к словарю, на основе которого будет создан кроссворд (рисунок 2).</p>
+            <img class="main" src="resources\Screenshot_2.png" alt="картинка отклеилась" style="height: 240px; width:500px;"></p>
+            <p class="img">Рисунок 2 - Окно настройки параметров</p>
+            <p class="main_text">Как только кроссворд будет создан или загружен, можно будет приступить к его разгадыванию.</p>
+
+            <h3 class="inner_header">Выбор подсказок и их виды</h3>
+            <p class="main_text">Возможно на этапе разгадывания кроссворда у вас возникнут сложности и будет необходимо воспользоваться подсказкой, благо такая функция в программе присутствует.</p>
+            <p class="main_text">Всего есть два вида подсказок: открыть букву или открыть все слово целиком. Чтобы воспользоваться ими, нужно выделить соответствующую букву слова или же все слово во втором случае, а затем нажать на кнопку "Открыть букву" или "Открыть слово". Они расположены в правой нижней части окна (рисунок 3).</p>
+            <img class="main" src="resources\Screenshot_3.png" alt="картинка отклеилась"></p>
+            <p class="img">Рисунок 3 - Расположение кнопок для открытия подсказок</p>
+
+            <h2 class="main">Функции, доступные для администратора</h2>
+            <h3 class="inner_header">Менеджер кроссвордов</h3>
+            <p class="main_text">Данный инструмент необходим для создания кроссвордов вручную или автоматически. Автоматическая генерация проводится аналогично с генерацией в режиме разгадывания."</p>
+            <p class="main_text">При составлении кроссворда вручную задаются параметры кроссворда по умнолчанию (20х20), остается лишь загрузить словарь (В выпадающем списке "Словарь" выбрать пункт меню "Загрузить"). Слова в кроссворд добавляются перетаскиванием, доступные позиции выделяются зеленым цветом. При этом они добавляются в верхний правый список - Список вопросов (рисунок 4). Создавать можно кроссворды разного размера, это задается в окне настройки параметров при выборе пункта меню "Параметры". </p>
+            <img class="main" src="resources\Screenshot_4.png" alt="картинка отклеилась"></p>
+            <p class="img">Рисунок 4 - Процесс составления кроссворда вручную</p>
+
+
+            <h3 class="inner_header">Менеджер словарей</h3>
+            <p class="main_text">При использовании этого инструмента (рисунок 5) можно составлять собственные словари, хранящиеся в файлах с расширением *.dict. Для этого необходимо выбрать пункт меню Файл/Новый. Можно редактировать существующие словари - Файл/Загрузить. Когда словарь будет создан или открыт, в него можно будет добавить понятие, отредактировать или удалить его. Для удобства есть поиск слов по маске - последовательности букв и специальных символов * и ?. Символ * указывает на один символ, а символ ? на любую последовательность символов. После задания маски в поле ввода, надо выбрать кнопку "Поиск слов по маске". Затем маску можно очистить. </p>
+            <img class="main" src="resources\Screenshot_5.png" alt="картинка отклеилась"></p>
+            <p class="img">Рисунок 5 - Окно менеджера словарей</p>
+
+        </div>
+
+
+
+
+        <p class="main_text"></p>
+        <p class="main_text"></p>
+        <p class="main_text"></p>
+    </div>
+
+</div>
+</body>
+</html>

@@ -519,9 +519,25 @@ namespace Crossword
             return serializer.SerializeCrossword(this);
         }
 
-        public int Generate(Dictionary dictionary)
+        public void Generate(Dictionary dictionary)
         {
-            return generator.Generate(this, dictionary);
+            int wordHaveBeenAdded = generator.Generate(this, dictionary); 
+
+            if (wordHaveBeenAdded == 0)
+                MessageBox.Show("Новые слова не были добавлены!");
+        }
+
+        public bool CanChangeBorders(int newWidth, int newHeight)
+        {
+            var can = true;
+            foreach (var crosswordWord in crosswordWords)
+            {
+                int x0, y0, x1, y1;
+                crosswordWord.PositionAtIndex(0, out x0, out y0);
+                crosswordWord.PositionAtIndex(crosswordWord.Word.Length - 1, out x1, out y1);
+                can &= x0 < newWidth && x1 < newWidth && y0 < newHeight && y1 < newHeight;
+            }
+            return can;
         }
     }
 

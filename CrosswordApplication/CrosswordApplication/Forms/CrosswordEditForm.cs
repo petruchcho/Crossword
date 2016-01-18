@@ -320,7 +320,7 @@ namespace CrosswordApplication.Forms
 
         private void toolStripButton_Click(object sender, EventArgs e)
         {
-
+            FormUtils.OpenFormAndCloseCurrent(this, new DictionaryManagerForm());
         }
 
         private List<CrosswordLetter> BuildProgress()

@@ -141,12 +141,17 @@ namespace CrosswordApplication.Dictionary
 
         public DictionaryWord GetRandomDictionaryWord()
         {
+            return GetRandomDictionaryWord(1);
+        }
+
+        public DictionaryWord GetRandomDictionaryWord(double rangePercent)
+        {
             if (DictionaryWords == null || DictionaryWords.Length == 0)
             {
                 return null;
             }
 
-            DictionaryWord dictionaryWord = DictionaryWords[random.Next(0, DictionaryWords.Length)];
+            DictionaryWord dictionaryWord = DictionaryWords[random.Next(0, (int) (DictionaryWords.Length * rangePercent))];
 
             return dictionaryWord;
         }

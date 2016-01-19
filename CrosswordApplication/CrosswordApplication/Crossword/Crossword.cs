@@ -551,11 +551,59 @@ namespace Crossword
             return serializer.SerializeCrossword(this);
         }
 
+        private char[,] BuildMap()
+        {
+            char[,] res = new char[width, height];
+            foreach (var crosswordWord in CrosswordWords)
+            {
+                for (int i = 0; i < crosswordWord.Word.Length; i++)
+                {
+                    int x, y;
+                    crosswordWord.PositionAtIndex(i, out x, out y);
+                    res[x, y] = crosswordWord.Word[i];
+                }
+            }
+            return res;
+        }
+
+        private bool FilledEnough()
+        {
+            var map = BuildMap();
+            for (int x = 0; x < width; x++)
+            {
+                bool emptyColumn = true;
+                for (int y = 0; y < height; y++)
+                {
+                    emptyColumn &= map[x, y] == 0;
+                }
+                if (emptyColumn) return false;
+            }
+            for (int y = 0; y < height; y++)
+            {
+                bool emptyRow = true;
+
+                for (int x = 0; x < width; x++)
+                {
+                    emptyRow &= map[x, y] == 0;
+                }
+                if (emptyRow) return false;
+            }
+            return true;
+        }
+
         public void Generate(Dictionary dictionary)
         {
             int wordHaveBeenAdded = generator.Generate(this, dictionary);
             if (wordHaveBeenAdded == 0)
+            {
                 MessageBox.Show("Новые слова не были добавлены!");
+            }
+            if (!FilledEnough())
+            {
+                MessageBox.Show(
+                    "Алгоритм не смог найти оптимального кроссворда для данного размера. Увеличьте словарь или попробуйте еще раз. Нажмите ок чтобы увидеть результат",
+                    "Предупреждение");
+            }
         }
 
         public bool CanChangeBorders(int newWidth, int newHeight)
@@ -686,9 +734,13 @@ namespace Crossword
             int blankIterations = 0;
             int wordsHaveBeenAdded = 0;
 
+            dictionary.Sort(new DictionaryWordComparator(DictionaryWordComparator.SortDirection.Descending, DictionaryWordComparator.SortBy.LetterCount));
+
+            int iterationNumber = 0;
             while (blankIterations < 100)
             {
-                var dictionaryWord = dictionary.GetRandomDictionaryWord();
+                iterationNumber++;
+                var dictionaryWord = dictionary.GetRandomDictionaryWord(iterationNumber < 10 ? 0.3 : 1);
                 var positions = crossword.GetPreviewsPositions(dictionaryWord);
 
                 if (positions != null)
@@ -706,16 +758,8 @@ namespace Crossword
                 }
                 else
                 {
-                    int x = random.Next(0, crossword.Width);
-                    int y = random.Next(0, crossword.Height);
-                    int lengthOfWord = dictionaryWord.Word.Length;
-
-                    while (x + lengthOfWord - 1 > crossword.Width - 1)
-                    {
-                        x = random.Next(0, crossword.Width);
-                    }
-
-                    crossword.AddWord(new CrosswordWord(crossword, dictionaryWord, new CrosswordWordPosition(x, y, Orientation.Horizontal), false));
+                    Orientation orientation = random.Next(2) > 0 ? Orientation.Horizontal : Orientation.Vertical;
+                    crossword.AddWord(new CrosswordWord(crossword, dictionaryWord, new CrosswordWordPosition(0, 0, orientation), false));
                     wordsHaveBeenAdded = 1;
                 }                
                 

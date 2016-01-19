@@ -21,6 +21,7 @@ namespace CrosswordApplication.Dictionary
             DictionaryWords = new DictionaryWord[0];
         }
 
+        private string filepath;
         private string filename;
 
         /* 
@@ -68,7 +69,8 @@ namespace CrosswordApplication.Dictionary
                         }
                         // TODO Sort it with some comparer
                         Sort(new DictionaryWordComparator(DictionaryWordComparator.SortDirection.Ascending, DictionaryWordComparator.SortBy.Alphabet));
-                        filename = openFileDialog.FileName;
+                        filepath = openFileDialog.FileName;
+                        filename = openFileDialog.SafeFileName;
                         return true;
                     }
                     catch (Exception e)
@@ -152,6 +154,11 @@ namespace CrosswordApplication.Dictionary
         public string GetFilename()
         {
             return filename;
+        }
+
+        public string GetFilepath()
+        {
+            return filepath;
         }
     }
 }

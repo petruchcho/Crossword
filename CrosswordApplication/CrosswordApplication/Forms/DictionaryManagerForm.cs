@@ -14,6 +14,8 @@ namespace CrosswordApplication.Forms
         private DictionaryWordComparator.SortDirection sortDirection;
         private DictionaryWordComparator.SortBy sortBy;
 
+        private bool inSearch;
+
         private string selectedWord;
         private string selectedDascription;
 
@@ -36,7 +38,7 @@ namespace CrosswordApplication.Forms
             if (dictionary != null)
             {
                 if ((dictionary.DictionaryWords.Length > 0) && (dictionary.DictionaryWords[dictionary.DictionaryWords.Length - 1] != null))
-                    dictionary.Save((res) => { });
+                    dictionary.Save((res) => { UpdateUi(); });
             }
         }
 
@@ -52,7 +54,6 @@ namespace CrosswordApplication.Forms
             dictionary.Load((res) =>
             {
                 this.dictionary = dictionary;
-
                 try
                 {
                     UpdateUi();
@@ -92,6 +93,8 @@ namespace CrosswordApplication.Forms
 
         private void UpdateUi()
         {
+            emptyState.Visible = false;
+            this.Text = "Менеджер словарей";
             if (dictionary == null || !dictionary.IsLoaded())
             {
                 ShowEmptyState();
@@ -99,6 +102,11 @@ namespace CrosswordApplication.Forms
             else
             {
                 ShowDictionary();
+                if (dictionary.GetFilename() != null)
+                {
+                    this.Text += ": " + dictionary.GetFilename();
+                }
+                this.Text += " Размер: " + dictionary.DictionaryWords.Length;
             }
             UpdateButtonsState();
         }
@@ -158,7 +166,6 @@ namespace CrosswordApplication.Forms
 
         private void открытьСловарьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            emptyState.Visible = false;
             LoadDictionary(() =>
             {
                 sortDirection = DictionaryWordComparator.SortDirection.Ascending;
@@ -168,6 +175,7 @@ namespace CrosswordApplication.Forms
                 ShowSortTypeButtons(false, true);
                 ShowMask(true);
                 UpdateButtonsState();
+                emptyState.Visible = false;
             });
         }
 
@@ -268,9 +276,9 @@ namespace CrosswordApplication.Forms
 
                 ShowDirectionButtons(false, false);
                 ShowSortTypeButtons(false, false);
-
+                inSearch = true;
             }
-
+            UpdateButtonsState();
         }
 
         private void deleteMaskButton_Click(object sender, EventArgs e)
@@ -287,7 +295,9 @@ namespace CrosswordApplication.Forms
 
                 dictionary.Sort(new DictionaryWordComparator(sortDirection, sortBy));
 
+                inSearch = false;
                 UpdateUi();
+                UpdateButtonsState();
             }
         }
 
@@ -346,10 +356,11 @@ namespace CrosswordApplication.Forms
             var dictionaryLoaded = dictionary != null && dictionary.DictionaryWords != null;
             var dictionaryIsEmpty = dictionaryLoaded && dictionary.DictionaryWords.Length > 0;
 
-            newWordButton.Enabled = dictionaryLoaded;
-            updateWordButton.Enabled = dictionaryIsEmpty;
-            deleteWordButton.Enabled = dictionaryIsEmpty;
+            newWordButton.Enabled = !inSearch && dictionaryLoaded;
+            updateWordButton.Enabled = !inSearch && dictionaryIsEmpty;
+            deleteWordButton.Enabled = !inSearch && dictionaryIsEmpty;
 
+            deleteMaskButton.Enabled = inSearch;
         }
 
         private void updateWordButton_Click(object sender, EventArgs e)
@@ -392,7 +403,7 @@ namespace CrosswordApplication.Forms
                 }
                 else
                 {
-                    dictionary.Save((res) => { });
+                    dictionary.Save((res) => { UpdateUi(); });
                 }
             }
             else
@@ -419,6 +430,10 @@ namespace CrosswordApplication.Forms
 
         private void dictionaryListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (inSearch)
+            {
+                return;
+            }
             int indexSelected = dictionaryListBox.CurrentCell.RowIndex;
             try
             {

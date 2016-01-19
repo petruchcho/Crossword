@@ -102,7 +102,7 @@ namespace CrosswordApplication.Forms
             {
                 if (res)
                 {
-                    dictionaryFilePathTextBox.Text = _dictionary.GetFilename();
+                    dictionaryFilePathTextBox.Text = _dictionary.GetFilepath();
                 }
                 else
                 {

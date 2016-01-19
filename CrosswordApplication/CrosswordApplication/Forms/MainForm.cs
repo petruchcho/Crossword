@@ -48,7 +48,7 @@ namespace CrosswordApplication
                 }
                 Process.Start(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
             }
-            catch(Win32Exception e1)
+            catch(Exception e1)
             {
                 MessageBox.Show("Файл справки отсутствует!");
             }

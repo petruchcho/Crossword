@@ -19,6 +19,8 @@ namespace CrosswordApplication.Forms
         private string selectedWord;
         private string selectedDascription;
 
+        private bool search = false;
+
         public DictionaryManagerForm()
         {
             InitializeComponent();
@@ -241,12 +243,14 @@ namespace CrosswordApplication.Forms
 
         private void searchButton_Click(object sender, EventArgs e)
         {
+
             selectedWord = null;
             int letterCount = searchMask.Text.Length;
             DictionaryMask mask = new DictionaryMask(searchMask.Text);
 
             if (letterCount > 0)
             {
+                search = true;
                 int wordCount = 0;
 
                 sortDirection = DictionaryWordComparator.SortDirection.Ascending;
@@ -271,6 +275,8 @@ namespace CrosswordApplication.Forms
                 {
                     MessageBox.Show("По данной маске ничего не найдено");
                     //items.Add("По данной маске ничего не найдено");
+                    selectedWord = null;
+                    selectedDascription = null;
                     dictionaryListBox.Update();
                 }
 
@@ -286,6 +292,7 @@ namespace CrosswordApplication.Forms
             selectedWord = null;
             if (searchMask.Text.Length > 0)
             {
+                search = false;
                 searchMask.Text = "";
                 sortDirection = DictionaryWordComparator.SortDirection.Ascending;
                 sortBy = DictionaryWordComparator.SortBy.Alphabet;
@@ -312,8 +319,9 @@ namespace CrosswordApplication.Forms
             {
                 return;
             }
-            selectedWord = dictionary.DictionaryWords[indexSelected].Word;
-            selectedDascription = dictionary.DictionaryWords[indexSelected].Description;
+
+            selectedWord = dictionaryListBox.CurrentRow.Cells[0].Value.ToString();
+            selectedDascription = dictionaryListBox.CurrentRow.Cells[1].Value.ToString();
         }
 
         private void deleteWordButton_Click(object sender, EventArgs e)
@@ -341,6 +349,10 @@ namespace CrosswordApplication.Forms
                     UpdateUi();
 
                     selectedWord = null;
+                    if (search)
+                    {
+                        searchButton_Click(sender, e);
+                    }
                 }
             }
             else
@@ -356,9 +368,9 @@ namespace CrosswordApplication.Forms
             var dictionaryLoaded = dictionary != null && dictionary.DictionaryWords != null;
             var dictionaryIsEmpty = dictionaryLoaded && dictionary.DictionaryWords.Length > 0;
 
-            newWordButton.Enabled = !inSearch && dictionaryLoaded;
-            updateWordButton.Enabled = !inSearch && dictionaryIsEmpty;
-            deleteWordButton.Enabled = !inSearch && dictionaryIsEmpty;
+            newWordButton.Enabled = dictionaryLoaded;
+            updateWordButton.Enabled = dictionaryIsEmpty;
+            deleteWordButton.Enabled = dictionaryIsEmpty;
 
             deleteMaskButton.Enabled = inSearch;
         }
@@ -371,6 +383,11 @@ namespace CrosswordApplication.Forms
                 if (createOrUpdateDictionaryWordForm.ShowDialog() == DialogResult.OK)
                 {
                     UpdateUi();
+                }
+
+                if (search)
+                {
+                    searchButton_Click(sender, e);
                 }
             }
             else
@@ -388,6 +405,10 @@ namespace CrosswordApplication.Forms
             {
                 dictionary.Sort(new DictionaryWordComparator(sortDirection, sortBy));
                 UpdateUi();
+                if (search)
+                {
+                    searchButton_Click(sender, e);
+                }
             }
         }
 
@@ -437,9 +458,9 @@ namespace CrosswordApplication.Forms
             int indexSelected = dictionaryListBox.CurrentCell.RowIndex;
             try
             {
-                    selectedWord = dictionary.DictionaryWords[indexSelected].Word;
-                    selectedDascription = dictionary.DictionaryWords[indexSelected].Description;
-                    updateWordButton_Click(sender, e);
+                selectedWord = dictionaryListBox.CurrentRow.Cells[0].Value.ToString();
+                selectedDascription = dictionaryListBox.CurrentRow.Cells[1].Value.ToString();
+                updateWordButton_Click(sender, e);
             }
             catch (Exception)
             {

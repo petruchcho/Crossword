@@ -121,6 +121,7 @@ namespace CrosswordApplication.Forms
             dictionaryListBox.Visible = true;
 
             var items = dictionaryListBox.Rows;
+            items.Clear();
             for (var i = 0; i < dictionary.DictionaryWords.Length; i++)
             {
                 var dictionaryWord = dictionary.DictionaryWords[i];
@@ -315,6 +316,9 @@ namespace CrosswordApplication.Forms
                 openWordButton.Enabled = false;
                 finishButton.Enabled = false;
             }
+
+            dictionarySortAsc.Enabled = dictionaryLoaded;
+            dictionarySortDesc.Enabled = dictionaryLoaded;
         }
 
         private void dictionaryListBox_MouseDown(object sender, MouseEventArgs e)
@@ -1046,6 +1050,18 @@ namespace CrosswordApplication.Forms
             {
                 MessageBox.Show("Файл справки отсутствует!");
             }
+        }
+
+        private void dictionarySortDesc_Click(object sender, EventArgs e)
+        {
+            dictionary.Sort(new DictionaryWordComparator(DictionaryWordComparator.SortDirection.Descending, DictionaryWordComparator.SortBy.Alphabet));
+            SetDictionary();
+        }
+
+        private void dictionarySortAsc_Click(object sender, EventArgs e)
+        {
+            dictionary.Sort(new DictionaryWordComparator(DictionaryWordComparator.SortDirection.Ascending, DictionaryWordComparator.SortBy.Alphabet));
+            SetDictionary();
         }
     }
 

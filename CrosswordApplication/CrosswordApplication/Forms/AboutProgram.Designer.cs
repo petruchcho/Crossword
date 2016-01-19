@@ -110,7 +110,6 @@
             this.label6.TabIndex = 7;
             this.label6.Text = "Курсовой проект по теме \"Автоматизированная система\r\nсоставления и разгадывания к" +
     "лассического кроссворда\" \r\nпо дисциплине \"Программная инженерия\"";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // AboutProgram
             // 

@@ -53,7 +53,6 @@ namespace CrosswordApplication.Forms
             {
                 this.dictionary = dictionary;
 
-                HideProgress();
                 try
                 {
                     UpdateUi();
@@ -67,7 +66,7 @@ namespace CrosswordApplication.Forms
                     ShowDirectionButtons(false, false);
                     ShowSortTypeButtons(false, false);
                     ShowMask(false);
-                    ShowButtonsForWord(false);
+                    UpdateButtonsState();
                     emptyState.Visible = true;
                 }
             });
@@ -101,25 +100,31 @@ namespace CrosswordApplication.Forms
             {
                 ShowDictionary();
             }
+            UpdateButtonsState();
         }
 
         private void ShowDictionary()
         {
-            var items = dictionaryListBox.Items;
+            var items = dictionaryListBox.Rows;
             items.Clear();
+
             for (var i = 0; i < dictionary.DictionaryWords.Length; i++)
             {
-                items.Add(dictionary.DictionaryWords[i].ToString());
-                if (i % 200 == 0)
+
+                items.Add(dictionary.DictionaryWords[i].Word, dictionary.DictionaryWords[i].Description);
+                if (i%400 == 0)
                 {
                     dictionaryListBox.Update();
                 }
             }
+
+            HideProgress();
+            dictionaryListBox.ClearSelection();
         }
 
         private void ShowEmptyState()
         {
-            var items = dictionaryListBox.Items;
+            var items = dictionaryListBox.Rows;
             items.Clear();
             dictionaryListBox.Update();
         }
@@ -129,20 +134,13 @@ namespace CrosswordApplication.Forms
             ShowDirectionButtons(false, false);
             ShowSortTypeButtons(false, false);
             ShowMask(false);
-            ShowButtonsForWord(false);
+            UpdateButtonsState();
         }
 
         private void ShowDirectionButtons(bool ascending, bool descending)
         {
             anscendingButton.Enabled = ascending;
             descendingButton.Enabled = descending;
-        }
-
-        private void ShowButtonsForWord(bool flag)
-        {
-            newWordButton.Enabled = flag;
-            updateWordButton.Enabled = flag;
-            deleteWordButton.Enabled = flag;
         }
 
         private void ShowSortTypeButtons(bool alphabet, bool lettercount)
@@ -169,18 +167,18 @@ namespace CrosswordApplication.Forms
                 ShowDirectionButtons(false, true);
                 ShowSortTypeButtons(false, true);
                 ShowMask(true);
-                ShowButtonsForWord(true);
+                UpdateButtonsState();
             });
         }
 
         private void ShowProgress()
         {
-            //progressBar.Visible = true;
+            
         }
 
         private void HideProgress()
         {
-            //progressBar.Visible = false;
+            
         }
 
         private void anscendingButton_Click(object sender, EventArgs e)
@@ -248,21 +246,23 @@ namespace CrosswordApplication.Forms
 
                 dictionary.Sort(new DictionaryWordComparator(sortDirection, sortBy));
 
-                var items = dictionaryListBox.Items;
+                var items = dictionaryListBox.Rows;
                 items.Clear();
 
                 DictionaryIterator iterator = dictionary.GetIterator(mask);
 
                 while (iterator.HasNext())
                 {
-                    items.Add(iterator.Next().ToString());
+                    var word = iterator.Next();
+                    items.Add(word.Word, word.Description);
                     dictionaryListBox.Update();
                     wordCount++;
                 }
 
                 if (wordCount == 0)
                 {
-                    items.Add("По данной маске ничего не найдено");
+                    MessageBox.Show("По данной маске ничего не найдено");
+                    //items.Add("По данной маске ничего не найдено");
                     dictionaryListBox.Update();
                 }
 
@@ -293,12 +293,17 @@ namespace CrosswordApplication.Forms
 
         private void dictionaryListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int indexSelected = dictionaryListBox.SelectedIndex;
-            if (dictionaryListBox.SelectedItem.ToString() != "По данной маске ничего не найдено")
+            if (dictionaryListBox.CurrentCell == null || dictionary == null)
             {
-                selectedWord = dictionary.DictionaryWords[indexSelected].Word;
-                selectedDascription = dictionary.DictionaryWords[indexSelected].Description;
+                return;
             }
+            int indexSelected = dictionaryListBox.CurrentCell.RowIndex;
+            if (dictionary.DictionaryWords == null || indexSelected >= dictionary.DictionaryWords.Length)
+            {
+                return;
+            }
+            selectedWord = dictionary.DictionaryWords[indexSelected].Word;
+            selectedDascription = dictionary.DictionaryWords[indexSelected].Description;
         }
 
         private void deleteWordButton_Click(object sender, EventArgs e)
@@ -334,6 +339,17 @@ namespace CrosswordApplication.Forms
                     "Вы не выбрали понятие",
                     "Ошибка", MessageBoxButtons.OK);
             }
+        }
+
+        void UpdateButtonsState()
+        {
+            var dictionaryLoaded = dictionary != null && dictionary.DictionaryWords != null;
+            var dictionaryIsEmpty = dictionaryLoaded && dictionary.DictionaryWords.Length > 0;
+
+            newWordButton.Enabled = dictionaryLoaded;
+            updateWordButton.Enabled = dictionaryIsEmpty;
+            deleteWordButton.Enabled = dictionaryIsEmpty;
+
         }
 
         private void updateWordButton_Click(object sender, EventArgs e)
@@ -397,21 +413,18 @@ namespace CrosswordApplication.Forms
             ShowDirectionButtons(false, true);
             ShowSortTypeButtons(false, true);
             ShowMask(true);
-            ShowButtonsForWord(true);
+            UpdateButtonsState();
             UpdateUi();
         }
 
         private void dictionaryListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            int indexSelected = dictionaryListBox.SelectedIndex;
+            int indexSelected = dictionaryListBox.CurrentCell.RowIndex;
             try
             {
-                if (dictionaryListBox.SelectedItem.ToString() != "По данной маске ничего не найдено")
-                {
                     selectedWord = dictionary.DictionaryWords[indexSelected].Word;
                     selectedDascription = dictionary.DictionaryWords[indexSelected].Description;
                     updateWordButton_Click(sender, e);
-                }
             }
             catch (Exception)
             {
@@ -436,18 +449,18 @@ namespace CrosswordApplication.Forms
 
         private void userguideToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String text = System.IO.File.ReadAllText(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
-            if (!(text.Contains("<head>") || text.Contains("</head>") || text.Contains("<body>") || text.Contains("</body>")))
-            {
-                MessageBox.Show("Файл справки некорректен!");
-                return;
-            }
-
             try
             {
+                String text = System.IO.File.ReadAllText(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
+                if (!(text.Contains("<head>") || text.Contains("</head>") || text.Contains("<body>") || text.Contains("</body>")))
+                {
+                    MessageBox.Show("Файл справки некорректен!");
+                    return;
+                }
+
                 Process.Start(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
             }
-            catch (Win32Exception e1)
+            catch (Exception e1)
             {
                 MessageBox.Show("Файл справки отсутствует!");
             }

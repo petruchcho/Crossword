@@ -677,7 +677,7 @@ namespace Crossword
             int blankIterations = 0;
             int wordsHaveBeenAdded = 0;
 
-            while (blankIterations < 10)
+            while (blankIterations < 100)
             {
                 var dictionaryWord = dictionary.GetRandomDictionaryWord();
                 var positions = crossword.GetPreviewsPositions(dictionaryWord);

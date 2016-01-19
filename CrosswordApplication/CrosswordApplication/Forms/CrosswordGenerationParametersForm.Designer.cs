@@ -146,10 +146,9 @@
             // dictionaryFilePathTextBox
             // 
             this.dictionaryFilePathTextBox.Location = new System.Drawing.Point(30, 54);
-            this.dictionaryFilePathTextBox.Multiline = true;
             this.dictionaryFilePathTextBox.Name = "dictionaryFilePathTextBox";
             this.dictionaryFilePathTextBox.ReadOnly = true;
-            this.dictionaryFilePathTextBox.Size = new System.Drawing.Size(370, 23);
+            this.dictionaryFilePathTextBox.Size = new System.Drawing.Size(370, 20);
             this.dictionaryFilePathTextBox.TabIndex = 7;
             // 
             // label2

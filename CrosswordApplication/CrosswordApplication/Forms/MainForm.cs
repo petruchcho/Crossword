@@ -39,17 +39,16 @@ namespace CrosswordApplication
             //UserGuideForm userguide = new UserGuideForm();
             //userguide.Show();
 
-            String text = System.IO.File.ReadAllText(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
-            if (!(text.Contains("<head>") || text.Contains("</head>") || text.Contains("<body>") || text.Contains("</body>")))
-            {
-                MessageBox.Show("Файл справки некорректен!");
-                return;
-            }
-
             try {
+                String text = System.IO.File.ReadAllText(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
+                if (!(text.Contains("<head>") || text.Contains("</head>") || text.Contains("<body>") || text.Contains("</body>")))
+                {
+                    MessageBox.Show("Файл справки некорректен!");
+                    return;
+                }
                 Process.Start(System.IO.Path.GetFullPath(@"..\..\pages") + @"\help.html");
             }
-            catch(Win32Exception e1)
+            catch(Exception e1)
             {
                 MessageBox.Show("Файл справки отсутствует!");
             }

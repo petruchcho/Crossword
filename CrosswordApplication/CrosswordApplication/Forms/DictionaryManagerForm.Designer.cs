@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DictionaryManagerForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.newWordButton = new System.Windows.Forms.ToolStripButton();
@@ -51,10 +52,14 @@
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userguideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dictionaryListBox = new System.Windows.Forms.ListBox();
             this.emptyState = new System.Windows.Forms.Label();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.dictionaryListBox = new CrosswordApplication.Forms.CustomDataGridView();
+            this.wordColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dictionaryListBox)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -130,7 +135,7 @@
             // 
             this.searchMask.Name = "searchMask";
             this.searchMask.Size = new System.Drawing.Size(100, 25);
-            this.searchMask.ToolTipText = "Поиск по маске\r\n* - любая одна буква\r\n? - любые несколько букв\r\n";
+            this.searchMask.ToolTipText = "Поиск по маске\r\n? - любая одна буква\r\n* - любые несколько букв\r\n";
             this.searchMask.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchMask_KeyDown);
             this.searchMask.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox1_KeyPress);
             // 
@@ -256,30 +261,12 @@
             this.оПрограммеToolStripMenuItem.Text = "О программе";
             this.оПрограммеToolStripMenuItem.Click += new System.EventHandler(this.оПрограммеToolStripMenuItem_Click);
             // 
-            // руководствоПользователяToolStripMenuItem
+            // userguideToolStripMenuItem
             // 
-            this.userguideToolStripMenuItem.Name = "руководствоПользователяToolStripMenuItem";
+            this.userguideToolStripMenuItem.Name = "userguideToolStripMenuItem";
             this.userguideToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.userguideToolStripMenuItem.Text = "Руководство пользователя";
             this.userguideToolStripMenuItem.Click += new System.EventHandler(this.userguideToolStripMenuItem_Click);
-            // 
-            // dictionaryListBox
-            // 
-            this.dictionaryListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dictionaryListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dictionaryListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dictionaryListBox.FormattingEnabled = true;
-            this.dictionaryListBox.HorizontalScrollbar = true;
-            this.dictionaryListBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.dictionaryListBox.ItemHeight = 20;
-            this.dictionaryListBox.Location = new System.Drawing.Point(0, 52);
-            this.dictionaryListBox.Name = "dictionaryListBox";
-            this.dictionaryListBox.Size = new System.Drawing.Size(735, 380);
-            this.dictionaryListBox.TabIndex = 4;
-            this.dictionaryListBox.SelectedIndexChanged += new System.EventHandler(this.dictionaryListBox_SelectedIndexChanged);
-            this.dictionaryListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dictionaryListBox_MouseDoubleClick);
             // 
             // emptyState
             // 
@@ -293,16 +280,79 @@
             this.emptyState.TabIndex = 5;
             this.emptyState.Text = "Загрузите или создайте новый словарь";
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(514, 28);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(209, 15);
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar.TabIndex = 7;
+            this.progressBar.Visible = false;
+            // 
+            // dictionaryListBox
+            // 
+            this.dictionaryListBox.AllowUserToAddRows = false;
+            this.dictionaryListBox.AllowUserToDeleteRows = false;
+            this.dictionaryListBox.AllowUserToResizeColumns = false;
+            this.dictionaryListBox.AllowUserToResizeRows = false;
+            this.dictionaryListBox.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dictionaryListBox.BackgroundColor = System.Drawing.Color.White;
+            this.dictionaryListBox.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dictionaryListBox.ColumnHeadersVisible = false;
+            this.dictionaryListBox.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.wordColumn,
+            this.descriptionColumn});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dictionaryListBox.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dictionaryListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dictionaryListBox.Location = new System.Drawing.Point(0, 49);
+            this.dictionaryListBox.MultiSelect = false;
+            this.dictionaryListBox.Name = "dictionaryListBox";
+            this.dictionaryListBox.RowHeadersVisible = false;
+            this.dictionaryListBox.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dictionaryListBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dictionaryListBox.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dictionaryListBox.Size = new System.Drawing.Size(736, 385);
+            this.dictionaryListBox.TabIndex = 6;
+            this.dictionaryListBox.SelectionChanged += new System.EventHandler(this.dictionaryListBox_SelectedIndexChanged);
+            this.dictionaryListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dictionaryListBox_MouseDoubleClick);
+            // 
+            // wordColumn
+            // 
+            this.wordColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.wordColumn.FillWeight = 25F;
+            this.wordColumn.HeaderText = "Слово";
+            this.wordColumn.Name = "wordColumn";
+            this.wordColumn.ReadOnly = true;
+            this.wordColumn.Width = 183;
+            // 
+            // descriptionColumn
+            // 
+            this.descriptionColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.descriptionColumn.FillWeight = 75F;
+            this.descriptionColumn.HeaderText = "Описание";
+            this.descriptionColumn.Name = "descriptionColumn";
+            this.descriptionColumn.ReadOnly = true;
+            this.descriptionColumn.Width = 550;
+            // 
             // DictionaryManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(736, 434);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.emptyState);
+            this.Controls.Add(this.dictionaryListBox);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.dictionaryListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -314,6 +364,7 @@
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dictionaryListBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,12 +389,15 @@
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem новыйToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
-        private System.Windows.Forms.ListBox dictionaryListBox;
         private System.Windows.Forms.ToolStripDropDownButton stripSplitButton;
         private System.Windows.Forms.ToolStripMenuItem поАлфавиту;
         private System.Windows.Forms.ToolStripMenuItem поКоличествуБукв;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem userguideToolStripMenuItem;
         private System.Windows.Forms.Label emptyState;
+        private CustomDataGridView dictionaryListBox;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn wordColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descriptionColumn;
     }
 }

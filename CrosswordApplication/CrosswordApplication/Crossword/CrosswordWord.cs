@@ -93,7 +93,7 @@ namespace CrosswordApplication.Crossword
             }
 
             // Rectangles are intersected. If words not then WRONG
-            if (!(Intersect(Ax+1, Bx-1, Cx, Dx) && Intersect(Ay+1, By-1, Cy, Dy)))
+            if (!(Intersect(Ax + 1, Bx - 1, Cx, Dx) && Intersect(Ay + 1, By - 1, Cy, Dy)))
             {
                 return IntersectionType.WrongIntersection;
             }

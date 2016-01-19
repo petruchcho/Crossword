@@ -7,11 +7,11 @@
         public DictionaryMask(string mask)
         {
             _mask = mask;
-            while ((_mask.IndexOf("??") > -1) || (_mask.IndexOf("*?") > -1) || (_mask.IndexOf("?*") > -1))
+            while ((_mask.IndexOf("**") > -1) || (_mask.IndexOf("?*") > -1) || (_mask.IndexOf("*?") > -1))
             {
-                _mask = _mask.Replace("??", "?");
-                _mask = _mask.Replace("*?", "?");
-                _mask = _mask.Replace("?*", "?");
+                _mask = _mask.Replace("**", "*");
+                _mask = _mask.Replace("?*", "*");
+                _mask = _mask.Replace("*?", "*");
             }
 
             string news = _mask;
@@ -25,7 +25,7 @@
 
         private bool _IsMatch(string mask, string word)
         {
-            if (mask[0] == '*')
+            if (mask[0] == '?')
             {
                 if (mask.Length > 1)
                 {
@@ -36,7 +36,7 @@
                     return word.Length == 1;
                 }
             }
-            else if (mask[0] == '?')
+            else if (mask[0] == '*')
             {
                 if ((mask.Length == 1) && (word.Length > 0))
                 {

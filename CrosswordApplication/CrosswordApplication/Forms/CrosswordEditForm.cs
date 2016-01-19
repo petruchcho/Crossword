@@ -274,6 +274,10 @@ namespace CrosswordApplication.Forms
             if (userRole == UserRole.Administrator)
             {
                 this.Text = "Менеджер кроссвордов";
+                if (crossword != null && crossword.GetFilename() != null)
+                {
+                    this.Text += ": " + crossword.GetFilename();
+                }
             }
             else
             {

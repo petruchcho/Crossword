@@ -67,6 +67,8 @@ namespace Crossword
         private int letterHelpers = 0;
         private int wordHelpers = 0;
 
+        private string fileName;
+
         private readonly CrosswordSerializer serializer = new CrosswordSerializer();
 
         private readonly CrosswordGenerator generator = new CrosswordGenerator();
@@ -101,6 +103,7 @@ namespace Crossword
                     {
                         var crosswordStrings = System.IO.File.ReadAllLines(openFileDialog.FileName, Encoding.GetEncoding(1251));
                         serializer.DeserializeCrossword(this, crosswordStrings);
+                        fileName = openFileDialog.SafeFileName;
                         return true;
                     }
                     catch (Exception e)
@@ -143,6 +146,7 @@ namespace Crossword
                                ? serializer.SerializeCrossword(this)
                                : serializer.SerializeCrossword(this, progress);
 
+                           fileName = saveFileDialog1.FileName.Split('\\').Last();
                            streamWriter.WriteLine(serializedCrossword);
                            streamWriter.Close();
                        }
@@ -576,6 +580,11 @@ namespace Crossword
             }
             LetterHelpers = (int)(0.1 * sumOfLetters);
             WordHelpers = (int)(0.1 * crosswordWords.Count);
+        }
+
+        public string GetFilename()
+        {
+            return fileName;
         }
     }
 

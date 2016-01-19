@@ -135,7 +135,7 @@
             // 
             this.searchMask.Name = "searchMask";
             this.searchMask.Size = new System.Drawing.Size(100, 25);
-            this.searchMask.ToolTipText = "Поиск по маске\r\n* - любая одна буква\r\n? - любые несколько букв\r\n";
+            this.searchMask.ToolTipText = "Поиск по маске\r\n? - любая одна буква\r\n* - любые несколько букв\r\n";
             this.searchMask.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchMask_KeyDown);
             this.searchMask.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox1_KeyPress);
             // 

@@ -253,7 +253,8 @@ namespace CrosswordApplication.Forms
 
                 while (iterator.HasNext())
                 {
-                    items.Add(iterator.Next().ToString());
+                    var word = iterator.Next();
+                    items.Add(word.Word, word.Description);
                     dictionaryListBox.Update();
                     wordCount++;
                 }

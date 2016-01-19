@@ -66,7 +66,7 @@ namespace CrosswordApplication.Forms
                     ShowDirectionButtons(false, false);
                     ShowSortTypeButtons(false, false);
                     ShowMask(false);
-                    ShowButtonsForWord(false);
+                    UpdateButtonsState();
                     emptyState.Visible = true;
                 }
             });
@@ -100,6 +100,7 @@ namespace CrosswordApplication.Forms
             {
                 ShowDictionary();
             }
+            UpdateButtonsState();
         }
 
         private void ShowDictionary()
@@ -133,20 +134,13 @@ namespace CrosswordApplication.Forms
             ShowDirectionButtons(false, false);
             ShowSortTypeButtons(false, false);
             ShowMask(false);
-            ShowButtonsForWord(false);
+            UpdateButtonsState();
         }
 
         private void ShowDirectionButtons(bool ascending, bool descending)
         {
             anscendingButton.Enabled = ascending;
             descendingButton.Enabled = descending;
-        }
-
-        private void ShowButtonsForWord(bool flag)
-        {
-            newWordButton.Enabled = flag;
-            updateWordButton.Enabled = flag;
-            deleteWordButton.Enabled = flag;
         }
 
         private void ShowSortTypeButtons(bool alphabet, bool lettercount)
@@ -173,7 +167,7 @@ namespace CrosswordApplication.Forms
                 ShowDirectionButtons(false, true);
                 ShowSortTypeButtons(false, true);
                 ShowMask(true);
-                ShowButtonsForWord(true);
+                UpdateButtonsState();
             });
         }
 
@@ -346,6 +340,17 @@ namespace CrosswordApplication.Forms
             }
         }
 
+        void UpdateButtonsState()
+        {
+            var dictionaryLoaded = dictionary != null && dictionary.DictionaryWords != null;
+            var dictionaryIsEmpty = dictionaryLoaded && dictionary.DictionaryWords.Length > 0;
+
+            newWordButton.Enabled = dictionaryLoaded;
+            updateWordButton.Enabled = dictionaryIsEmpty;
+            deleteWordButton.Enabled = dictionaryIsEmpty;
+
+        }
+
         private void updateWordButton_Click(object sender, EventArgs e)
         {
             if (selectedWord != null)
@@ -407,7 +412,7 @@ namespace CrosswordApplication.Forms
             ShowDirectionButtons(false, true);
             ShowSortTypeButtons(false, true);
             ShowMask(true);
-            ShowButtonsForWord(true);
+            UpdateButtonsState();
             UpdateUi();
         }
 
